@@ -75,7 +75,24 @@ function setup() {
     fill(169, 224, 0);
     rect(400,500,50,90,20);
 
+    //left eye (opened)
+    fill(0);
+    ellipse(350,420,20)
 
+    //right eye (closed)
+    stroke(0);
+    strokeWeight(7);
+    line(420,420,400,420);
+
+    //tongue
+    fill(255, 217, 218);
+    noStroke();
+    rect(370,455,20,20,0,0,20,20);
+
+    //mouth line
+    stroke(0);
+    strokeWeight(7);
+    line(360,455,400,455);
 }
 
 // draw()
