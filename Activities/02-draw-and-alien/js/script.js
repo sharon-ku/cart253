@@ -28,6 +28,16 @@ fill(0);
 ellipse(245,130,60,90); //leftie
 ellipse(395,130,60,90); //rightie
 
+// Drawing the nostrils
+ellipse(310,170,5,5); //leftie
+ellipse(330,170,5,5); //rightie
+
+// Drawing the mouth
+stroke(252, 88, 88);
+strokeWeight(2);
+rectMode(CENTER);
+rect(320,210,15,10);
+
 
 
 
