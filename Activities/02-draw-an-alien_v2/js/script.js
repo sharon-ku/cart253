@@ -29,11 +29,13 @@ function setup() {
     rect(120,0,30,30);
   fill(169, 224, 0); //lime green
     rect(150,0,30,30);
-//  fill(202, 128, 202); //french mauve
-  //  rect(180,0,30,30);
-//  fill(11, 128, 202); //green blue crayola
-//    rect(210,0,30,30);
-
+/***
+Unused colours
+  fill(202, 128, 202); //french mauve
+  rect(180,0,30,30);
+  fill(11, 128, 202); //green blue crayola
+  rect(210,0,30,30);
+***/
 
 
 
@@ -44,11 +46,11 @@ function setup() {
   ellipse(200,250,10,10); //ell 2
   ellipse(300,50,10,10);  //ell 3
   ellipse(400,200,10,10); //ell 4
-  ellipse(500,100,10,10);
-  ellipse(600,200,10,10);
-  ellipse(700,100,10,10);
-  ellipse(800,200,10,10);
-  ellipse(900,100,10,10);
+  ellipse(500,100,10,10); //ell 5
+  ellipse(600,200,10,10); //ell 6
+  ellipse(700,100,10,10); //ell 7
+  ellipse(800,200,10,10); //ell 8
+  ellipse(900,100,10,10); //ell 9
 
   // Drawing the moon
     //Filled part of moon
@@ -58,41 +60,74 @@ function setup() {
       fill(144, 190, 222); //pale cerulean/blue
       ellipse(750,125,170);
 
+  // Drawing the hills
+    //Hill 1
+      strokeWeight(10);
+      stroke(8, 65, 928);
+      point(0,420);
+      point(330,500);
+      point(600,800);
+      strokeWeight(1);
+
+      stroke(8, 65, 928);
+      //noFill();
+      beginShape();
+      curveVertex(0,420);
+      curveVertex(0,420);
+      curveVertex(330,500);
+      curveVertex(600,800);
+      curveVertex(600,800);
+      endShape();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   // Drawing the little alien
     //body
+    noStroke();
     fill(169, 224, 0);
-    rect(300,360,150,190,20);
+    rect(250,360,150,190,20);
 
     //left ear
     fill(169, 224, 0);
-    rect(300,300,50,90,20);
+    rect(250,300,50,90,20);
 
     //left foot
     fill(169, 224, 0);
-    rect(300,500,50,90,20);
+    rect(250,500,50,90,20);
 
     //right foot
     fill(169, 224, 0);
-    rect(400,500,50,90,20);
+    rect(350,500,50,90,20);
 
     //left eye (opened)
     fill(0);
-    ellipse(350,420,20)
+    ellipse(300,420,20)
 
     //right eye (closed)
     stroke(0);
     strokeWeight(7);
-    line(420,420,400,420);
+    line(370,420,350,420);
 
     //tongue
     fill(255, 217, 218);
     noStroke();
-    rect(370,455,20,20,0,0,20,20);
+    rect(320,455,20,20,0,0,20,20);
 
     //mouth line
     stroke(0);
     strokeWeight(7);
-    line(360,455,400,455);
+    line(310,455,350,455);
 }
 
 // draw()
