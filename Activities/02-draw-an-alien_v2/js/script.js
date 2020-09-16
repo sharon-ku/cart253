@@ -2,17 +2,17 @@
 Activity 2: Drawing an alien (v2)
 Sharon Ku
 
-I drew an alien, the one-eyed creature.
+I drew the home of an alien, the one-eyed creature.
 **************************************************/
 
 // setup()
 //
-// Drawing an alien
+// Drawing a scene with an alien in it
 function setup() {
 
   // Setting up a canvas
   createCanvas(1000,800);
-  background(8, 65, 92);
+  background(144, 190, 222);
 
   //Color palette
   noStroke();
@@ -27,12 +27,12 @@ function setup() {
     rect(90,0,30,30);
   fill(144, 243, 255); //electric blue
     rect(120,0,30,30);
-  fill(169, 224, 90); //inchworm/lime green
+  fill(169, 224, 0); //lime green
     rect(150,0,30,30);
-  fill(202, 128, 202); //french mauve
-    rect(180,0,30,30);
-  fill(11, 128, 202); //green blue crayola
-    rect(210,0,30,30);
+//  fill(202, 128, 202); //french mauve
+  //  rect(180,0,30,30);
+//  fill(11, 128, 202); //green blue crayola
+//    rect(210,0,30,30);
 
 
 
@@ -40,10 +40,10 @@ function setup() {
   // Drawing stars (starting from left to right)
   fill(255, 217, 218);
   noStroke();
-  ellipse(100,100,10,10);
-  ellipse(200,200,10,10);
-  ellipse(300,100,10,10);
-  ellipse(400,200,10,10);
+  ellipse(100,100,10,10); //ell 1
+  ellipse(200,250,10,10); //ell 2
+  ellipse(300,50,10,10);  //ell 3
+  ellipse(400,200,10,10); //ell 4
   ellipse(500,100,10,10);
   ellipse(600,200,10,10);
   ellipse(700,100,10,10);
@@ -51,10 +51,29 @@ function setup() {
   ellipse(900,100,10,10);
 
   // Drawing the moon
-  ellipse();
+    //Filled part of moon
+      fill(255, 217, 218); //pale pink
+      ellipse(800,150,170);
+    //Dark side of the moon
+      fill(144, 190, 222); //pale cerulean/blue
+      ellipse(750,125,170);
 
+  // Drawing the little alien
+    //body
+    fill(169, 224, 0);
+    rect(300,360,150,190,20);
 
+    //left ear
+    fill(169, 224, 0);
+    rect(300,300,50,90,20);
 
+    //left foot
+    fill(169, 224, 0);
+    rect(300,500,50,90,20);
+
+    //right foot
+    fill(169, 224, 0);
+    rect(400,500,50,90,20);
 
 
 }
