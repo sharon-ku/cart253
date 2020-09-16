@@ -1,20 +1,22 @@
 /**************************************************
-Template p5 project
-Pippin Barr
+Activity 2: Drawing an alien (v2)
+Sharon Ku
 
-Here is a description of this template p5 project.
+I drew an alien, the one-eyed creature.
 **************************************************/
 
 // setup()
 //
-// Description of setup() goes here.
+// Drawing an alien
 function setup() {
+  createCanvas(1400,800);
+  background(99, 93, 186);
 
 }
 
 // draw()
 //
-// Description of draw() goes here.
+// This is not used in the project.
 function draw() {
 
 }
