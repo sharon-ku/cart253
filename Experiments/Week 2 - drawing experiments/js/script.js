@@ -1,8 +1,10 @@
 /**************************************************
-Template p5 project
-Pippin Barr
+Drawing Experiments
+Sharon Ku
 
-Here is a description of this template p5 project.
+Experimenting with p5's drawing and color functions
+
+Currently drawing a face with two rectangles in background.
 **************************************************/
 
 // setup()
@@ -11,17 +13,31 @@ Here is a description of this template p5 project.
 function setup() {
   createCanvas(500,500);
 
-  background(50,100,50);
+  // Set the background to blue
+  background(32, 115, 247);
 
-  stroke(255,255,0)
+  // Draw the skin-colored head
+  fill(250,200,200);
+  ellipse(250,250,200,200);
 
-  fill(20,20,20)
+  // Draw the black eyes
+  fill(0);
+  ellipse(200,250,30,30);
+  ellipse(300,250,30,30);
+
+  // Draw the mouth
+  strokeWeight(10);
+  line(200,300,300,300);
+
+  // Draw 2 Rectangles from previous practice experimentation
   rectMode(CENTER);
-  rect(250,250,50,50);
+  strokeWeight(0);
+  fill(247, 161, 32);
+  rect(40,250,50,50);
 
-  fill(50,50,50)
+  fill(247, 89, 32);
   rectMode(CORNER);
-  rect(250,250,50,50);
+  rect(400,350,50,50);
 
 
 }
