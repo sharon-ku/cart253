@@ -9,7 +9,7 @@ Currently drawing a face with two rectangles in background.
 
 // setup()
 //
-// Description of setup() goes here.
+// Draws a face on the canvas.
 function setup() {
   createCanvas(500,500);
 
@@ -44,7 +44,7 @@ function setup() {
 
 // draw()
 //
-// Description of draw() goes here.
+// Does nothing.
 function draw() {
 
 }
