@@ -40,28 +40,37 @@ Unused colours
 
 
   // Drawing stars (starting from left to right)
-  fill(255, 217, 218);
+  fill(255, 217, 218); //light pink
   noStroke();
   ellipse(100,100,10,10); //ell 1
+  fill(242, 224, 90); //minion yellow
   ellipse(200,250,10,10); //ell 2
+  fill(104, 237, 198); //aquamarine
   ellipse(300,50,10,10);  //ell 3
+  fill(144, 243, 255); //electric blue
   ellipse(400,200,10,10); //ell 4
+  fill(255, 217, 218); //light pink
   ellipse(500,100,10,10); //ell 5
+  fill(242, 224, 90); //minion yellow
   ellipse(600,200,10,10); //ell 6
-  ellipse(700,100,10,10); //ell 7
-  ellipse(800,200,10,10); //ell 8
-  ellipse(900,100,10,10); //ell 9
+  fill(104, 237, 198); //aquamarine
+  ellipse(800,200,10,10); //ell 7
+  fill(144, 243, 255); //electric blue
+  ellipse(850,300,10,10); //ell 8
+  fill(255, 217, 218); //light pink
+  ellipse(920,50,10,10); //ell 9
+
 
   // Drawing the moon
     //Filled part of moon
       fill(255, 217, 218); //pale pink
-      ellipse(800,150,170);
+      ellipse(780,150,170);
     //Dark side of the moon
       fill(144, 190, 222); //pale cerulean/blue
-      ellipse(750,125,170);
+      ellipse(730,125,170);
 
-  // Drawing the hills
-    //Hill 1
+  // Drawing the hills --> see next attempt
+    /**Hill 1
       strokeWeight(10);
       stroke(8, 65, 928);
       point(0,420);
@@ -70,18 +79,23 @@ Unused colours
       strokeWeight(1);
 
       stroke(8, 65, 928);
+      fill(144, 190, 222);
       //noFill();
       beginShape();
       curveVertex(0,420);
       curveVertex(0,420);
       curveVertex(330,500);
       curveVertex(600,800);
-      curveVertex(600,800);
+    //  curveVertex(600,800);
+      curveVertex(0,420);
+      curveVertex(0,420);
       endShape();
+**/
 
-
-
-
+//Drawing the hills - second attempt
+  //Hill 1
+  fill(144, 243, 255);
+  ellipse(150,920,1000,1000);
 
 
 
@@ -96,38 +110,38 @@ Unused colours
     //body
     noStroke();
     fill(169, 224, 0);
-    rect(250,360,150,190,20);
+    rect(220,360,150,190,20);
 
     //left ear
     fill(169, 224, 0);
-    rect(250,300,50,90,20);
+    rect(220,300,50,90,20);
 
     //left foot
     fill(169, 224, 0);
-    rect(250,500,50,90,20);
+    rect(220,500,50,90,20);
 
     //right foot
     fill(169, 224, 0);
-    rect(350,500,50,90,20);
+    rect(320,500,50,90,20);
 
     //left eye (opened)
     fill(0);
-    ellipse(300,420,20)
+    ellipse(270,420,20)
 
     //right eye (closed)
     stroke(0);
     strokeWeight(7);
-    line(370,420,350,420);
+    line(340,420,320,420);
 
     //tongue
     fill(255, 217, 218);
     noStroke();
-    rect(320,455,20,20,0,0,20,20);
+    rect(300,455,20,20,0,0,20,20);
 
     //mouth line
     stroke(0);
     strokeWeight(7);
-    line(310,455,350,455);
+    line(280,455,330,455);
 }
 
 // draw()
