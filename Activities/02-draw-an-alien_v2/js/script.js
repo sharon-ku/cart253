@@ -14,6 +14,7 @@ function setup() {
   createCanvas(1000,800);
   background(144, 190, 222);
 
+/**
   //Color palette
   noStroke();
   fill(8, 65, 92); //indigo dye
@@ -29,6 +30,9 @@ function setup() {
     rect(120,0,30,30);
   fill(169, 224, 0); //lime green
     rect(150,0,30,30);
+
+**/
+
 /***
 Unused colours
   fill(202, 128, 202); //french mauve
@@ -70,7 +74,9 @@ Unused colours
       ellipse(730,125,170);
 
   // Drawing the hills --> see next attempt
-    /**Hill 1
+/**
+
+    //Hill 1
       strokeWeight(10);
       stroke(8, 65, 928);
       point(0,420);
@@ -89,14 +95,26 @@ Unused colours
     //  curveVertex(600,800);
       curveVertex(0,420);
       curveVertex(0,420);
-      endShape();
+      endShape(CLOSE);
 **/
 
-//Drawing the hills - second attempt
-  //Hill 1
-  fill(144, 243, 255);
-  ellipse(150,920,1000,1000);
+//Drew a simple hump
+    strokeWeight(10);
+    stroke(8, 65, 928);
+    fill(255, 217, 218);
+    beginShape();
+    curveVertex(0, 500);
+    curveVertex(100, 100);
+    curveVertex(200, 100)
+    curveVertex(300, 500);
+    endShape();
 
+
+//Drawing the hills - second attempt
+    //Hill 1
+    noStroke();
+    fill(144, 243, 255);
+    ellipse(150,920,1000,1000);
 
 
 
