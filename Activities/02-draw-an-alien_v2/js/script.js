@@ -96,7 +96,7 @@ Unused colours
       curveVertex(0,420);
       curveVertex(0,420);
       endShape(CLOSE);
-**/
+
 
 //Drew a simple hump
     strokeWeight(10);
@@ -108,7 +108,7 @@ Unused colours
     curveVertex(200, 100)
     curveVertex(300, 500);
     endShape();
-
+**/
 
 //Drawing the hills - second attempt
     //Hill 1
