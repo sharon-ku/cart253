@@ -12,7 +12,7 @@ function setup() {
   /***For 3.1 Intro variables
   createCanvas(windowWidth, windowHeight);
   ***/
-
+  createCanvas(500, 500);
 
 
 
@@ -30,6 +30,7 @@ function draw() {
   rectMode(CENTER);
   rect(width/2, height/2, mouseX, mouseY);
   ***/
-
+  background(0);
+  ellipse(250,250,100);
 
 }
