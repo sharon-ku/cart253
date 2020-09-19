@@ -2,8 +2,13 @@
 Week 3 variable experiments
 Sharon Ku
 
-Experimenting with built-in variables
+3.2 Creating variables
 **************************************************/
+
+let bgShade = 0;
+let circleX = 250;
+let circleY = 250;
+let circleSize = 100;
 
 // setup()
 //
@@ -22,7 +27,7 @@ function setup() {
 // Description of draw() goes here.
 function draw() {
 
-  background(0);
-  ellipse(250,250,100);
+  background(bgShade);
+  ellipse(circleX,circleY,circleSize);
 
 }
