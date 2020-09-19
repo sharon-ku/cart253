@@ -5,6 +5,7 @@ Sharon Ku
 3.2 Creating variables
 3.3 Changing variables
 3.4 Introducing JavaScript objects
+3.5 Debugging variables
 **************************************************/
 
 let bgShade = 0;
@@ -43,6 +44,9 @@ function draw() {
   // circleSize = circleSize * 1.01;
   // circleY = circleY / 1.01;
   ellipse(circle.x,circle.y,circle.size);
+
+  // console.log("circle.x is "+circle.x);
+
 
 
 }
