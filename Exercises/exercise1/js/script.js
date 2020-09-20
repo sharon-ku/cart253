@@ -18,6 +18,8 @@ let circle1 = {
   y: 100,
   speed: 0.008,
   acceleration: 4,
+  sizeMin: 100,
+  sizeMax: 400,
 }
 
 let circle2 = {
@@ -62,8 +64,13 @@ function draw() {
       circle1.x += (mouseX - circle1.x) * circle1.speed * circle1.acceleration;
       circle1.y += (mouseY - circle1.y) * circle1.speed * circle1.acceleration;
 
+      //Animating the circle's size
+      circle1.size = map(dist(mouseX, mouseY, circle1.x, circle1.y), 0, windowWidth, circle1.sizeMin, circle1.sizeMax); //  NEED TO CHANGE WINDOWWIDTH
+
+
+
       // Drawing the circle
-      ellipse(circle1.x, circle1.y, 100, 100);
+      ellipse(circle1.x, circle1.y, circle1.size);
 
 
 
