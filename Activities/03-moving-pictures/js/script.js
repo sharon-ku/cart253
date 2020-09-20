@@ -21,7 +21,7 @@ let bigCircle = {
   xSpeed: 1,
   xMin: 0,
   size: 200,
-  sizeMin: 0,
+  sizeMin: 200, //same as intitial size
   growthRate: 1.002,
   fillR: 107,
   fillG: 255,
@@ -35,7 +35,7 @@ let smallCircle = {
   xSpeed: -1,
   xMax: 500,
   size: 100,
-  // sizeMin: 0,
+  // sizeMin: 100, // same as initial size
   // growthRate: 1.004,
   relativeSize: 0.9,
   fillR: 252,
@@ -62,11 +62,12 @@ function setup() {
 function draw() {
 
   //Background changing from black to red
-  bgColor.red += bgColor.redChangeRate;
-  bgColor.red = constrain(bgColor.red,bgColor.redMin,bgColor.redMax);
+  // bgColor.red += bgColor.redChangeRate;
+  bgColor.red = map(bigCircle.size, bigCircle.sizeMin, height, 0, bgColor.redMax);
+  // bgColor.red = constrain(bgColor.red,bgColor.redMin,bgColor.redMax);
   background(bgColor.red,bgColor.green,bgColor.blue);
 
-
+  console.log(bgColor.red);
 
   //Left circle moves to center, growing the whole time
     //Animating the circle's growth
