@@ -18,8 +18,17 @@ let circle1 = {
   y: 100,
   speed: 0.008,
   acceleration: 4,
-
 }
+
+let circle2 = {
+  x: 500,
+  y: 500,
+  speed: 0.006,
+  acceleration: 3,
+}
+
+
+
 
 
 
@@ -73,7 +82,17 @@ function draw() {
       circleFill.b = map(mouseY, windowHeight, 0, 150, 255);
       fill(circleFill.r, circleFill.g, circleFill.b);
 
-      ellipse(500,500,100,100);
+      // Animating the circle's movement
+      circle2.x += (mouseX - circle2.x) * circle2.speed * circle2.acceleration;
+      circle2.y += (mouseY - circle2.y) * circle2.speed * circle2.acceleration;
+
+      ellipse(circle2.x, circle2.y, 100, 100);
+
+
+
+
+
+
 
 
   // Circle 3
