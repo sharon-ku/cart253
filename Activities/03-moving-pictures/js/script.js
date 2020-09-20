@@ -35,8 +35,9 @@ let smallCircle = {
   xSpeed: -1,
   xMax: 500,
   size: 100,
-  sizeMin: 0,
-  growthRate: 1.004,
+  // sizeMin: 0,
+  // growthRate: 1.004,
+  relativeSize: 0.9,
   fillR: 252,
   fillG: 182,
   fillB: 219,
@@ -46,7 +47,7 @@ let smallCircle = {
 
 // setup()
 //
-//Description of setup
+//Setting up the canvas and removing strokes for all shapes
 function setup() {
 
   createCanvas(500,500);
@@ -57,7 +58,7 @@ function setup() {
 
 // draw()
 //
-// Description of draw() goes here.
+// Animating the background and 2 circles
 function draw() {
 
   //Background changing from black to red
@@ -70,7 +71,7 @@ function draw() {
   //Left circle moves to center, growing the whole time
     //Animating the circle's growth
     bigCircle.size *= bigCircle.growthRate;
-    // bigCircle.size = constrain(bigCircle.size, bigCircle.sizeMin, height); //limiting the circle's growth to size of canvas
+    bigCircle.size = constrain(bigCircle.size, bigCircle.sizeMin, height); //limiting the circle's growth to size of canvas
 
     //Animating the circle's movement to the right
     bigCircle.x += bigCircle.xSpeed;
@@ -81,10 +82,16 @@ function draw() {
 
 
 
-//Right circle moves to center, growing the whole time
-  //Animating the right circle's growth
-    smallCircle.size *= smallCircle.growthRate;
-    // smallCircle.size = constrain(smallCircle.size, smallCircle.sizeMin, height); //limiting the circle's growth to size of canvas
+  //Right circle moves to center, growing the whole time
+    //Animating the right circle's growth
+        /***My original code
+        smallCircle.size *= smallCircle.growthRate;
+        smallCircle.size = constrain(smallCircle.size, smallCircle.sizeMin, height); //limiting the circle's growth to size of canvas
+        ***/
+
+        //Revised code after reading how Pippin did it
+        smallCircle.size = bigCircle.size * smallCircle.relativeSize;
+
 
     //Animating the circle's movement to the left
     smallCircle.x += smallCircle.xSpeed;
