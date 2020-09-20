@@ -21,24 +21,26 @@ let bigCircle = {
   xSpeed: 1,
   xMin: 0,
   size: 200,
-  growthRate: 1.001,
+  sizeMin: 0,
+  growthRate: 1.002,
   fillR: 107,
   fillG: 255,
   fillB: 184,
   fillAlpha: 140,
-  sizeMin: 0,
-
 }
 
 let smallCircle = {
   x: 500,
   y: 250,
+  xSpeed: -1,
+  xMax: 500,
   size: 100,
-  growthRate: 1.1,
+  sizeMin: 0,
+  growthRate: 1.004,
   fillR: 252,
   fillG: 182,
   fillB: 219,
-  fillAlpha: 220,
+  fillAlpha: 200,
 }
 
 
@@ -50,8 +52,7 @@ function setup() {
   createCanvas(500,500);
   noStroke();
 
-  //Setting the color of the left circle
-  fill(bigCircle.fillR, bigCircle.fillG, bigCircle.fillB, bigCircle.fillAlpha);
+
 }
 
 // draw()
@@ -69,18 +70,28 @@ function draw() {
   //Left circle moves to center, growing the whole time
     //Animating the circle's growth
     bigCircle.size *= bigCircle.growthRate;
-    bigCircle.size = constrain(bigCircle.size, bigCircle.sizeMin, height); //limiting the circle's growth to size of canvas
+    // bigCircle.size = constrain(bigCircle.size, bigCircle.sizeMin, height); //limiting the circle's growth to size of canvas
 
     //Animating the circle's movement to the right
     bigCircle.x += bigCircle.xSpeed;
     bigCircle.x = constrain(bigCircle.x, bigCircle.xMin, width/2);
 
+    fill(bigCircle.fillR, bigCircle.fillG, bigCircle.fillB, bigCircle.fillAlpha);
     ellipse(bigCircle.x, bigCircle.y, bigCircle.size);
 
 
 
+//Right circle moves to center, growing the whole time
+  //Animating the right circle's growth
+    smallCircle.size *= smallCircle.growthRate;
+    // smallCircle.size = constrain(smallCircle.size, smallCircle.sizeMin, height); //limiting the circle's growth to size of canvas
 
+    //Animating the circle's movement to the left
+    smallCircle.x += smallCircle.xSpeed;
+    smallCircle.x = constrain(smallCircle.x, width/2, smallCircle.xMax);
 
+    fill(smallCircle.fillR, smallCircle.fillG, smallCircle.fillB, smallCircle.fillAlpha);
+    ellipse(smallCircle.x, smallCircle.y, smallCircle.size);
 
 
 }
