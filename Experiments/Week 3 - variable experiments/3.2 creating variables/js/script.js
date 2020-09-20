@@ -6,6 +6,8 @@ Sharon Ku
 3.3 Changing variables
 3.4 Introducing JavaScript objects
 3.5 Debugging variables
+3.6 Introducing random numbers
+3.7 Map and constrain
 **************************************************/
 
 let bgShade = 0;
@@ -23,7 +25,8 @@ let circle = {
   x:0,
   y:250,
   size:100,
-  speed:2
+  speed:1,
+  fill:255
 };
 
 // setup()
@@ -39,11 +42,28 @@ function setup() {
 function draw() {
   // bgShade = bgShade + 1;
   background(bgShade);
+
+
   circle.x += circle.speed;
+  circle.x = constrain(circle.x,0,width);
+
+  circle.size = map(mouseY,0,height,50,500);
+
+  circle.fill = map(circle.x,0,width,0,255);
+  fill(circle.fill);
+  ellipse(circle.x,circle.y,circle.size);
+
+
+  //intro to random numbers
+  // circle.speed = random(-5.5);
+  // circle.y = random(0,height);
+  // circle.fill = random(0,255);
+  // circle.size = random(10,100);
+
+  //intro to variables
   //circleSpeed += circleAcceleration;
   // circleSize = circleSize * 1.01;
   // circleY = circleY / 1.01;
-  ellipse(circle.x,circle.y,circle.size);
 
   // console.log("circle.x is "+circle.x);
 
