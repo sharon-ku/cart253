@@ -2,10 +2,10 @@
 Exercise 1: I like to move it move it!
 Sharon Ku
 
-Here is a description of this template p5 project.
+Three circles (big-sized Papa, medium-sized Mama, and baby-sized Baby) follow the mouse's position at different speeds and accelerations. As the circles approach the mouse, they get smaller and they decelerate. They also change color based on the mouse's position.
 **************************************************/
 
-let maxDistance = 100; //max distance between two points on the canvas
+let maxDistance = 100;
 
 let circleFill = {
   r: 172,
@@ -13,6 +13,7 @@ let circleFill = {
   b: 172,
 }
 
+// Papa circle
 let circle1 = {
   x: 100,
   y: 100,
@@ -27,6 +28,7 @@ let circle1 = {
   sizeMax: 400,
 }
 
+// Mama circle
 let circle2 = {
   x: 500,
   y: 500,
@@ -38,9 +40,10 @@ let circle2 = {
   speed: 0.005,
   acceleration: 3.5,
   sizeMin: 80,
-  sizeMax: 250,
+  sizeMax: 300,
 }
 
+// Baby circle
 let circle3 = {
   x: 700,
   y: 100,
@@ -60,21 +63,28 @@ let circle3 = {
 
 // setup()
 //
-// Description of setup() goes here.
+// Removing the stroke from all shapes.
 function setup() {
-  createCanvas(windowWidth,windowHeight);
+
   noStroke();
 
-  //calculating the diagonal distance from one corner of the canvas to the other corner
-  maxDistance = dist(0, 0, windowWidth, windowHeight);
-  console.log(windowWidth, windowHeight, maxDistance);
 }
+
+
+
 
 // draw()
 //
-// Description of draw() goes here.
+// Animating the 3 circles' color, size, and movement.
 function draw() {
+
+  // Setting up the black canvas
+  createCanvas(windowWidth,windowHeight);
   background(0);
+
+  // Calculating the diagonal distance of the canvas
+  maxDistance = dist(0, 0, windowWidth, windowHeight);
+  console.log(windowWidth, windowHeight, maxDistance);
 
   // Circle 1 -----------------------------------------------------------------
       // Animating the color of the circle based on mouse's position
@@ -109,17 +119,6 @@ function draw() {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
   // Circle 2 -----------------------------------------------------------------
       // Animating the color of the circle based on mouse's position
       circleFill.r = map(mouseY, windowHeight, 0, 200, 255);
@@ -134,6 +133,7 @@ function draw() {
 
 
       // Animating the circle's movement
+
           // Constraining the circle's movement to the inside of the canvas
           circle2.xMin = circle2.size / 2;
           circle2.xMax = windowWidth-(circle2.size / 2);
@@ -150,11 +150,6 @@ function draw() {
 
       // Drawing the circle
       ellipse(circle2.x, circle2.y, circle2.size);
-
-
-
-
-
 
 
 
