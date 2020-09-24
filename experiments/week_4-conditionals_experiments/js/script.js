@@ -4,14 +4,12 @@ Pippin Barr
 
 Here is a description of this template p5 project.
 **************************************************/
-let bgShade = 0;
 
-let circle = {
-  x: 0,
+
+let caterpillar = {
+  x: 100,
   y: 250,
-  size: 100,
-  speed: 2,
-
+  segmentSize: 50,
 };
 
 
@@ -26,19 +24,25 @@ function setup() {
 //
 // Description of draw() goes here.
 function draw() {
-  background(bgShade);
-  circle.x = circle.x + circle.speed;
+  background(0);
+  noStroke();
+  fill(100,200,100);
 
-  if (mouseX < width/3) {
-    fill(50,75,135);
+  let x = caterpillar.x;
+  let numSegments = 5;
+  // let segmentsDrawn = 0;
+
+  // while (segmentsDrawn < numSegments){
+  // ellipse(x,caterpillar.y,caterpillar.segmentSize);
+  // x += 40;
+  // segmentsDrawn += 1;
+  // }
+
+  for (let segmentsDrawn = 0; segmentsDrawn < numSegments; segmentsDrawn++){
+    ellipse(x, caterpillar.y, caterpillar.segmentSize);
+    x += 40;
   }
 
-  else if (mouseX < 2 * width/3) {
-    fill(49,130,67);
-  }
+  console.log("caterpillar.x is"+caterpillar.x);
 
-  else{
-    fill(80, 170, 230);
-  }
-  ellipse(circle.x,circle.y,circle.size);
 }
