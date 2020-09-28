@@ -19,7 +19,8 @@ let circle = {
   maxSpeed: 10,
 };
 
-
+let angle = 0;
+let rectScale = 0;
 // setup()
 //
 // Description of setup() goes here.
@@ -33,28 +34,16 @@ function setup() {
 function draw() {
   background(0);
 
-  if (mouseX < circle.x) {
-    circle.ax = -circle.acceleration;
-  }
-  else {
-    circle.ax = circle.acceleration;
-  }
 
-  if (mouseY < circle.y){
-    circle.ay = -circle.acceleration;
-  }
-  else{
-    circle.ay = circle.acceleration;
-  }
+  push();
+  fill(255,0,0);
+  rectMode(CENTER);
+  translate(width/2, height/2);
+  rotate(angle);
+  scale(rectScale);
+  rect(0,0,100,100);
+  pop();
 
-  circle.vx = circle.vx + circle.ax;
-  circle.vx = constrain(circle.vx, -circle.maxSpeed, circle.maxSpeed);
-  circle.vy = circle.vy + circle.ay;
-  circle.vy = constrain(circle.vy, -circle.maxSpeed, circle.maxSpeed);
-
-  circle.x = circle.x + circle.vx;
-  circle.y = circle.y + circle.vy;
-
-  ellipse(circle.x, circle.y, circle.size);
-
+  angle = angle + 0.01;
+  rectScale = rectScale + 0.01;
 }
