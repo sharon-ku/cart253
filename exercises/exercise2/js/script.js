@@ -11,14 +11,16 @@ let user = {
   y: 0,
   vx: 0,
   vy: 0,
+  speed: 0.01,
   ax: 0,
   ay: 0,
   acceleration: 0.06,
-  speed: 3,
   size: 100,
-  r: 0,
-  g: 255,
-  b: 0,
+  fill:{
+    r: 0,
+    g: 255,
+    b: 0,
+  }
 };
 
 // Covid circle
@@ -77,9 +79,17 @@ function draw() {
 
   // Covid 19 movement
   covid.x += covid.vx;
-  covid.y += covid.vy;
 
-  if(covid.x > width) {
+  if (covid.y < user.y) {
+    covid.y += covid.vy;
+    covid.vy = covid.speed;
+  }
+  else{
+    covid.y += covid.vy;
+    covid.vy = -covid.speed;
+  }
+
+  if(covid.x > width) { // once covid reaches the right side of canvas, send covid back to left side of canvas at random y position
     covid.x = 0;
     covid.y = random(0, height);
   }
@@ -105,8 +115,6 @@ function draw() {
     user.ax = -user.acceleration;
   }
 
-  console.log(user.x);
-
   if (user.y < mouseY){
     user.y += user.vy;
     user.vy += user.ay;
@@ -119,7 +127,7 @@ function draw() {
   }
 
   // Display user circle
-  fill(user.r, user.g, user.b);
+  fill(user.fill.r, user.fill.g, user.fill.b);
   ellipse(user.x, user.y, user.size);
 
   // Check for catching Covid 19
