@@ -6,7 +6,7 @@ COVID-19, represented by a red circle, will move from the left side of the canva
 **************************************************/
 
 // User circle
-let circle = {
+let user = {
   x: 100,
   y: 255,
   size: 100,
@@ -82,16 +82,16 @@ function draw() {
   pop();
 
   // User circle movement
-  circle.x = mouseX;
-  circle.y = mouseY;
+  user.x = mouseX;
+  user.y = mouseY;
 
   // Display user circle
-  fill(circle.r, circle.g, circle.b);
-  ellipse(circle.x, circle.y, circle.size);
+  fill(user.r, user.g, user.b);
+  ellipse(user.x, user.y, user.size);
 
   // Check for catching Covid 19
-  let d = dist(covid.x, covid.y, circle.x, circle.y);
-  if (d < ((covid.size/2) + (circle.size/2))){
+  let d = dist(covid.x, covid.y, user.x, user.y);
+  if (d < ((covid.size/2) + (user.size/2))){
     noLoop();
   }
 }
