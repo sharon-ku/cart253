@@ -50,7 +50,6 @@ function preload(){
 function setup() {
   createCanvas(windowWidth, windowHeight);
   noStroke();
-  image(clownImage,0,0);
 
   covid.vx = covid.speed;
 
@@ -62,6 +61,7 @@ function setup() {
 // Description of draw() goes here.
 function draw() {
   background(bg.r, bg.g, bg.b);
+  image(clownImage,250,250);
 
   // Display static
   push();
