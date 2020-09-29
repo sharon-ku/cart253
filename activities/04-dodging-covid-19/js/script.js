@@ -7,40 +7,36 @@ COVID-19, represented by a red circle, will move from the left side of the canva
 
 // User circle
 let circle = {
+  x: 100,
+  y: 255,
   size: 100,
-  R: 0,
-  G: 255,
-  B: 0,
-  x: 0,
-  y: 0,
+  r: 0,
+  g: 255,
+  b: 0,
 };
 
 // Covid circle
 let covid = {
   size: 100,
-  R: 255,
-  G: 0,
-  B: 0,
-  x: 100,
-  y: 100,
-  vx: 1,
+  x: 0,
+  y: 250,
+  vx: 0,
+  vy: 0,
+  speed: 5,
+  fill:{
+    r: 255,
+    g: 0,
+    b: 0,
+  }
   // ax: 0,
   // acceleration: 0.0007,
 };
 
 let bg = {
-  R: 0,
-  G: 0,
-  B: 0,
-  infected: {
-    R: 50,
-    G: 50,
-    B: 50,
-  }
+  r: 0,
+  g: 0,
+  b: 0,
 };
-
-let covidReturns = false;
-let infected = false;
 
 // setup()
 //
@@ -48,50 +44,54 @@ let infected = false;
 function setup() {
   createCanvas(windowWidth, windowHeight);
   noStroke();
+
+  covid.vx = covid.speed;
+
+  noCursor();
 }
 
 // draw()
 //
 // Description of draw() goes here.
 function draw() {
-  background(bg.R, bg.G, bg.B);
+  background(bg.r, bg.g, bg.b);
 
-  // Animating covid circle ---------------------------------
-
-
-
-  covid.x += covid.vx;
-  // covid.vx += covid.ax;
-  // covid.ax += covid.acceleration;
-
+  // Display static
   push();
-  fill(covid.R, covid.G, covid.B);
+  for (let i = 0; i < 1000; i++) {
+    let x = random(0,width);
+    let y = random(0,height);
+    stroke(255);
+    point(x,y);
+  }
+  pop();
+
+  // Covid 19 movement ---------------------------------
+  covid.x += covid.vx;
+  covid.y += covid.vy;
+
+  if(covid.x > width) {
+    covid.x = 0;
+    covid.y = random(0, height); //WHY IS THIS CODE IN SETUP//////////////////
+  }
+
+  // Display Covid 19
+  push();
+  fill(covid.fill.r, covid.fill.g, covid.fill.b);
   ellipse(covid.x, covid.y, covid.size);
   pop();
 
-  if(covid.x === windowWidth) {
-    covidReturns = true;
-  }
-
-  if(covidReturns) {
-    covid.x = 0;
-    covid.y = random(0, windowHeight);
-    covidReturns = false;
-  }
-
-  // console.log(covidReturns, covid.x);
-
-  // Animating the user circle ---------------------------------
+  // User circle movement
   circle.x = mouseX;
   circle.y = mouseY;
+
+  // Display user circle
+  fill(circle.r, circle.g, circle.b);
   ellipse(circle.x, circle.y, circle.size);
 
-  if (covid.x === circle.x && covid.y === circle.y){
-    infected = true;
+  // Check for catching Covid 19
+  let d = dist(covid.x, covid.y, circle.x, circle.y);
+  if (d < ((covid.size/2) + (circle.size/2))){
+    noLoop();
   }
-
-  if (infected === true){
-    background(bg.infected.R, bg.infected.G, bg.infected.B);
-  }
-
 }
