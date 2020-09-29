@@ -2,7 +2,7 @@
 Exercise 2: Dodge-em
 Sharon Ku
 
-COVID-19, represented by a red circle, will move from the left side of the canvas to the right at a random y position. Each time it reaches the right side, it will reset to the left at a random y position. The user will control their own circle with the mouse position. If the COVID-19 circle touches the user circle, everything stops! In the background we see random static for visual flair and we don’t see the mouse cursor.
+COVID-19, represented by a red circle, will move from the left side of the canvas to the right at a random y position. Each time it reaches the right side, it will reset to the left at a random y position. The user will control their own circle with the mouse position. The background changes colors based on the mouse's y position. If the COVID-19 circle touches the user circle, everything stops! In the background we see random static for visual flair and we don’t see the mouse cursor.
 **************************************************/
 
 // User circle
@@ -15,11 +15,11 @@ let user = {
   ax: 0,
   ay: 0,
   acceleration: 0.06,
-  size: 100,
+  size: 50,
   fill:{
-    r: 0,
-    g: 255,
-    b: 0,
+    r: 250,
+    g: 193,
+    b: 114,
   }
 };
 
@@ -30,20 +30,28 @@ let covid = {
   y: 250,
   vx: 0,
   vy: 0,
-  speed: 5,
+  speed: 3,
   fill:{
-    r: 255,
-    g: 0,
-    b: 0,
+    r: 226,
+    g: 91,
+    b: 69,
   }
   // ax: 0,
   // acceleration: 0.0007,
 };
 
 let bg = {
-  r: 0,
-  g: 0,
-  b: 0,
+  r: 21,
+  g: 76,
+  b: 73,
+  // russian green
+  rMin: 21,
+  gMin: 76,
+  bMin: 73,
+  // deep jungle green (aka darker than russian green)
+  rMax: 81,
+  gMax: 152,
+  bMax: 114,
 };
 
 let xMin = 0;
@@ -65,14 +73,19 @@ function setup() {
 //
 // Description of draw() goes here.
 function draw() {
+  // Background color changes based on mouse's y position
+  bg.r = map(mouseY, width, yMin, bg.rMin, bg.rMax);
+  bg.g = map(mouseY, width, yMin, bg.gMin, bg.gMax);
+  bg.b = map(mouseY, width, yMin, bg.bMin, bg.bMax);
+
   background(bg.r, bg.g, bg.b);
 
   // Display static
   push();
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 100; i++) {
     let x = random(0,width);
     let y = random(0,height);
-    stroke(255);
+    stroke(505);
     point(x,y);
   }
   pop();
