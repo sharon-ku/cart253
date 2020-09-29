@@ -2,7 +2,7 @@
 Exercise 2: Dodge-em
 Sharon Ku
 
-COVID-19, represented by a red circle, will move from the left side of the canvas to the right at a random y position. Each time it reaches the right side, it will reset to the left at a random y position. The user will control their own circle with the mouse position. The background changes colors based on the mouse's y position. If the COVID-19 circle touches the user circle, everything stops! In the background we see random static for visual flair and we don’t see the mouse cursor.
+COVID-19, represented by a red circle, will move from the left side of the canvas to the right at a random y position. Each time it reaches the right side, it will reset to the left at a random y position. The user will control their own circle with the mouse position. The user circle follows the mouse with a velocity and acceleration though, so beware! The background changes colors based on the mouse's y position. If the COVID-19 circle touches the user circle, everything stops! In the background we see random static for visual flair and we don’t see the mouse cursor.
 **************************************************/
 
 // User circle
@@ -23,6 +23,13 @@ let user = {
   }
 };
 
+// Scared face on user circle
+let scaredFaceImage;
+let scaredFace = {
+  x: 0,
+  y: 0,
+}
+
 // Covid circle
 let covid = {
   size: 100,
@@ -40,6 +47,7 @@ let covid = {
   // acceleration: 0.0007,
 };
 
+// Background
 let bg = {
   r: 21,
   g: 76,
@@ -54,24 +62,45 @@ let bg = {
   bMax: 114,
 };
 
+// Minimum x and y values
 let xMin = 0;
 let yMin = 0;
 
+
+
+
+
+// preload()
+//
+// Loads the scaredFace loadImage
+function preload(){
+  scaredFaceImage = loadImage("assets/images/scaredFace.png");
+}
+
+
+
+
+
+
 // setup()
 //
-// Description of setup() goes here.
+// Setting up the canvas, removing all strokes, hiding cursor, assigning covid's x velocity
 function setup() {
   createCanvas(windowWidth, windowHeight);
   noStroke();
 
   covid.vx = covid.speed;
 
-  // noCursor();
+  noCursor();
 }
+
+
+
+
 
 // draw()
 //
-// Description of draw() goes here.
+// Animating the background's color, the static effect, the covid 19 circle, the user circle, and the scared face on the user circle
 function draw() {
   // Background color changes based on mouse's y position
   bg.r = map(mouseY, width, yMin, bg.rMin, bg.rMax);
@@ -139,13 +168,21 @@ function draw() {
     user.ay = -user.acceleration;
   }
 
+  // Scared face movement
+  scaredFace.x = user.x;
+  scaredFace.y = user.y;
+
   // Display user circle
   fill(user.fill.r, user.fill.g, user.fill.b);
   ellipse(user.x, user.y, user.size);
 
+  // Display scared face on user circle
+  imageMode(CENTER);
+  image(scaredFaceImage, scaredFace.x, scaredFace.y);
+
   // Check for catching Covid 19
   let d = dist(covid.x, covid.y, user.x, user.y);
   if (d < ((covid.size/2) + (user.size/2))){
-  noLoop();
+    noLoop();
   }
 }
