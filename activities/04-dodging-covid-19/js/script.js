@@ -38,12 +38,19 @@ let bg = {
   b: 0,
 };
 
+let clownImage;
+
+function preload(){
+  clownImage = loadImage("assets/images/clown.png");
+}
+
 // setup()
 //
 // Description of setup() goes here.
 function setup() {
   createCanvas(windowWidth, windowHeight);
   noStroke();
+  image(clownImage,0,0);
 
   covid.vx = covid.speed;
 

@@ -10,9 +10,17 @@ Here is a description of this template p5 project.
 let angleX = 0;
 let angleY = 0;
 
+let clownImage;
+
+function preload(){
+  clownImage = loadImage("assets/images/clown.png");
+
+}
+
 function setup() {
   // Using WEBGL in createCanvas to specify 3D graphics
   createCanvas(500, 500, WEBGL);
+  image(clownImage,250,0);
 }
 
 function draw() {
