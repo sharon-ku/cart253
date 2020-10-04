@@ -5,56 +5,48 @@ Pippin Barr
 Here is a description of this template p5 project.
 **************************************************/
 
+let hamlet1 = "To be or not to be";
+let hamlet2 = 'That is the question';
+let hamlet3 = `Whether 'tis nobler in the mind...`;
+
+let hello ={
+  string: `Hello, world!`,
+  x: 0,
+  y: 0,
+  vx: 5,
+  vy: 1,
+};
+
 
 // setup()
 //
 // Description of setup() goes here.
 function setup() {
   createCanvas(500, 500);
-
-  let hotCelsius = toCelsius(100);
-  console.log (`100 degress Fahrenheit is ${hotCelsius} degrees Celsius.`);
-
-  let coldCelsius = toCelsius(10);
-  console.log (`10 degrees Fahrenheit is ${coldCelsius} degrees Celsius.`);
 }
 
-// draw()
-//
-// Description of draw() goes here.
 function draw() {
-  background(0);
+  background(127);
 
-  let x = random(0,width);
-  let y = random(0,height);
+  textAlign(CENTER, CENTER);
+  // Make the font size respond to the mouse
+  let size = map(mouseX, 0, width, 12, 128);
+  textSize(size);
+  textStyle(BOLD);
 
-  let color = randomColor();
-  fill(randomColor().r, randomColor().g, randomColor().b);
-  ellipse(250,250,100,100);
+  // Make the fill respond to the mouse
+  let red = map(mouseX, 0, width, 100, 200);
+  let green = map(mouseY, 0, height, 100, 200);
+  let blue = map(mouseX + mouseY, 0, width + height, 100, 200);
+  fill(red, green, blue);
 
-}
+  // Make the stroke color respond to the mouse
+  let strokeShade = map(mouseX, 0, width, 0, 255);
+  stroke(strokeShade);
 
-function toCelsius(fahrenheit) {
-  let celsius = (fahrenheit - 32) * 5/9;
-  return celsius;
-}
+  // Make the stroke weight respond to the mouse
+  let weight = map(mouseY, 0, height, 0, 40);
+  strokeWeight(weight);
 
-
-function parallels(x,y){
-  for(let i=0; i<10; i++){
-    noStroke();
-    fill(255);
-    rectMode(CENTER);
-    rect(x,y,2,50);
-    x += 5;
-  }
-}
-
-function randomColor() {
-  let result = {
-    r: random(0,255),
-    g: random(0,255),
-    b: random(0,255),
-  };
-  return result;
+  text(`Hello, World!`, 250, 250);
 }
