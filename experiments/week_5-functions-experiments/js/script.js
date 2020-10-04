@@ -11,6 +11,12 @@ Here is a description of this template p5 project.
 // Description of setup() goes here.
 function setup() {
   createCanvas(500, 500);
+
+  let hotCelsius = toCelsius(100);
+  console.log (`100 degress Fahrenheit is ${hotCelsius} degrees Celsius.`);
+
+  let coldCelsius = toCelsius(10);
+  console.log (`10 degrees Fahrenheit is ${coldCelsius} degrees Celsius.`);
 }
 
 // draw()
@@ -19,11 +25,16 @@ function setup() {
 function draw() {
   background(0);
 
-  parallels(100,100);
-  parallels(50,50);
+  let x = random(0,width);
+  let y = random(0,height);
 
 
 
+}
+
+function toCelsius(fahrenheit) {
+  let celsius = (fahrenheit - 32) * 5/9;
+  return celsius;
 }
 
 
