@@ -28,7 +28,9 @@ function draw() {
   let x = random(0,width);
   let y = random(0,height);
 
-
+  let color = randomColor();
+  fill(randomColor().r, randomColor().g, randomColor().b);
+  ellipse(250,250,100,100);
 
 }
 
@@ -46,4 +48,13 @@ function parallels(x,y){
     rect(x,y,2,50);
     x += 5;
   }
+}
+
+function randomColor() {
+  let result = {
+    r: random(0,255),
+    g: random(0,255),
+    b: random(0,255),
+  };
+  return result;
 }
