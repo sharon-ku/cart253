@@ -13,7 +13,7 @@ let bg = {
   b: 0,
 };
 
-// FOR THE INTRO -------------------------------------------------------------
+// VARIABLES FOR THE INTRO -------------------------------------------------------------
 // title text
 let titleText = `lookingForLove`;
 let titleFont;
@@ -50,16 +50,18 @@ let startButton = {
   }
 };
 
-// FOR THE ANIMATION -------------------------------------------------------------
+// VARIABLES FOR THE ANIMATION -------------------------------------------------------------
 let circle1 = {
   size: 100,
   x: 200,
   y: 200,
   vx: 0,
   vy: 0,
-  speed: 4,
+  speed: 8,
   tx: 0,
   ty: 10,
+  txChange: 0.025,
+  tyChange: 0.025,
   fill: {
     r: 255,
     g: 0,
@@ -73,9 +75,11 @@ let circle2 = {
   y: 500,
   vx: 0,
   vy: 0,
-  speed: 4,
-  tx: 0,
-  ty: 10,
+  speed: 8,
+  tx: 10,
+  ty: 30,
+  txChange: 0.015,
+  tyChange: 0.015,
   fill: {
     r: 0,
     g: 255,
@@ -100,8 +104,12 @@ function setup() {
   noStroke();
 
   // Initial position for circle 1
-  circle1.x = windowWidth / 3;
-  circle1.y = windowHeight / 3;
+  circle1.x = windowWidth/2;
+  circle1.y = windowHeight/2;
+
+  // Initial position for circle 2
+  circle2.x = windowWidth * 2/3;
+  circle2.y = windowHeight * 2/3;
 }
 
 // draw()
@@ -131,24 +139,12 @@ function title() {
 }
 
 function animation(){
-  // Circle 1 movement and display
+  // displays and moves 2 circles
+  moveCircle1(circle1.txChange, circle1.tyChange, circle1.vx, circle1.vy, circle1.speed);
+  displayCircle(circle1.fill.r, circle1.fill.g, circle1.fill.b, circle1.x, circle1.y, circle1.size);
 
-
-  circle1.tx += 0.025;
-  circle1.ty += 0.025;
-
-  let noiseX = noise(circle1.tx);
-  let noiseY = noise(circle1.ty);
-
-  fill(circle1.fill.r, circle1.fill.g, circle1.fill.b);
-  circle1.vx = map(noiseX, 0, 1, -circle1.speed, circle1.speed);
-  circle1.vy = map(noiseY, 0, 1, -circle1.speed, circle1.speed);
-
-  circle1.x += circle1.vx;
-  circle1.y += circle1.vy;
-
-  ellipse(circle1.x,circle1.y,circle1.size);
-
+  moveCircle2(circle2.txChange, circle2.tyChange, circle2.vx, circle2.vy, circle2.speed);
+  displayCircle(circle2.fill.r, circle2.fill.g, circle2.fill.b, circle2.x, circle2.y, circle2.size);
 
   // Cue deepSadness if either circle goes off canvas
 
@@ -157,6 +153,8 @@ function animation(){
 
 }
 
+
+// FUNCTIONS -----------------------------------------------------------------------------
 
 // The Start button and Start text enlarge if mouse's position is on start button
 function enlargeStartButton() {
@@ -227,4 +225,42 @@ function displayStart() {
   textFont(start.font);
   text(start.text, start.x, start.y);
   pop();
+}
+
+// Display a circle
+function displayCircle(fillR, fillG, fillB, x, y, size) {
+  push();
+  fill(fillR, fillG, fillB);
+  ellipse(x, y, size);
+  pop();
+}
+
+// Circle1 moves randomly across the canvas (Perlin noise)
+function moveCircle1(txChange, tyChange, vx, vy, speed){
+  circle1.tx += txChange;
+  circle1.ty += tyChange;
+
+  let noiseX = noise(circle1.tx);
+  let noiseY = noise(circle1.ty);
+
+  vx = map(noiseX, 0, 1, -speed, speed);
+  vy = map(noiseY, 0, 1, -speed, speed);
+
+  circle1.x += vx;
+  circle1.y += vy;
+}
+
+// Circle2 moves randomly across the canvas (Perlin noise)
+function moveCircle2(txChange, tyChange, vx, vy, speed){
+  circle2.tx += txChange;
+  circle2.ty += tyChange;
+
+  let noiseX = noise(circle2.tx);
+  let noiseY = noise(circle2.ty);
+
+  vx = map(noiseX, 0, 1, -speed, speed);
+  vy = map(noiseY, 0, 1, -speed, speed);
+
+  circle2.x += vx;
+  circle2.y += vy;
 }
