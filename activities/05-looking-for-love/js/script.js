@@ -13,6 +13,7 @@ let bg = {
   b: 0,
 };
 
+// FOR THE INTRO -------------------------------------------------------------
 // title text
 let titleText = `lookingForLove`;
 let titleFont;
@@ -20,7 +21,7 @@ let titleFont;
 // start
 let start = {
   text: `START`,
-  font: `Georgia`,
+  font: `Arial`,
   x: 100,
   y: 100,
   size: 35,
@@ -47,7 +48,42 @@ let startButton = {
     g: 125,
     b: 125,
   }
-}
+};
+
+// FOR THE ANIMATION -------------------------------------------------------------
+let circle1 = {
+  size: 100,
+  x: 200,
+  y: 200,
+  vx: 0,
+  vy: 0,
+  speed: 4,
+  tx: 0,
+  ty: 10,
+  fill: {
+    r: 255,
+    g: 0,
+    b: 0,
+  }
+};
+
+let circle2 = {
+  size: 100,
+  x: 500,
+  y: 500,
+  vx: 0,
+  vy: 0,
+  speed: 4,
+  tx: 0,
+  ty: 10,
+  fill: {
+    r: 0,
+    g: 255,
+    b: 0,
+  }
+};
+
+
 
 // loading font
 function preload(){
@@ -62,6 +98,10 @@ function preload(){
 function setup() {
   createCanvas(windowWidth, windowHeight);
   noStroke();
+
+  // Initial position for circle 1
+  circle1.x = windowWidth / 3;
+  circle1.y = windowHeight / 3;
 }
 
 // draw()
@@ -75,6 +115,10 @@ function draw() {
     title();
   }
 
+  if (state === `animation`) {
+    animation();
+  }
+
 }
 
 function title() {
@@ -85,6 +129,34 @@ function title() {
 
   enlargeStartButton(); // Start button and Start text enlarge if mouse's position is on start button
 }
+
+function animation(){
+  // Circle 1 movement and display
+
+
+  circle1.tx += 0.025;
+  circle1.ty += 0.025;
+
+  let noiseX = noise(circle1.tx);
+  let noiseY = noise(circle1.ty);
+
+  fill(circle1.fill.r, circle1.fill.g, circle1.fill.b);
+  circle1.vx = map(noiseX, 0, 1, -circle1.speed, circle1.speed);
+  circle1.vy = map(noiseY, 0, 1, -circle1.speed, circle1.speed);
+
+  circle1.x += circle1.vx;
+  circle1.y += circle1.vy;
+
+  ellipse(circle1.x,circle1.y,circle1.size);
+
+
+  // Cue deepSadness if either circle goes off canvas
+
+
+
+
+}
+
 
 // The Start button and Start text enlarge if mouse's position is on start button
 function enlargeStartButton() {
