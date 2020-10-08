@@ -1,6 +1,6 @@
 /**************************************************
-Template p5 project
-Pippin Barr
+Project 1: Simulation
+Sharon Ku
 
 Here is a description of this template p5 project.
 **************************************************/
@@ -37,8 +37,8 @@ function draw() {
 
 
 function firefishCasualSwimming(){
-  firefish.tx = firefish.tx + 0.025;
-  firefish.ty = firefish.ty + 0.025;
+  firefish.tx += 0.025;
+  firefish.ty += 0.025;
 
   let noiseX = noise(firefish.tx);
   let noiseY = noise(firefish.ty);
