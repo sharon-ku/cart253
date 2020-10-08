@@ -1,5 +1,5 @@
 /**************************************************
-Activity 5: Looking for love
+Exercise 3: Love, actually
 Sharon Ku
 
 Here is a description of this template p5 project.
@@ -8,18 +8,20 @@ Here is a description of this template p5 project.
 let state = `title`; //Possible states are: title, animation, loveTriumph, deepSadness
 
 let bg = {
+  // black
   r: 0,
   g: 0,
   b: 0,
-  rSad: 81,
-  gSad: 26,
-  bSad: 168,
+  // charleston green
+  rSad: 41,
+  gSad: 49,
+  bSad: 50,
 };
 
 // VARIABLES FOR THE INTRO -------------------------------------------------------------
 // title text
 let titleText = `lookingForLove`;
-let titleFont;
+let titleFont; // CinzelDecorative-Bold
 
 // start
 let start = {
@@ -36,7 +38,7 @@ let start = {
     r: 0,
     g: 0,
     b: 0,
-  }
+  },
 };
 
 // start button
@@ -47,13 +49,15 @@ let startButton = {
   x: 100,
   y: 100,
   fill: {
-    r: 255, // light pink
+    // light pink
+    r: 255,
     g: 205,
     b: 255,
-    rHover: 10, // vivid sky blue
+    // vivid sky blue
+    rHover: 10,
     gHover: 205,
     bHover: 255,
-  }
+  },
 };
 
 // VARIABLES FOR THE ANIMATION -------------------------------------------------------------
@@ -69,14 +73,16 @@ let circle1 = {
   txChange: 0.025,
   tyChange: 0.025,
   fill: {
-    r: 213, // flashy purple
+    // flashy purple
+    r: 213,
     g: 77,
     b: 247,
-    rLove: 180, // lavender floral
+    // lavender floral
+    rLove: 180,
     gLove: 139,
     bLove: 231,
     changeSpeed: 2,
-  }
+  },
 };
 
 let circle2 = {
@@ -91,17 +97,56 @@ let circle2 = {
   txChange: 0.015,
   tyChange: 0.015,
   fill: {
-    r: 28, //sea green crayola
+    //sea green crayola
+    r: 28,
     g: 234,
     b: 182,
-    rLove: 255, // baker miller pink
+    // baker miller pink
+    rLove: 255,
     gLove: 148,
     bLove: 180,
     changeSpeed: 2,
-  }
+  },
 };
 
+let textBox = {
+  length: 500,
+  height: 100,
+  x: 100,
+  y: 100,
+  cornerRadius: 10,
+  distToBottom: 200,
+  fill: {
+    r: 255,
+    g: 255,
+    b: 255,
+  },
+  stroke: {
+    r: 0,
+    g: 0,
+    b: 0,
+  },
+};
 
+let narrator = {
+  text: {
+    animation: `Is it meant to be?`,
+    loveTriumph: `It's love at first sight! The two of you end up being the happiest couple in the world.`,
+    deepSadness: `Your crush decided to move to a foreign country to get away from you. Guess you'll have to find someone else.`,
+    secretLover: `Oh no! Looks like Circly had its eyes set on someone else! What a shame; the other circle has nicer curves than you. You will enroll yourself in a gym to improve your curvature.`,
+  },
+  font: `Arial`,
+  x: 100,
+  y: 100,
+  size: 35,
+  // horAlign: `CENTER`,
+  // verAlign: `CENTER`,
+  fill: {
+    r: 0,
+    g: 0,
+    b: 0,
+  },
+};
 
 // loading font
 function preload(){
@@ -158,10 +203,34 @@ function title() {
 }
 
 function animation(){
-  // Displays and moves 2 circles
-  moveCircle1(circle1.txChange, circle1.tyChange, circle1.vx, circle1.vy, circle1.speed);
+  // Display textBox
+  push();
+  textBox.x = width/2;
+  textBox.y = height - textBox.distToBottom;
+  fill(textBox.fill.r, textBox.fill.g, textBox.fill.b);
+  rectMode(CENTER,CENTER);
+  rect(textBox.x, textBox.y, textBox.length, textBox.height, textBox.cornerRadius);
+  pop();
+
+  // Display text that goes inside the textBox
+  push();
+  narrator.x = textBox.x;
+  narrator.y = textBox.y;
+
+  fill(narrator.fill.r, narrator.fill.g, narrator.fill.b);
+  textSize(narrator.size);
+  textAlign(CENTER,CENTER);
+
+  textFont(narrator.font);
+  text(narrator.text.animation, narrator.x, narrator.y);
+  pop();
+
+  // Display circle 1 and have it follow the mouse's position
+  circle1.x = mouseX;
+  circle1.y = mouseY;
   displayCircle(circle1.fill.r, circle1.fill.g, circle1.fill.b, circle1.x, circle1.y, circle1.size);
 
+  // Display circle 2 and have it move randomly using Perlin noise
   moveCircle2(circle2.txChange, circle2.tyChange, circle2.vx, circle2.vy, circle2.speed);
   displayCircle(circle2.fill.r, circle2.fill.g, circle2.fill.b, circle2.x, circle2.y, circle2.size);
 
@@ -301,21 +370,6 @@ function displayCircle(fillR, fillG, fillB, x, y, size) {
   fill(fillR, fillG, fillB);
   ellipse(x, y, size);
   pop();
-}
-
-// Circle1 moves randomly across the canvas (Perlin noise)
-function moveCircle1(txChange, tyChange, vx, vy, speed){
-  circle1.tx += txChange;
-  circle1.ty += tyChange;
-
-  let noiseX = noise(circle1.tx);
-  let noiseY = noise(circle1.ty);
-
-  vx = map(noiseX, 0, 1, -speed, speed);
-  vy = map(noiseY, 0, 1, -speed, speed);
-
-  circle1.x += vx;
-  circle1.y += vy;
 }
 
 // Circle2 moves randomly across the canvas (Perlin noise)
