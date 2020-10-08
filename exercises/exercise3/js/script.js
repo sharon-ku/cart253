@@ -136,6 +136,7 @@ let textBox = {
     r: 255,
     g: 255,
     b: 255,
+    alpha: 200,
   },
   stroke: {
     r: 0,
@@ -444,7 +445,7 @@ function narratorSays(narratorSpeech) {
   push();
   textBox.x = width/2;
   textBox.y = height - textBox.distToBottom;
-  fill(textBox.fill.r, textBox.fill.g, textBox.fill.b);
+  fill(textBox.fill.r, textBox.fill.g, textBox.fill.b, textBox.fill.alpha);
   rectMode(CENTER,CENTER);
   rect(textBox.x, textBox.y, textBox.length, textBox.height, textBox.cornerRadius);
   pop();
