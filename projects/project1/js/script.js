@@ -5,16 +5,34 @@ Sharon Ku
 Here is a description of this template p5 project.
 **************************************************/
 
+"use strict";
+
 let firefish = {
   x: 500,
   y: 250,
   length: 160,
-  width: 50,
+  width: 66,
   vx: 0,
   vy: 0,
   speed: 3,
   tx: 0,
   ty: 10,
+  txChange: 0.025,
+  tyChange: 0.025,
+  img: undefined,
+};
+
+let bg = {
+  fill: {
+    r: 0,
+    g: 0,
+    b: 0,
+  },
+};
+
+
+function preload() {
+  firefish.img = loadImage(`assets/images/firefish1.png`);
 }
 
 
@@ -29,16 +47,16 @@ function setup() {
 //
 // Description of draw() goes here.
 function draw() {
-  background(0);
+  background(bg.fill.r, bg.fill.g, bg.fill.b);
 
   firefishCasualSwimming();
   displayFirefish();
 }
 
-
+// Firefish swims randomly using Perlin noise
 function firefishCasualSwimming(){
-  firefish.tx += 0.025;
-  firefish.ty += 0.025;
+  firefish.tx += firefish.txChange;
+  firefish.ty += firefish.tyChange;
 
   let noiseX = noise(firefish.tx);
   let noiseY = noise(firefish.ty);
@@ -54,5 +72,6 @@ function firefishCasualSwimming(){
 }
 
 function displayFirefish() {
-  ellipse(firefish.x, firefish.y, firefish.length, firefish.width);
+  imageMode(CENTER);
+  image(firefish.img, firefish.x, firefish.y,firefish.length, firefish.width);
 }
