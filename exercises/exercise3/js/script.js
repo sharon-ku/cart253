@@ -5,17 +5,21 @@ Sharon Ku
 Here is a description of this template p5 project.
 **************************************************/
 
-let state = `title`; //Possible states are: title, animation, loveTriumph, deepSadness
+let state = `title`; //Possible states are: title, animation, loveTriumph, deepSadness, secretLover
 
 let bg = {
   // black
   r: 0,
   g: 0,
   b: 0,
-  // charleston green
-  rSad: 41,
-  gSad: 49,
-  bSad: 50,
+  // royal purple
+  rSad: 105,
+  gSad: 70,
+  bSad: 147,
+  // cotton candy pink
+  rLove: 255,
+  gLove: 195,
+  bLove: 223,
 };
 
 // VARIABLES FOR THE INTRO -------------------------------------------------------------
@@ -61,17 +65,10 @@ let startButton = {
 };
 
 // VARIABLES FOR THE ANIMATION -------------------------------------------------------------
-let circle1 = {
+let circle1 = { // user circle
   size: 100,
   x: 200,
   y: 200,
-  vx: 0,
-  vy: 0,
-  speed: 8,
-  tx: 0,
-  ty: 10,
-  txChange: 0.025,
-  tyChange: 0.025,
   fill: {
     // flashy purple
     r: 213,
@@ -83,6 +80,11 @@ let circle1 = {
     bLove: 231,
     changeSpeed: 2,
   },
+  triggerSecretLover: {
+    x: 200,
+    y: 100,
+  },
+  triggerDist: 50,
 };
 
 let circle2 = {
@@ -101,16 +103,24 @@ let circle2 = {
     r: 28,
     g: 234,
     b: 182,
-    // baker miller pink
-    rLove: 255,
-    gLove: 148,
-    bLove: 180,
-    changeSpeed: 2,
+
+  },
+};
+
+let secretCircle = {
+  size: 100,
+  x: 500,
+  y: 500,
+  fill: {
+    //olive green
+    r: 187,
+    g: 190,
+    b: 100,
   },
 };
 
 let textBox = {
-  length: 500,
+  length: 700,
   height: 100,
   x: 100,
   y: 100,
@@ -131,14 +141,15 @@ let textBox = {
 let narrator = {
   text: {
     animation: `Is it meant to be?`,
-    loveTriumph: `It's love at first sight! The two of you end up being the happiest couple in the world.`,
+    loveTriumph: `It's love at first sight! The two of you end up being the happiest circles in the world.`,
     deepSadness: `Your crush decided to move to a foreign country to get away from you. Guess you'll have to find someone else.`,
     secretLover: `Oh no! Looks like Circly had its eyes set on someone else! What a shame; the other circle has nicer curves than you. You will enroll yourself in a gym to improve your curvature.`,
   },
   font: `Arial`,
   x: 100,
   y: 100,
-  size: 35,
+  size: 20,
+  padding: 30,
   // horAlign: `CENTER`,
   // verAlign: `CENTER`,
   fill: {
@@ -163,12 +174,12 @@ function setup() {
   noStroke();
 
   // Initial position for circle 1
-  circle1.x = windowWidth/2;
-  circle1.y = windowHeight/2;
+  circle1.x = width/2;
+  circle1.y = height/2;
 
   // Initial position for circle 2
-  circle2.x = windowWidth * 2/3;
-  circle2.y = windowHeight * 2/3;
+  circle2.x = width * 2/3;
+  circle2.y = height * 2/3;
 }
 
 // draw()
@@ -193,6 +204,11 @@ function draw() {
   if (state === `deepSadness`) {
     deepSadness();
   }
+
+  if (state === `secretLover`) {
+    secretLover();
+  }
+
 }
 
 function title() {
@@ -203,27 +219,8 @@ function title() {
 }
 
 function animation(){
-  // Display textBox
-  push();
-  textBox.x = width/2;
-  textBox.y = height - textBox.distToBottom;
-  fill(textBox.fill.r, textBox.fill.g, textBox.fill.b);
-  rectMode(CENTER,CENTER);
-  rect(textBox.x, textBox.y, textBox.length, textBox.height, textBox.cornerRadius);
-  pop();
-
-  // Display text that goes inside the textBox
-  push();
-  narrator.x = textBox.x;
-  narrator.y = textBox.y;
-
-  fill(narrator.fill.r, narrator.fill.g, narrator.fill.b);
-  textSize(narrator.size);
-  textAlign(CENTER,CENTER);
-
-  textFont(narrator.font);
-  text(narrator.text.animation, narrator.x, narrator.y);
-  pop();
+  // Display narrator text inside a textbox
+  narratorSays(narrator.text.animation);
 
   // Display circle 1 and have it follow the mouse's position
   circle1.x = mouseX;
@@ -239,45 +236,69 @@ function animation(){
     state = `loveTriumph`;
   }
 
-  // Cue deepSadness if either circle goes off canvas
+  // Cue deepSadness if circle 2 goes off canvas
   if (circleGoesOffCanvas()) {
     state = `deepSadness`;
+  }
+
+  // Cue secretLover if mouse hits specific location
+  if (dist(mouseX, mouseY, circle1.triggerSecretLover.x, circle1.triggerSecretLover.y) < circle1.triggerDist) {
+    state = `secretLover`;
   }
 }
 
 function loveTriumph() {
-  // display circle 1 with different fill color
-  if (circle1.fill.r < circle1.fill.rLove) {
-    circle1.fill.r += circle1.fill.changeSpeed;
-    circle1.fill.r = constrain(circle1.fill.r, 0, circle1.fill.rLove);
-  }
-  else {
-    circle1.fill.r -= circle1.fill.changeSpeed;
-    circle1.fill.r = constrain(circle1.fill.r, circle1.fill.rLove, 255);
-  }
-  if (circle1.fill.g < circle1.fill.gLove) {
-    circle1.fill.g += circle1.fill.changeSpeed;
-    circle1.fill.g = constrain(circle1.fill.g, 0, circle1.fill.gLove);
-  }
-  else {
-    circle1.fill.g -= circle1.fill.changeSpeed;
-    circle1.fill.g = constrain(circle1.fill.g, circle1.fill.gLove, 255);
-  }
+``  // Change background to love color
+  background(bg.rLove, bg.gLove, bg.bLove);
 
-  displayCircle(circle1.fill.r, circle1.fill.gLove, circle1.fill.bLove, circle1.x, circle1.y, circle1.size);
+  // Display circle 1
+  displayCircle(circle1.fill.r, circle1.fill.g, circle1.fill.b, circle1.x, circle1.y, circle1.size);
 
-  //display circle 2 with different fill color
+  // Display circle 2
+  displayCircle(circle2.fill.r, circle2.fill.g, circle2.fill.b, circle2.x, circle2.y, circle2.size);
 
-  displayCircle(circle2.fill.rLove, circle2.fill.gLove, circle2.fill.bLove, circle2.x, circle2.y, circle2.size);
+  // Display narrator text inside a textbox
+  narratorSays(narrator.text.loveTriumph);
 }
 
 function deepSadness() {
+  // Change background to depressing color
   background(bg.rSad, bg.gSad, bg.bSad);
 
+  // Display circle 1
+  displayCircle(circle1.fill.r, circle1.fill.g, circle1.fill.b, circle1.x, circle1.y, circle1.size);
 
+  // Display circle 2
+  displayCircle(circle2.fill.r, circle2.fill.g, circle2.fill.b, circle2.x, circle2.y, circle2.size);
+
+  // Display narrator text inside a textbox
+  narratorSays(narrator.text.deepSadness);
+}
+
+function secretLover() {
+  // Change background to depressing color
+  background(bg.rSad, bg.gSad, bg.bSad);
+
+  // Display circle1
+  displayCircle(circle1.fill.r, circle1.fill.g, circle1.fill.b, circle1.x, circle1.y, circle1.size);
+
+  // Display circle2
+  displayCircle(circle2.fill.r, circle2.fill.g, circle2.fill.b, circle2.x, circle2.y, circle2.size);
+
+  // Display secretCircle
+  secretCircle.x = circle2.x + secretCircle.size/2;
+  secretCircle.y = circle2.y + secretCircle.size/2;
+
+  displayCircle(secretCircle.fill.r, secretCircle.fill.g, secretCircle.fill.b, secretCircle.x, secretCircle.y, secretCircle.size);
+
+  // Display narrator text inside a textbox
+  narratorSays(narrator.text.secretLover);
 }
 
 // FUNCTIONS -----------------------------------------------------------------------------
+
+
+
 
 // Behavior of Start button and Start text when mouse hovers over button
 function hoverOnStartButton() {
@@ -387,9 +408,9 @@ function moveCircle2(txChange, tyChange, vx, vy, speed){
   circle2.y += vy;
 }
 
-// Check if circle goes off canvas
+// Check if circle 2 goes off canvas
 function circleGoesOffCanvas() {
-  if (circle1.x < 0 || circle1.x > width || circle1.y < 0 || circle1.y > height || circle2.x < 0 || circle2.x > width || circle2.y < 0 || circle2.y > height) {
+  if (circle2.x < 0 || circle2.x > width || circle2.y < 0 || circle2.y > height) {
     return true;
   }
   else {
@@ -409,4 +430,29 @@ function circlesTouch(){
   else{
     return false;
   }
+}
+
+// Displays textbox and narrator text
+function narratorSays(narratorSpeech) {
+  // Display textBox
+  push();
+  textBox.x = width/2;
+  textBox.y = height - textBox.distToBottom;
+  fill(textBox.fill.r, textBox.fill.g, textBox.fill.b);
+  rectMode(CENTER,CENTER);
+  rect(textBox.x, textBox.y, textBox.length, textBox.height, textBox.cornerRadius);
+  pop();
+
+  // Displays narrator voice
+  push();
+  narrator.x = textBox.x;
+  narrator.y = textBox.y;
+
+  rectMode(CENTER,CENTER);
+  fill(narrator.fill.r, narrator.fill.g, narrator.fill.b);
+  textSize(narrator.size);
+  textAlign(CENTER,CENTER);
+  textFont(narrator.font);
+  text(narratorSpeech, narrator.x, narrator.y, textBox.length-narrator.padding, textBox.height-narrator.padding);
+  pop();
 }
