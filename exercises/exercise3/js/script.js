@@ -2,11 +2,18 @@
 Exercise 3: Love, actually
 Sharon Ku
 
-Here is a description of this template p5 project.
+The introduction shows the title "Looking for Love" with a start button, which when clicked, leads to the animation. In the animation, the user controls a circle while a second circle (circle 2) moves around randomly. There is a textbox at the bottom for the narrator.
+
+3 scenarios might happen during the simulation:
+1) When the user circle touches circle 2, it leads to loveTriumph, and the background turns pink with the narrator reminding them that they are happy.
+2) When circle 2 goes off the canvas, the background turns a depressing color and the narrator tells the user that circle 2 is gone.
+3) When the user circle hits a specific area on the canvas, circle 2 meets a new lover and forgets about the user circle (this is what the narrator says).
+
 **************************************************/
 
 let state = `title`; //Possible states are: title, animation, loveTriumph, deepSadness, secretLover
 
+// background colors
 let bg = {
   // black
   r: 0,
@@ -22,12 +29,12 @@ let bg = {
   bLove: 223,
 };
 
-// VARIABLES FOR THE INTRO -------------------------------------------------------------
 // title text
 let titleText = `lookingForLove`;
 let titleFont; // CinzelDecorative-Bold
+let titleFill = 255;
 
-// start
+// start text
 let start = {
   text: `START`,
   font: `Arial`,
@@ -36,8 +43,6 @@ let start = {
   size: 35,
   sizeBigger: 40,
   sizeSmaller: 35,
-  // horAlign: `CENTER`,
-  // verAlign: `CENTER`,
   fill: {
     r: 0,
     g: 0,
@@ -64,8 +69,8 @@ let startButton = {
   },
 };
 
-// VARIABLES FOR THE ANIMATION -------------------------------------------------------------
-let circle1 = { // user circle
+// user circle
+let circle1 = {
   size: 100,
   x: 200,
   y: 200,
@@ -87,6 +92,7 @@ let circle1 = { // user circle
   triggerDist: 50,
 };
 
+// circle that user circle has a crush on
 let circle2 = {
   size: 100,
   x: 500,
@@ -103,19 +109,19 @@ let circle2 = {
     r: 28,
     g: 234,
     b: 182,
-
   },
 };
 
+// extra circle for easter egg
 let secretCircle = {
   size: 100,
   x: 500,
   y: 500,
   fill: {
-    //olive green
-    r: 187,
-    g: 190,
-    b: 100,
+    //coral orange
+    r: 255,
+    g: 131,
+    b: 87,
   },
 };
 
@@ -150,8 +156,6 @@ let narrator = {
   y: 100,
   size: 20,
   padding: 30,
-  // horAlign: `CENTER`,
-  // verAlign: `CENTER`,
   fill: {
     r: 0,
     g: 0,
@@ -159,16 +163,18 @@ let narrator = {
   },
 };
 
-// loading font
+
+// preload() ********************************************************************
+//
+// Loads font for title
 function preload(){
   titleFont = loadFont(`assets/fonts/CinzelDecorative-Bold.ttf`);
 }
 
 
-
-// setup()
+// setup() ********************************************************************
 //
-// Description of setup() goes here.
+// Sets up canvas, removes strokes, sets initial position for circle 1 and 2
 function setup() {
   createCanvas(windowWidth, windowHeight);
   noStroke();
@@ -182,35 +188,35 @@ function setup() {
   circle2.y = height * 2/3;
 }
 
-// draw()
-//
-// Description of draw() goes here.
-function draw() {
 
+
+// draw() ********************************************************************
+//
+// Set up initial background color, link states to state functions
+function draw() {
   background(bg.r, bg.g, bg.b);
 
   if (state === `title`) {
     title();
   }
-
-  if (state === `animation`) {
+  else if (state === `animation`) {
     animation();
   }
-
-  if (state === `loveTriumph`) {
+  else if (state === `loveTriumph`) {
     loveTriumph();
   }
-
-  if (state === `deepSadness`) {
+  else if (state === `deepSadness`) {
     deepSadness();
   }
-
-  if (state === `secretLover`) {
+  else if (state === `secretLover`) {
     secretLover();
   }
-
 }
 
+
+// Functions for states ****************************************************************
+//
+// Display title and Start button which changes size + color when mouse hovers over it
 function title() {
   displayTitle(); // Display "Looking for Love"
   displayStartButton(); // Drawing the start button
@@ -218,6 +224,7 @@ function title() {
   hoverOnStartButton(); // Start button and Start text enlarge if mouse's position is on start button
 }
 
+// Circle 1 follows mouse, while circle 2 moves randomly. 3 possible scenarios can occur depending on how the circles interact: loveTriumph, deepSadness, and secretLover. Narrator text is displayed in textbox.
 function animation(){
   // Display narrator text inside a textbox
   narratorSays(narrator.text.animation);
@@ -241,14 +248,15 @@ function animation(){
     state = `deepSadness`;
   }
 
-  // Cue secretLover if mouse hits specific location
+  // Cue secretLover if mouse hits specific location on canvas
   if (dist(mouseX, mouseY, circle1.triggerSecretLover.x, circle1.triggerSecretLover.y) < circle1.triggerDist) {
     state = `secretLover`;
   }
 }
 
+// Changes background and narrator text. Displays both circles in their last position from animation state.
 function loveTriumph() {
-``  // Change background to love color
+  // Change background to love color
   background(bg.rLove, bg.gLove, bg.bLove);
 
   // Display circle 1
@@ -261,6 +269,7 @@ function loveTriumph() {
   narratorSays(narrator.text.loveTriumph);
 }
 
+// Changes background and narrator text. Displays both circles in their last position from animation state.
 function deepSadness() {
   // Change background to depressing color
   background(bg.rSad, bg.gSad, bg.bSad);
@@ -275,6 +284,7 @@ function deepSadness() {
   narratorSays(narrator.text.deepSadness);
 }
 
+// Changes background and narrator text. Displays both circles in their last position from animation state. New secretCircle pops up next to circle 2.
 function secretLover() {
   // Change background to depressing color
   background(bg.rSad, bg.gSad, bg.bSad);
@@ -295,11 +305,8 @@ function secretLover() {
   narratorSays(narrator.text.secretLover);
 }
 
-// FUNCTIONS -----------------------------------------------------------------------------
-
-
-
-
+// OTHER FUNCTIONS *******************************************************************
+//
 // Behavior of Start button and Start text when mouse hovers over button
 function hoverOnStartButton() {
   if (mouseIsInStartButton()) {
@@ -319,7 +326,7 @@ function hoverOnStartButton() {
     pop();
   }
   else {
-    // Start button and text look the same as before
+    // Start button and text keep size of initial setup
     startButton.size = startButton.sizeSmaller;
     start.size = start.sizeSmaller;
   }
@@ -328,12 +335,11 @@ function hoverOnStartButton() {
 // If user clicks on Start button, cue `animation` state
 function mouseClicked() {
   if (mouseIsInStartButton()) {
-    startButton.fill.r = 70;
     state = `animation`;
   }
 }
 
-// Checks if mouse's position is inside the start button
+// Checks if mouse's position is inside the Start button
 function mouseIsInStartButton() {
   if (mouseX < startButton.x+(startButton.size/2) && mouseX > startButton.x-(startButton.size/2)) {
     if (mouseY < startButton.y+(startButton.size/2) && mouseY > startButton.y-(startButton.size/2)) {
@@ -348,14 +354,14 @@ function mouseIsInStartButton() {
 // Display title "Looking for Love"
 function displayTitle() {
   push();
-  fill(255);
-  textSize(windowHeight/7);
+  fill(titleFill);
+  textSize(height/7);
   textAlign(CENTER,CENTER);
 
   textFont(titleFont);
-  text(`Looking`, windowWidth/3, windowHeight/3);
-  text(`for`, windowWidth/2, windowHeight/2);
-  text(`Love`, windowWidth*2/3, windowHeight*2/3);
+  text(`Looking`, width/3, height/3);
+  text(`for`, width/2, height/2);
+  text(`Love`, width*2/3, height*2/3);
   pop();
 }
 
@@ -394,7 +400,7 @@ function displayCircle(fillR, fillG, fillB, x, y, size) {
 }
 
 // Circle2 moves randomly across the canvas (Perlin noise)
-function moveCircle2(txChange, tyChange, vx, vy, speed){
+function moveCircle2(txChange, tyChange, vx, vy, speed) {
   circle2.tx += txChange;
   circle2.ty += tyChange;
 
@@ -443,7 +449,7 @@ function narratorSays(narratorSpeech) {
   rect(textBox.x, textBox.y, textBox.length, textBox.height, textBox.cornerRadius);
   pop();
 
-  // Displays narrator voice
+  // Displays narrator speech
   push();
   narrator.x = textBox.x;
   narrator.y = textBox.y;
