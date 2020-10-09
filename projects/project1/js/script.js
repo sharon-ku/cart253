@@ -2,14 +2,16 @@
 Project 1: Simulation
 Sharon Ku
 
-Here is a description of this template p5 project.
+3 fishes (nemo, firefish, and goby) swim around the tank. When the fishes spot the finger (user circle), they follow it. The user adds food to the tank by clicking the "Add Food" button and tries to get the fishes to eat the food by guiding them with the finger. When the fishes are full, the simulation ends.
 **************************************************/
 
-"use strict";
+"use strict"; // because strict is good
+
+let state = `intro`; // other states: animation, end
 
 let firefish = {
-  x: 200,
-  y: 500,
+  x: 500,
+  y: 200,
   length: 160,
   width: 66,
   vx: 0,
@@ -23,10 +25,24 @@ let firefish = {
   txChange: 0.025,
   tyChange: 0.025,
   img: undefined,
-  visibleRange: 300,
+  fieldOfVision: 300,
   scale: {
     x: 1,
     y: 1,
+  },
+  angle: 0,
+};
+
+// User circle
+let finger = {
+  size: 40,
+  x: 100,
+  y: 100,
+  fill: { //light cyan
+    r: 220,
+    g: 255,
+    b: 250,
+    alpha: 200,
   },
 };
 
@@ -38,7 +54,11 @@ let bg = {
   },
 };
 
+let fishtank = {
+  border: 50,
+};
 
+// Preload fish images
 function preload() {
   firefish.img = loadImage(`assets/images/firefish1.png`);
 }
@@ -46,41 +66,65 @@ function preload() {
 
 // setup()
 //
-// Description of setup() goes here.
+// Set up canvas and remove cursor
 function setup() {
-  createCanvas(1920,1000);
+  createCanvas(windowWidth, windowHeight);
+  noCursor();
 }
 
 // draw()
 //
-// Description of draw() goes here.
+// Set up background color and states
 function draw() {
   background(bg.fill.r, bg.fill.g, bg.fill.b);
 
-  // display firefish
+  if (state === `intro`) {
+    intro();
+  }
+}
+
+// Intro state: finger and firefish are displayed. Finger moves with mouse. Firefish moves randomly (Perlin noise) until it spots the finger and follows it.
+function intro() {
+  displayFinger();
+
   displayFirefish({img: firefish.img, x: firefish.x, y: firefish.y, length: firefish.length, width: firefish.width})
 
+  // Constraining firefish's movement
+  firefish.x = constrain(firefish.x, fishtank.border, width - fishtank.border);
+  firefish.y = constrain(firefish.y, fishtank.border, height - fishtank.border);
+
+  // Firefish follows finger if the fish senses the finger, or else it swims casually around the tank.
   if (firefishSensesFinger()) {
-
-    // bg.fill.r = 20;
-    // bg.fill.g = 20;
-    // translate(firefish.x, firefish.y);
-    // firefish.width *= -1;
-
     fishFollowsFinger({x: firefish.x, y: firefish.y, vx: firefish.vx, vy: firefish.vy, speed: firefish.speed.followingMouse});
 
+    // Trying to figure out how to rotate fish
+    push();
+    // translate(firefish.x, firefish.y);
+    firefish.angle = PI/4;
+    pop();
   }
   else {
     firefishCasualSwimming();
   }
 
+  // Trying to figure out how to flip fish
   // if (firefish.x < mouseX) {
   //   firefish.width *= -1;
   // }
 }
 
 
-function fishFollowsFinger({x, y, vx, vy, speed}){
+// Finger is a circle that follows cursor.
+function displayFinger() {
+  finger.x = mouseX;
+  finger.y = mouseY;
+  fill(finger.fill.r, finger.fill.g, finger.fill.b, finger.fill.alpha);
+
+  ellipse(finger.x, finger.y, finger.size);
+}
+
+// The fish follows the finger
+function fishFollowsFinger({x, y, vx, vy, speed}) {
   push();
   let distX = firefish.x - mouseX;
   let distY = firefish.y - mouseY;
@@ -105,8 +149,9 @@ function fishFollowsFinger({x, y, vx, vy, speed}){
   pop();
 }
 
+// Returns true if finger is close enough to the fish (within the fish's field of vision)
 function firefishSensesFinger(){
-  if (dist(firefish.x, firefish.y, mouseX, mouseY) < firefish.visibleRange) {
+  if (dist(firefish.x, firefish.y, mouseX, mouseY) < firefish.fieldOfVision) {
     return true;
   }
   else {
@@ -116,6 +161,8 @@ function firefishSensesFinger(){
 
 // Firefish swims randomly using Perlin noise
 function firefishCasualSwimming(){
+  push();
+  // translate(firefish.x,firefish.y);
   firefish.tx += firefish.txChange;
   firefish.ty += firefish.tyChange;
 
@@ -130,14 +177,21 @@ function firefishCasualSwimming(){
 
   firefish.x = constrain(firefish.x, 0, width);
   firefish.y = constrain(firefish.y, 0, height);
+  pop();
 }
 
 // Display firefish
 function displayFirefish({img, x, y, length, width}) {
   push();
   imageMode(CENTER);
+  // Trying to figure out how to flip fish
   // translate(firefish.x, firefish.y);
   // scale(firefish.scale.x, firefish.scale.y);
+
+  // Trying to figure out how to rotate fish
+  translate(firefish.x,firefish.y);
+  rotate(firefish.angle);
+  firefish.angle += 0.0215; // made an animation to see if fish rotates properly: turns out it does not :(
   image(img, x, y, length, width);
   pop();
 
