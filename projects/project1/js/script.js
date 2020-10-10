@@ -11,9 +11,18 @@ let state = `animation`; // other states: animation, end
 
 let changeFirefishImage = undefined;
 
-let displayFood = false;
+let timeForFood = false;
 
 let generateRandomFoodPosition = false;
+
+
+// title text
+let title = {
+  line1: `Hungry`,
+  line2: `Fishies`,
+  font: undefined,
+  fill: 255,
+};
 
 let firefish = {
   img1: undefined,
@@ -26,7 +35,7 @@ let firefish = {
   vy: 0,
   speed: {
     casualSwimming: 5,
-    followingMouse: 0.8,
+    followingMouse: 1.5,
   },
   tx: 0,
   ty: 10,
@@ -60,10 +69,13 @@ let food = {
   y: 0,
   vx: 0,
   vy: 0,
-  speed: 2,
+  speed: 0.5,
   ax: 0,
   ay: 0,
-  acceleration: 2,
+  acceleration: {
+    x: 0,
+    y: 0,
+  },
   size: 15,
   fill: { // beige
     r: 255,
@@ -72,6 +84,8 @@ let food = {
     alpha: 255,
   }
 }
+
+let fishfood;
 
 
 let moreFoodButton = {
@@ -102,6 +116,7 @@ function preload() {
   firefish.img1 = loadImage(`assets/images/firefish1.png`);
   firefish.img2 = loadImage(`assets/images/firefish2.png`);
   moreFoodButton.img = loadImage(`assets/images/moreFood.png`);
+  title.font = loadFont(`assets/fonts/Slackey-Regular.ttf`);
 }
 
 
@@ -112,6 +127,9 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   noCursor();
   noStroke();
+
+  // fishfood = new Fishfood();
+  // print(fishfood.x, fishfood.y);
 }
 
 // draw()
@@ -132,6 +150,17 @@ function draw() {
 
 }
 
+// class Fishfood {
+//   constructor() {
+//     this.x = 500;
+//     this.y = 0;
+//   }
+//
+//   move() {
+//     this.
+//   }
+// }
+
 // let test;
 //
 // function switchFirefishImage() {
@@ -139,7 +168,26 @@ function draw() {
 // }
 
 function intro() {
+  displayTitle(); // display "Hungry Fishies"
+  displayFinger(); // display user circle
 
+  displayFirefish({img: firefish.img1, x: firefish.x, y: firefish.y, length: firefish.length, width: firefish.width});
+
+  firefishCasualSwimming({tx:firefish.tx, ty:firefish.ty, txChange:firefish.txChange, tyChange:firefish.tyChange, speedCasualSwimming:firefish.speed.casualSwimming});
+}
+
+
+// Display title "Hungry Fishies"
+function displayTitle() {
+  push();
+  fill(title.fill);
+  textSize(height/15);
+  textAlign(CENTER,CENTER);
+
+  textFont(title.font);
+  text(title.line1, width/3, height/3);
+  text(title.line2, width/2, height/2);
+  pop();
 }
 
 // Display More Food Button
@@ -173,7 +221,7 @@ function hoverOnMoreFoodButton() {
   }
 
   if (mouseIsPressed && fingerIsOnMoreFoodButton()) {
-    displayFood = true;
+    timeForFood = true;
     // generateRandomFoodPosition = true;
   }
 
@@ -182,15 +230,38 @@ function hoverOnMoreFoodButton() {
     generateRandomFoodPosition = false;
   }
 
-  if (displayFood) {
-      push();
-      for (let i = 0; i < food.quantity; i++) {
-      fill(food.fill.r, food.fill.g, food.fill.b, food.fill.alpha);
-      ellipse(food.x, food.y, food.size);
-      }
-      pop();
-      // displayFood = false;
+  if (timeForFood) {
+    displayFood();
   }
+}
+
+function displayFood() {
+  push();
+  for (let i = 0; i < food.quantity; i++) {
+    fill(food.fill.r, food.fill.g, food.fill.b, food.fill.alpha);
+    ellipse(food.x, food.y, food.size);
+  }
+  pop();
+
+  // Move food
+  // food.x += food.vx + random(-food.ax.left, food.ax.right);
+  food.ax = food.acceleration.x;
+  food.ay = food.acceleration.y;
+
+  food.x += food.vx + food.ax;
+  food.y += food.vy + food.ay;
+
+  let chance = random();
+
+  if (chance < 0.05) {
+  food.vx = random(-food.speed,food.speed);
+  }
+  food.vy = food.speed;
+
+  
+
+  // timeForFood = false;
+
 
 }
 
@@ -210,7 +281,7 @@ function mousePressed() {
 //   }
 // }
 
-// Intro state: finger and firefish are displayed. Finger moves with mouse. Firefish moves randomly (Perlin noise) until it spots the finger and follows it.
+// Animation state: finger and firefish are displayed. Finger moves with mouse. Firefish moves randomly (Perlin noise) until it spots the finger and follows it.
 function animation() {
 
   displayMoreFoodButton();
@@ -218,7 +289,7 @@ function animation() {
 
   displayFinger();
 
-  displayFirefish({img: firefish.img1, x: firefish.x, y: firefish.y, length: firefish.length, width: firefish.width})
+  displayFirefish({img: firefish.img1, x: firefish.x, y: firefish.y, length: firefish.length, width: firefish.width});
 
   // Constraining firefish's movement
   firefish.x = constrain(firefish.x, fishtank.border, width - fishtank.border);
@@ -229,7 +300,7 @@ function animation() {
     fishFollowsFinger({x: firefish.x, y: firefish.y, vx: firefish.vx, vy: firefish.vy, speed: firefish.speed.followingMouse});
   }
   else {
-    firefishCasualSwimming();
+    firefishCasualSwimming({speedCasualSwimming:firefish.speed.casualSwimming});
   }
 
 
@@ -261,10 +332,10 @@ function fishFollowsFinger({x, y, vx, vy, speed}) {
     distX = firefish.x - mouseX;
   }
 
-  // push();
-  // translate(firefish.x,firefish.y);
-  // setFishAngle();
-  // pop();
+  push();
+  translate(firefish.x,firefish.y);
+  setFishAngle();
+  pop();
 
 
   if (distX < 0) {
@@ -303,18 +374,18 @@ function firefishSensesFinger(){
 }
 
 // Firefish swims randomly using Perlin noise
-function firefishCasualSwimming(){
+function firefishCasualSwimming({vx, vy, speedCasualSwimming}) {
   firefish.tx += firefish.txChange;
   firefish.ty += firefish.tyChange;
 
   let noiseX = noise(firefish.tx);
   let noiseY = noise(firefish.ty);
 
-  let change = random();
+  let chanceOfChangingDirections = random();
 
-  if (change < 0.02) {
-  firefish.vx = map(noiseX, 0, 1, -firefish.speed.casualSwimming, firefish.speed.casualSwimming);
-  firefish.vy = map(noiseY, 0, 1, -firefish.speed.casualSwimming, firefish.speed.casualSwimming);
+  if (chanceOfChangingDirections < 0.02) {
+  firefish.vx = map(noiseX, 0, 1, -speedCasualSwimming, speedCasualSwimming);
+  firefish.vy = map(noiseY, 0, 1, -speedCasualSwimming, speedCasualSwimming);
   }
 
   firefish.x += firefish.vx;
@@ -334,7 +405,7 @@ function displayFirefish({img, x, y, length, width}) {
   setFishAngle();
 
   scale(firefish.scale.x, firefish.scale.y);
-  setFishDirection(firefish.x,firefish.y); // Fish faces direction it is swimming
+  setFishDirection({x: firefish.x, y: firefish.y, vx: firefish.vx}); // Fish faces direction it is swimming
   image(img, 0, 0, length, width);
   pop();
 }
@@ -349,14 +420,13 @@ function setFishAngle() {
   else {
     firefish.angle -= 0.0005;
   }
-  console.log(firefish.angle);
 }
 
 // Fish faces direction it is swimming
-function setFishDirection(x,y) {
+function setFishDirection({x,y,vx}) {
   push();
   translate(x,y);
-  if (firefish.vx > 0) {
+  if (vx > 0) {
     firefish.scale.x = -1;
   }
   else {
