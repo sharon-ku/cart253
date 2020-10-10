@@ -7,9 +7,17 @@ Sharon Ku
 
 "use strict"; // because strict is good
 
-let state = `intro`; // other states: animation, end
+let state = `animation`; // other states: animation, end
+
+let changeFirefishImage = undefined;
+
+let displayFood = false;
+
+let generateRandomFoodPosition = false;
 
 let firefish = {
+  img1: undefined,
+  img2: undefined,
   x: 500,
   y: 200,
   length: 160,
@@ -24,7 +32,6 @@ let firefish = {
   ty: 10,
   txChange: 0.025,
   tyChange: 0.025,
-  img: undefined,
   fieldOfVision: 300,
   scale: {
     x: 1,
@@ -39,7 +46,7 @@ let finger = {
   size: 40,
   x: 100,
   y: 100,
-  fill: { //light cyan
+  fill: { // light cyan
     r: 220,
     g: 255,
     b: 250,
@@ -47,11 +54,42 @@ let finger = {
   },
 };
 
+let food = {
+  quantity: 5,
+  x: 500,
+  y: 0,
+  vx: 0,
+  vy: 0,
+  speed: 2,
+  ax: 0,
+  ay: 0,
+  acceleration: 2,
+  size: 15,
+  fill: { // beige
+    r: 255,
+    g: 221,
+    b: 185,
+    alpha: 255,
+  }
+}
+
+
+let moreFoodButton = {
+  img: undefined,
+  size: {
+    current: 150,
+    bigger: 160,
+    smaller: 150,
+  },
+  x: 100,
+  y: 100,
+}
+
 let bg = {
-  fill: {
-    r: 0,
-    g: 0,
-    b: 0,
+  fill: { // sky blue
+    r: 117,
+    g: 184,
+    b: 213,
   },
 };
 
@@ -61,7 +99,9 @@ let fishtank = {
 
 // Preload fish images
 function preload() {
-  firefish.img = loadImage(`assets/images/firefish1.png`);
+  firefish.img1 = loadImage(`assets/images/firefish1.png`);
+  firefish.img2 = loadImage(`assets/images/firefish2.png`);
+  moreFoodButton.img = loadImage(`assets/images/moreFood.png`);
 }
 
 
@@ -71,6 +111,7 @@ function preload() {
 function setup() {
   createCanvas(windowWidth, windowHeight);
   noCursor();
+  noStroke();
 }
 
 // draw()
@@ -82,13 +123,102 @@ function draw() {
   if (state === `intro`) {
     intro();
   }
+
+  if (state === `animation`) {
+    animation();
+  }
+
+  // loopFirefishImages = setInterval(switchFireFishImage(), 2000);
+
 }
 
-// Intro state: finger and firefish are displayed. Finger moves with mouse. Firefish moves randomly (Perlin noise) until it spots the finger and follows it.
+// let test;
+//
+// function switchFirefishImage() {
+//   test = setTimeout(displayFirefish({img: firefish.img1, x: firefish.x, y: firefish.y, length: firefish.length, width: firefish.width}), 1000);
+// }
+
 function intro() {
+
+}
+
+// Display More Food Button
+function displayMoreFoodButton() {
+  push();
+  imageMode(CENTER);
+  image(moreFoodButton.img, moreFoodButton.x, moreFoodButton.y, moreFoodButton.size.current, moreFoodButton.size.current);
+  pop();
+}
+
+// Checks if finger is hovering on More Food Button
+function fingerIsOnMoreFoodButton() {
+  if (finger.x < moreFoodButton.x+(moreFoodButton.size.current/2) && finger.x > moreFoodButton.x-(moreFoodButton.size.current/2)) {
+    if (finger.y < moreFoodButton.y+(moreFoodButton.size.current/2) && finger.y > moreFoodButton.y-(moreFoodButton.size.current/2)) {
+      return true;
+    }
+  }
+  else{
+    return false;
+  }
+}
+
+// More Food Button enlarges if finger hovers over it
+function hoverOnMoreFoodButton() {
+  if (fingerIsOnMoreFoodButton()) {
+    moreFoodButton.size.current = moreFoodButton.size.bigger;
+  }
+  else {
+    // More food button keeps its initial size
+    moreFoodButton.size.current = moreFoodButton.size.smaller;
+  }
+
+  if (mouseIsPressed && fingerIsOnMoreFoodButton()) {
+    displayFood = true;
+    // generateRandomFoodPosition = true;
+  }
+
+  if (generateRandomFoodPosition) {
+    food.x = random(fishtank.border, width - fishtank.border);
+    generateRandomFoodPosition = false;
+  }
+
+  if (displayFood) {
+      push();
+      for (let i = 0; i < food.quantity; i++) {
+      fill(food.fill.r, food.fill.g, food.fill.b, food.fill.alpha);
+      ellipse(food.x, food.y, food.size);
+      }
+      pop();
+      // displayFood = false;
+  }
+
+}
+
+function mousePressed() {
+  if (state === `animation`) {
+      generateRandomFoodPosition = true;
+  }
+}
+
+// // If finger clicks on More Food button, drop food
+// function mouseClicked() {
+//   if (fingerIsOnMoreFoodButton()) {
+//     push();
+//     fill(food.fill.r, food.fill.g, food.fill.b);
+//     ellipse(food.x, food.y, food.size);
+//     pop();
+//   }
+// }
+
+// Intro state: finger and firefish are displayed. Finger moves with mouse. Firefish moves randomly (Perlin noise) until it spots the finger and follows it.
+function animation() {
+
+  displayMoreFoodButton();
+  hoverOnMoreFoodButton();
+
   displayFinger();
 
-  displayFirefish({img: firefish.img, x: firefish.x, y: firefish.y, length: firefish.length, width: firefish.width})
+  displayFirefish({img: firefish.img1, x: firefish.x, y: firefish.y, length: firefish.length, width: firefish.width})
 
   // Constraining firefish's movement
   firefish.x = constrain(firefish.x, fishtank.border, width - fishtank.border);
