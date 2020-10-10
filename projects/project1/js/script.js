@@ -12,6 +12,7 @@ let state = `animation`; // other states: animation, end
 let changeFirefishImage = undefined;
 
 let timeForFood = false;
+let showFood = false;
 
 let generateRandomFoodPosition = false;
 
@@ -231,6 +232,11 @@ function hoverOnMoreFoodButton() {
   }
 
   if (timeForFood) {
+    showFood = true;
+    timeForFood = false;
+  }
+
+  if (showFood) {
     displayFood();
   }
 }
@@ -258,7 +264,12 @@ function displayFood() {
   }
   food.vy = food.speed;
 
-  
+  if (keyIsDown(LEFT_ARROW)) {
+    food.acceleration.x -= 0.05;
+  }
+  else if (keyIsDown(RIGHT_ARROW)) {
+    food.acceleration.x += 0.05;
+  }
 
   // timeForFood = false;
 
@@ -266,7 +277,7 @@ function displayFood() {
 }
 
 function mousePressed() {
-  if (state === `animation`) {
+  if (timeForFood === true) {
       generateRandomFoodPosition = true;
   }
 }
