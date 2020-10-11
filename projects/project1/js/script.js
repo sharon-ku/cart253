@@ -16,6 +16,8 @@ let showFood = false;
 
 let numFishfoods = 5;
 
+let fishfoods = [];
+
 // title text
 let title = {
   line1: `Hungry`,
@@ -63,30 +65,6 @@ let finger = {
   },
 };
 
-// let food = {
-//   quantity: 5,
-//   x: 500,
-//   y: 0,
-//   vx: 0,
-//   vy: 0,
-//   speed: 0.5,
-//   ax: 0,
-//   ay: 0,
-//   acceleration: {
-//     x: 0,
-//     y: 0,
-//     max: 3,
-//   },
-//   size: 15,
-//   fill: { // beige
-//     r: 255,
-//     g: 221,
-//     b: 185,
-//     alpha: 255,
-//   }
-// }
-
-
 let moreFoodButton = {
   img: undefined,
   size: {
@@ -117,8 +95,6 @@ function preload() {
   moreFoodButton.img = loadImage(`assets/images/moreFood.png`);
   title.font = loadFont(`assets/fonts/Slackey-Regular.ttf`);
 }
-
-let fishfoods = [];
 
 // setup()
 //
@@ -156,10 +132,9 @@ class Fishfood {
   constructor() {
     this.x = random(fishtank.border, width - fishtank.border);
     this.y = 0;
-    this.quantity = 5;
     this.vx = 0;
     this.vy = 0;
-    this.speed = 0.5;
+    this.speed = 3; //0.5
     this.ax = 0;
     this.ay = 0;
     this.accelerationX = 0;
@@ -174,11 +149,8 @@ class Fishfood {
 
   show() {
     push();
-    for (let i = 0; i < this.quantity; i++) {
-      fill(this.fillR, this.fillG, this.fillB, this.fillAlpha);
-      ellipse(this.x, this.y, this.size);
-    }
-
+    fill(this.fillR, this.fillG, this.fillB, this.fillAlpha);
+    ellipse(this.x, this.y, this.size);
     pop();
   }
 
@@ -190,9 +162,6 @@ class Fishfood {
 
     this.accelerationX = constrain(this.accelerationX, -this.accelerationMax, this.accelerationMax);
 
-    this.x += this.vx + this.ax;
-    this.y += this.vy + this.ay;
-
     let chance = random();
 
     if (chance < 0.05) {
@@ -200,13 +169,32 @@ class Fishfood {
     }
     this.vy = this.speed;
 
+    this.x += this.vx + this.ax;
+    this.y += this.vy + this.ay;
+
+    // Change current
     if (keyIsDown(LEFT_ARROW)) {
       this.accelerationX -= 0.05;
     }
     else if (keyIsDown(RIGHT_ARROW)) {
       this.accelerationX += 0.05;
     }
+
+    // test if food returns to top once it reaches the bottom
+    // if (this.y > height) {
+    //   this.y = 0;
+    // }
   }
+
+  offScreen() {
+    if (this.y > height) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
 }
 
 
@@ -215,11 +203,6 @@ class Fishfood {
 // function switchFirefishImage() {
 //   test = setTimeout(displayFirefish({img: firefish.img1, x: firefish.x, y: firefish.y, length: firefish.length, width: firefish.width}), 1000);
 // }
-
-
-function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
-}
 
 function intro() {
   displayTitle(); // display "Hungry Fishies"
@@ -284,50 +267,19 @@ function hoverOnMoreFoodButton() {
   }
 
   if (showFood) {
-    for (let i = 0; i < fishfoods.length; i++) {
+    for (let i = fishfoods.length-1; i >= 0; i--) {
       fishfoods[i].move();
       fishfoods[i].show();
+
+      // if fishfood is off screen, than it will be removed from the array
+      if (fishfoods[i].offScreen()) {
+        fishfoods.splice(i,1);
+      }
     }
   }
 }
 
-/***
 
-function displayFood() {
-  push();
-  for (let i = 0; i < food.quantity; i++) {
-    fill(food.fill.r, food.fill.g, food.fill.b, food.fill.alpha);
-    ellipse(food.x, food.y, food.size);
-  }
-  pop();
-
-  // Move food
-  food.x = constrain(food.x, fishtank.border, width - fishtank.border);
-
-  food.ax = food.acceleration.x;
-  food.ay = food.acceleration.y;
-
-  food.acceleration.x = constrain(food.acceleration.x, -food.acceleration.max, food.acceleration.max);
-
-  food.x += food.vx + food.ax;
-  food.y += food.vy + food.ay;
-
-  let chance = random();
-
-  if (chance < 0.05) {
-  food.vx = random(-food.speed,food.speed);
-  }
-  food.vy = food.speed;
-
-  if (keyIsDown(LEFT_ARROW)) {
-    food.acceleration.x -= 0.05;
-  }
-  else if (keyIsDown(RIGHT_ARROW)) {
-    food.acceleration.x += 0.05;
-  }
-}
-
-**/
 
 // console.log(`food.acceleration:${food.acceleration.x}`);
 
@@ -343,9 +295,9 @@ function animation() {
   displayMoreFoodButton();
   hoverOnMoreFoodButton();
 
-  displayFinger();
-
   displayFirefish({img: firefish.img1, x: firefish.x, y: firefish.y, length: firefish.length, width: firefish.width});
+
+  displayFinger();
 
   // Constraining firefish's movement
   firefish.x = constrain(firefish.x, fishtank.border, width - fishtank.border);
@@ -358,8 +310,6 @@ function animation() {
   else {
     firefishCasualSwimming({speedCasualSwimming:firefish.speed.casualSwimming});
   }
-
-
 }
 
 
@@ -466,15 +416,16 @@ function displayFirefish({img, x, y, length, width}) {
   pop();
 }
 
+// Firefish's angle changes depending on the direction it is going
 function setFishAngle() {
   rotate(firefish.angle);
   firefish.finalAngle = atan(firefish.vx,firefish.vy) / 3;
 
   if (firefish.angle < firefish.finalAngle) {
-    firefish.angle += 0.0005;
+    firefish.angle += 0.001; //0.0005
   }
   else {
-    firefish.angle -= 0.0005;
+    firefish.angle -= 0.001; //0.0005
   }
 }
 
