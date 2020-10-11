@@ -14,8 +14,7 @@ let changeFirefishImage = undefined;
 let timeForFood = false;
 let showFood = false;
 
-let generateRandomFoodPosition = false;
-
+let numFishfoods = 5;
 
 // title text
 let title = {
@@ -64,29 +63,28 @@ let finger = {
   },
 };
 
-let food = {
-  quantity: 5,
-  x: 500,
-  y: 0,
-  vx: 0,
-  vy: 0,
-  speed: 0.5,
-  ax: 0,
-  ay: 0,
-  acceleration: {
-    x: 0,
-    y: 0,
-  },
-  size: 15,
-  fill: { // beige
-    r: 255,
-    g: 221,
-    b: 185,
-    alpha: 255,
-  }
-}
-
-let fishfood;
+// let food = {
+//   quantity: 5,
+//   x: 500,
+//   y: 0,
+//   vx: 0,
+//   vy: 0,
+//   speed: 0.5,
+//   ax: 0,
+//   ay: 0,
+//   acceleration: {
+//     x: 0,
+//     y: 0,
+//     max: 3,
+//   },
+//   size: 15,
+//   fill: { // beige
+//     r: 255,
+//     g: 221,
+//     b: 185,
+//     alpha: 255,
+//   }
+// }
 
 
 let moreFoodButton = {
@@ -120,6 +118,7 @@ function preload() {
   title.font = loadFont(`assets/fonts/Slackey-Regular.ttf`);
 }
 
+let fishfoods = [];
 
 // setup()
 //
@@ -129,8 +128,10 @@ function setup() {
   noCursor();
   noStroke();
 
-  // fishfood = new Fishfood();
-  // print(fishfood.x, fishfood.y);
+  for (let i = 0; i < numFishfoods; i++) {
+    fishfoods[i] = new Fishfood();
+  }
+
 }
 
 // draw()
@@ -151,22 +152,74 @@ function draw() {
 
 }
 
-// class Fishfood {
-//   constructor() {
-//     this.x = 500;
-//     this.y = 0;
-//   }
-//
-//   move() {
-//     this.
-//   }
-// }
+class Fishfood {
+  constructor() {
+    this.x = random(fishtank.border, width - fishtank.border);
+    this.y = 0;
+    this.quantity = 5;
+    this.vx = 0;
+    this.vy = 0;
+    this.speed = 0.5;
+    this.ax = 0;
+    this.ay = 0;
+    this.accelerationX = 0;
+    this.accelerationY = 0;
+    this.accelerationMax = 3;
+    this.size = 15;
+    this.fillR = 255;  // beige
+    this.fillG = 221;
+    this.fillB = 185;
+    this.fillAlpha = 255;
+  }
+
+  show() {
+    push();
+    for (let i = 0; i < this.quantity; i++) {
+      fill(this.fillR, this.fillG, this.fillB, this.fillAlpha);
+      ellipse(this.x, this.y, this.size);
+    }
+
+    pop();
+  }
+
+  move() {
+    this.x = constrain(this.x, fishtank.border, width - fishtank.border);
+
+    this.ax = this.accelerationX;
+    this.ay = this.accelerationY;
+
+    this.accelerationX = constrain(this.accelerationX, -this.accelerationMax, this.accelerationMax);
+
+    this.x += this.vx + this.ax;
+    this.y += this.vy + this.ay;
+
+    let chance = random();
+
+    if (chance < 0.05) {
+    this.vx = random(-this.speed,this.speed);
+    }
+    this.vy = this.speed;
+
+    if (keyIsDown(LEFT_ARROW)) {
+      this.accelerationX -= 0.05;
+    }
+    else if (keyIsDown(RIGHT_ARROW)) {
+      this.accelerationX += 0.05;
+    }
+  }
+}
+
 
 // let test;
 //
 // function switchFirefishImage() {
 //   test = setTimeout(displayFirefish({img: firefish.img1, x: firefish.x, y: firefish.y, length: firefish.length, width: firefish.width}), 1000);
 // }
+
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+}
 
 function intro() {
   displayTitle(); // display "Hungry Fishies"
@@ -223,12 +276,6 @@ function hoverOnMoreFoodButton() {
 
   if (mouseIsPressed && fingerIsOnMoreFoodButton()) {
     timeForFood = true;
-    // generateRandomFoodPosition = true;
-  }
-
-  if (generateRandomFoodPosition) {
-    food.x = random(fishtank.border, width - fishtank.border);
-    generateRandomFoodPosition = false;
   }
 
   if (timeForFood) {
@@ -237,9 +284,14 @@ function hoverOnMoreFoodButton() {
   }
 
   if (showFood) {
-    displayFood();
+    for (let i = 0; i < fishfoods.length; i++) {
+      fishfoods[i].move();
+      fishfoods[i].show();
+    }
   }
 }
+
+/***
 
 function displayFood() {
   push();
@@ -250,9 +302,12 @@ function displayFood() {
   pop();
 
   // Move food
-  // food.x += food.vx + random(-food.ax.left, food.ax.right);
+  food.x = constrain(food.x, fishtank.border, width - fishtank.border);
+
   food.ax = food.acceleration.x;
   food.ay = food.acceleration.y;
+
+  food.acceleration.x = constrain(food.acceleration.x, -food.acceleration.max, food.acceleration.max);
 
   food.x += food.vx + food.ax;
   food.y += food.vy + food.ay;
@@ -270,27 +325,17 @@ function displayFood() {
   else if (keyIsDown(RIGHT_ARROW)) {
     food.acceleration.x += 0.05;
   }
-
-  // timeForFood = false;
-
-
 }
+
+**/
+
+// console.log(`food.acceleration:${food.acceleration.x}`);
 
 function mousePressed() {
   if (timeForFood === true) {
-      generateRandomFoodPosition = true;
+      // generateRandomFoodPosition = true;
   }
 }
-
-// // If finger clicks on More Food button, drop food
-// function mouseClicked() {
-//   if (fingerIsOnMoreFoodButton()) {
-//     push();
-//     fill(food.fill.r, food.fill.g, food.fill.b);
-//     ellipse(food.x, food.y, food.size);
-//     pop();
-//   }
-// }
 
 // Animation state: finger and firefish are displayed. Finger moves with mouse. Firefish moves randomly (Perlin noise) until it spots the finger and follows it.
 function animation() {
