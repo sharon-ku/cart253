@@ -14,7 +14,7 @@ function hoverOnStartButton() {
     fill(start.fill.r, start.fill.g, start.fill.b);
     textAlign(CENTER, CENTER);
     textSize(start.size);
-    textFont(start.font);
+    textFont(bodyTextFont);
     text(start.text, start.x, start.y);
     pop();
   }
@@ -66,7 +66,7 @@ function displayStart() {
   start.x = width*1/5;
   start.y = height*4/5;
 
-  textFont(start.font);
+  textFont(bodyTextFont);
   text(start.text, start.x, start.y);
   pop();
 }

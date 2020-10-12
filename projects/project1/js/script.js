@@ -20,6 +20,8 @@ let totalFood = 10;
 
 let timer;
 
+let bodyTextFont = undefined;
+
 // title text
 let title = {
   line1: `HUNGRY`,
@@ -31,12 +33,11 @@ let title = {
 // start text
 let start = {
   text: `START`,
-  font: `Arial`,
   x: 100,
   y: 100,
-  size: 25,
-  sizeBigger: 30,
-  sizeSmaller: 25,
+  size: 30,
+  sizeBigger: 40,
+  sizeSmaller: 30,
   fill: {
     r: 255,
     g: 255,
@@ -52,10 +53,15 @@ let startButton = {
   x: 100,
   y: 100,
   fill: {
-    // coral
-    r: 254,
-    g: 158,
-    b: 146,
+    // // coral
+    // r: 254,
+    // g: 158,
+    // b: 146,
+
+    // vivid sky blue
+    r: 10,
+    g: 205,
+    b: 255,
     // vivid sky blue
     rHover: 10,
     gHover: 205,
@@ -71,7 +77,8 @@ let foodTracker = {
   totalLength: 156,
   height: 13,
   radius: 15,
-  fillR: 219, // lime green
+  // lime green
+  fillR: 219,
   fillG: 220,
   fillB: 100,
 }
@@ -157,6 +164,21 @@ let bg = {
   },
 };
 
+let nightFilter = {
+  x: 0,
+  y: 0,
+  length: 100,
+  height: 100,
+  fill: { // dark blue
+    r: 33,
+    g: 63,
+    b: 104,
+    alpha: 0,
+    alphaChangeRate: 1,
+    finalAlpha: 130,
+  },
+}
+
 let fishtank = {
   border: 100,
 };
@@ -175,6 +197,7 @@ function preload() {
   bg.sand.img = loadImage(`assets/images/sand.png`);
 
   title.font = loadFont(`assets/fonts/Slackey-Regular.ttf`);
+  bodyTextFont = loadFont(`assets/fonts/CabinSketch-Regular.ttf`);
 }
 
 // setup() -----------------------------------------------------------------------
@@ -312,17 +335,38 @@ function animation() {
   else {
     firefishCasualSwimming({speedCasualSwimming:firefish.speed.casualSwimming});
   }
+
+  if (firefish.numFoodEaten === totalFood) {
+    state = `ending`;
+  }
 }
 
 // ending() -----------------------------------------------------------------------
 //
 // Display end poem and finger
 function ending() {
+  displayNightFilter();
   displayFinger();
   displayEndPoem();
 }
 
-function displayFoodTracker(){
+// Displays filter that plunges tank into darkness
+function displayNightFilter() {
+  nightFilter.length = width;
+  nightFilter.height = height;
+
+  push();
+  rectMode(CORNER);
+  // Filter goes from transparent to more opaque
+  nightFilter.fill.alpha += nightFilter.fill.alphaChangeRate;
+  nightFilter.fill.alpha = constrain(nightFilter.fill.alpha, 0, nightFilter.fill.finalAlpha);
+
+  fill(nightFilter.fill.r, nightFilter.fill.g, nightFilter.fill.b, nightFilter.fill.alpha);
+  rect(nightFilter.x, nightFilter.y, nightFilter.length, nightFilter.height);
+  pop();
+}
+
+function displayFoodTracker() {
   push();
   // display food tracker image
   image(firefish.foodTracker.img, firefish.foodTracker.x, firefish.foodTracker.y, firefish.foodTracker.length, firefish.foodTracker.height);

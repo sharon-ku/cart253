@@ -10,10 +10,10 @@ let line = [`All your fishies are now well fed,`, `Watch them go, off to bed...`
 class PoemLine {
   constructor(lineText, x, y) {
     this.line = lineText;
-    this.font = `Arial`;
+    this.font = bodyTextFont;
     this.x = x;
     this.y = y;
-    this.size = 20;
+    this.size = 30;
     this.fillR = 255;
     this.fillG = 255;
     this.fillB = 255;
