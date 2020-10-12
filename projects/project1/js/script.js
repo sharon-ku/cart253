@@ -204,97 +204,6 @@ function draw() {
 
 }
 
-class Fishfood {
-  constructor() {
-    this.x = random(fishtank.border, width - fishtank.border);
-    this.y = 0;
-    this.vx = 0;
-    this.vy = 0;
-    this.speed = 1.5; //0.5
-    this.ax = 0;
-    this.ay = 0;
-    this.accelerationX = 0;
-    this.accelerationY = 0;
-    this.accelerationMax = 3;
-    this.size = 15;
-    this.fillR = 255;  // beige
-    this.fillG = 221;
-    this.fillB = 185;
-    this.fillAlpha = 255;
-  }
-
-  show() {
-    push();
-    fill(this.fillR, this.fillG, this.fillB, this.fillAlpha);
-    ellipse(this.x, this.y, this.size);
-    pop();
-  }
-
-  move() {
-    this.x = constrain(this.x, fishtank.border, width - fishtank.border);
-
-    this.ax = this.accelerationX;
-    this.ay = this.accelerationY;
-
-    this.accelerationX = constrain(this.accelerationX, -this.accelerationMax, this.accelerationMax);
-
-    let chance = random();
-
-    if (chance < 0.05) {
-    this.vx = random(-this.speed,this.speed);
-    }
-    this.vy = this.speed;
-
-    this.x += this.vx + this.ax;
-    this.y += this.vy + this.ay;
-
-    // Change current
-    if (keyIsDown(LEFT_ARROW)) {
-      this.accelerationX -= 0.05;
-    }
-    else if (keyIsDown(RIGHT_ARROW)) {
-      this.accelerationX += 0.05;
-    }
-
-    // test if food returns to top once it reaches the bottom
-    // if (this.y > height) {
-    //   this.y = 0;
-    // }
-  }
-
-  // checks if food is off screen
-  offScreen() {
-    if (this.y > height) {
-      return true;
-    }
-    else {
-      return false;
-    }
-  }
-
-  // checks if food has been eaten by fish
-  foodEaten() {
-    let distToFishMouth;
-    let fishMouthLocation;
-
-    if (firefish.scale.x > 0) {
-      fishMouthLocation = firefish.x - (firefish.length/3);
-    }
-    else if (firefish.scale.x < 0) {
-      fishMouthLocation = firefish.x + (firefish.length/3);
-    }
-
-    distToFishMouth = dist(this.x, this.y, fishMouthLocation, firefish.y);
-
-    if (distToFishMouth < firefish.length/6) {
-      return true;
-    }
-    else {
-      return false;
-    }
-  }
-}
-
 // let test;
 //
 // function switchFirefishImage() {
@@ -371,9 +280,6 @@ function clickMoreFoodButton(){
     showFood = true;
     timeForFood = false;
   }
-
-
-  // console.log(fishfoods.length);
 
   if (showFood) {
     for (let i = fishfoods.length-1; i >= 0; i--) {
@@ -571,79 +477,5 @@ function setFishDirection({x,y,vx}) {
   else {
     firefish.scale.x = 1; // face left
   }
-  pop();
-}
-
-
-
-
-
-function hoverOnStartButton() {
-  if (mouseIsInStartButton()) {
-    push();
-    // Start button enlarges and changes color
-    startButton.size = startButton.sizeBigger;
-    fill(startButton.fill.rHover, startButton.fill.gHover, startButton.fill.bHover, startButton.fill.alpha);
-    ellipse(startButton.x, startButton.y, startButton.size);
-
-    // Start text enlarges
-    start.size = start.sizeBigger;
-    fill(start.fill.r, start.fill.g, start.fill.b);
-    textAlign(CENTER, CENTER);
-    textSize(start.size);
-    textFont(start.font);
-    text(start.text, start.x, start.y);
-    pop();
-  }
-  else {
-    // Start button and text keep size of initial setup
-    startButton.size = startButton.sizeSmaller;
-    start.size = start.sizeSmaller;
-  }
-}
-
-// If user clicks on Start button, cue `animation` state
-function mouseClicked() {
-  if (mouseIsInStartButton()) {
-    state = `animation`;
-  }
-}
-
-// Checks if mouse's position is inside the Start button
-function mouseIsInStartButton() {
-  if (mouseX < startButton.x+(startButton.size/2) && mouseX > startButton.x-(startButton.size/2)) {
-    if (mouseY < startButton.y+(startButton.size/2) && mouseY > startButton.y-(startButton.size/2)) {
-      return true;
-    }
-  }
-  else{
-    return false;
-  }
-}
-
-// Display the circular Start button
-function displayStartButton() {
-  push();
-  startButton.x = start.x;
-  startButton.y = start.y;
-
-  fill(startButton.fill.r, startButton.fill.g, startButton.fill.b, startButton.fill.alpha);
-  ellipse(startButton.x, startButton.y, startButton.size);
-  pop();
-}
-
-
-// Display the Start text
-function displayStart() {
-  push();
-  fill(start.fill.r, start.fill.g, start.fill.b);
-  textSize(start.size);
-  textAlign(CENTER, CENTER);
-
-  start.x = width*1/5;
-  start.y = height*4/5;
-
-  textFont(start.font);
-  text(start.text, start.x, start.y);
   pop();
 }
