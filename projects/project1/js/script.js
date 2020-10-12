@@ -27,11 +27,12 @@ let title = {
 };
 
 let foodTracker = {
-  x: 40,
-  y: 220,
+  x: 117,
+  y: 80,
   length: 0,
-  totalLength: 180,
-  height: 15,
+  totalLength: 156,
+  height: 13,
+  radius: 15,
   fillR: 219, // lime green
   fillG: 220,
   fillB: 100,
@@ -62,6 +63,13 @@ let firefish = {
   angle: 0,
   finalAngle: 90,
   numFoodEaten: 0,
+  foodTracker: {
+    img: undefined,
+    length: 236,
+    height: 74,
+    x: 50,
+    y: 50,
+  },
 };
 
 // User circle
@@ -73,19 +81,20 @@ let finger = {
     r: 220,
     g: 255,
     b: 250,
-    alpha: 200,
+    alpha: 180,
   },
 };
 
 let moreFoodButton = {
   img: undefined,
   size: {
-    current: 150,
-    bigger: 160,
-    smaller: 150,
+    current: 120,
+    bigger: 130,
+    smaller: 120,
   },
   x: 100,
   y: 100,
+  distFromEdge: 100,
 }
 
 let bg = {
@@ -94,17 +103,31 @@ let bg = {
     g: 184,
     b: 213,
   },
+  rocks: {
+    img: undefined,
+    length: 1247,
+    height: 400,
+  },
+  sand: {
+    img: undefined,
+    length: 1300,
+    height: 247,
+  },
 };
 
 let fishtank = {
-  border: 200,
+  border: 100,
 };
 
 // Preload fish images
 function preload() {
   firefish.img1 = loadImage(`assets/images/firefish1.png`);
   firefish.img2 = loadImage(`assets/images/firefish2.png`);
+  firefish.foodTracker.img = loadImage(`assets/images/firefishFoodTracker.png`);
+
   moreFoodButton.img = loadImage(`assets/images/moreFood.png`);
+  bg.rocks.img = loadImage(`assets/images/rocks.png`);
+  bg.sand.img = loadImage(`assets/images/sand.png`);
   title.font = loadFont(`assets/fonts/Slackey-Regular.ttf`);
 }
 
@@ -112,7 +135,7 @@ function preload() {
 //
 // Set up canvas and remove cursor
 function setup() {
-  createCanvas(windowWidth, windowHeight);
+  createCanvas(1300, 800);
   noCursor();
   noStroke();
 
@@ -127,6 +150,11 @@ function setup() {
 // Set up background color and states
 function draw() {
   background(bg.fill.r, bg.fill.g, bg.fill.b);
+  push();
+  imageMode(CENTER);
+  image(bg.sand.img, width/2, height - bg.sand.height/2, bg.sand.length, bg.sand.height);
+  image(bg.rocks.img, width/2, height*2/3, bg.rocks.length, bg.rocks.height);
+  pop();
 
   if (state === `intro`) {
     intro();
@@ -264,6 +292,8 @@ function displayTitle() {
 function displayMoreFoodButton() {
   push();
   imageMode(CENTER);
+  moreFoodButton.x = width - moreFoodButton.distFromEdge;
+  moreFoodButton.y = moreFoodButton.distFromEdge;
   image(moreFoodButton.img, moreFoodButton.x, moreFoodButton.y, moreFoodButton.size.current, moreFoodButton.size.current);
   pop();
 }
@@ -313,7 +343,7 @@ function clickMoreFoodButton(){
       if (fishfoods[i].foodEaten()) {
         firefish.numFoodEaten ++;
       }
-      
+
       if (fishfoods[i].foodEaten() || fishfoods[i].offScreen()) {
         fishfoods.splice(i,1);
       }
@@ -365,8 +395,9 @@ function animation() {
 
 function displayFoodTracker(){
   push();
+  image(firefish.foodTracker.img, firefish.foodTracker.x, firefish.foodTracker.y, firefish.foodTracker.length, firefish.foodTracker.height);
   fill(foodTracker.fillR, foodTracker.fillG, foodTracker.fillB);
-  rect(foodTracker.x, foodTracker.y, foodTracker.length, foodTracker.height);
+  rect(foodTracker.x, foodTracker.y, foodTracker.length, foodTracker.height, foodTracker.radius);
   pop();
 }
 
