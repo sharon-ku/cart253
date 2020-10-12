@@ -26,6 +26,17 @@ let title = {
   fill: 255,
 };
 
+let foodTracker = {
+  x: 40,
+  y: 220,
+  length: 0,
+  totalLength: 180,
+  height: 15,
+  fillR: 219, // lime green
+  fillG: 220,
+  fillB: 100,
+}
+
 let firefish = {
   img1: undefined,
   img2: undefined,
@@ -50,6 +61,7 @@ let firefish = {
   },
   angle: 0,
   finalAngle: 90,
+  numFoodEaten: 0,
 };
 
 // User circle
@@ -134,7 +146,7 @@ class Fishfood {
     this.y = 0;
     this.vx = 0;
     this.vy = 0;
-    this.speed = 3; //0.5
+    this.speed = 1.5; //0.5
     this.ax = 0;
     this.ay = 0;
     this.accelerationX = 0;
@@ -186,6 +198,7 @@ class Fishfood {
     // }
   }
 
+  // checks if food is off screen
   offScreen() {
     if (this.y > height) {
       return true;
@@ -195,8 +208,28 @@ class Fishfood {
     }
   }
 
-}
+  // checks if food has been eaten by fish
+  foodEaten() {
+    let distToFishMouth;
+    let fishMouthLocation;
 
+    if (firefish.scale.x > 0) {
+      fishMouthLocation = firefish.x - (firefish.length/3);
+    }
+    else if (firefish.scale.x < 0) {
+      fishMouthLocation = firefish.x + (firefish.length/3);
+    }
+
+    distToFishMouth = dist(this.x, this.y, fishMouthLocation, firefish.y);
+
+    if (distToFishMouth < firefish.length/6) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+}
 
 // let test;
 //
@@ -257,6 +290,9 @@ function hoverOnMoreFoodButton() {
     moreFoodButton.size.current = moreFoodButton.size.smaller;
   }
 
+}
+
+function clickMoreFoodButton(){
   if (mouseIsPressed && fingerIsOnMoreFoodButton()) {
     timeForFood = true;
   }
@@ -266,22 +302,31 @@ function hoverOnMoreFoodButton() {
     timeForFood = false;
   }
 
+
+  // console.log(fishfoods.length);
+
   if (showFood) {
     for (let i = fishfoods.length-1; i >= 0; i--) {
       fishfoods[i].move();
       fishfoods[i].show();
 
-      // if fishfood is off screen, than it will be removed from the array
-      if (fishfoods[i].offScreen()) {
+      if (fishfoods[i].foodEaten()) {
+        firefish.numFoodEaten ++;
+      }
+      
+      if (fishfoods[i].foodEaten() || fishfoods[i].offScreen()) {
         fishfoods.splice(i,1);
       }
+
+      // if fishfood is off screen, than it will be removed from the array
+      // if (fishfoods[i].offScreen()) {
+      //   fishfoods.splice(i,1);
+      // }
+
+
     }
   }
 }
-
-
-
-// console.log(`food.acceleration:${food.acceleration.x}`);
 
 function mousePressed() {
   if (timeForFood === true) {
@@ -294,10 +339,15 @@ function animation() {
 
   displayMoreFoodButton();
   hoverOnMoreFoodButton();
+  clickMoreFoodButton();
 
   displayFirefish({img: firefish.img1, x: firefish.x, y: firefish.y, length: firefish.length, width: firefish.width});
 
   displayFinger();
+
+  displayFoodTracker();
+  updateFoodTracker();
+  console.log(firefish.numFoodEaten);
 
   // Constraining firefish's movement
   firefish.x = constrain(firefish.x, fishtank.border, width - fishtank.border);
@@ -312,6 +362,17 @@ function animation() {
   }
 }
 
+
+function displayFoodTracker(){
+  push();
+  fill(foodTracker.fillR, foodTracker.fillG, foodTracker.fillB);
+  rect(foodTracker.x, foodTracker.y, foodTracker.length, foodTracker.height);
+  pop();
+}
+
+function updateFoodTracker(){
+  foodTracker.length = map(firefish.numFoodEaten, 0, numFishfoods, 0, foodTracker.totalLength);
+}
 
 // Finger is a circle that follows cursor.
 function displayFinger() {
@@ -338,10 +399,10 @@ function fishFollowsFinger({x, y, vx, vy, speed}) {
     distX = firefish.x - mouseX;
   }
 
-  push();
-  translate(firefish.x,firefish.y);
-  setFishAngle();
-  pop();
+  // push();
+  // translate(firefish.x,firefish.y);
+  // setFishAngle();
+  // pop();
 
 
   if (distX < 0) {
@@ -369,7 +430,7 @@ function fishFollowsFinger({x, y, vx, vy, speed}) {
   firefish.y += vy;
 }
 
-// Returns true if finger is close enough to the fish (within the fish's field of vision)
+// Returns true if finger is within the fish's field of vision
 function firefishSensesFinger(){
   if (dist(firefish.x, firefish.y, mouseX, mouseY) < firefish.fieldOfVision) {
     return true;
@@ -389,7 +450,7 @@ function firefishCasualSwimming({vx, vy, speedCasualSwimming}) {
 
   let chanceOfChangingDirections = random();
 
-  if (chanceOfChangingDirections < 0.02) {
+  if (chanceOfChangingDirections < 0.05) { //0.02
   firefish.vx = map(noiseX, 0, 1, -speedCasualSwimming, speedCasualSwimming);
   firefish.vy = map(noiseY, 0, 1, -speedCasualSwimming, speedCasualSwimming);
   }
@@ -404,22 +465,22 @@ function firefishCasualSwimming({vx, vy, speedCasualSwimming}) {
 // Display firefish
 function displayFirefish({img, x, y, length, width}) {
   push();
-  imageMode(CENTER);
-
   translate(x,y);
-
-  setFishAngle();
+  imageMode(CENTER);
+  // setFishAngle(); //Fish swims at an angle
 
   scale(firefish.scale.x, firefish.scale.y);
-  setFishDirection({x: firefish.x, y: firefish.y, vx: firefish.vx}); // Fish faces direction it is swimming
+  setFishDirection({x: firefish.x, y: firefish.y, vx: firefish.vx}); // Fish faces the direction it is swimming
   image(img, 0, 0, length, width);
   pop();
 }
 
 // Firefish's angle changes depending on the direction it is going
 function setFishAngle() {
+  push();
+  translate(firefish.x,firefish.y);
   rotate(firefish.angle);
-  firefish.finalAngle = atan(firefish.vx,firefish.vy) / 3;
+  firefish.finalAngle = atan(firefish.vx,firefish.vy) / 4;
 
   if (firefish.angle < firefish.finalAngle) {
     firefish.angle += 0.001; //0.0005
@@ -427,17 +488,20 @@ function setFishAngle() {
   else {
     firefish.angle -= 0.001; //0.0005
   }
+  pop();
 }
+
+
 
 // Fish faces direction it is swimming
 function setFishDirection({x,y,vx}) {
   push();
   translate(x,y);
   if (vx > 0) {
-    firefish.scale.x = -1;
+    firefish.scale.x = -1; // face right
   }
   else {
-    firefish.scale.x = 1;
+    firefish.scale.x = 1; // face left
   }
   pop();
 }
