@@ -7,16 +7,18 @@ Sharon Ku
 
 "use strict"; // because strict is good
 
-let state = `intro`; // other states: animation, end
+let state = `intro`; // other states: animation, ending
 
 let changeFirefishImage = undefined;
 
 let timeForFood = false;
 let showFood = false;
 
-let numFishfoods = 5;
-
 let fishfoods = [];
+let numFishfoods = 5;
+let totalFood = 10;
+
+let timer;
 
 // title text
 let title = {
@@ -155,7 +157,10 @@ let fishtank = {
   border: 100,
 };
 
-// Preload fish images
+
+// setup() -----------------------------------------------------------------------
+//
+// Preload all images and fonts
 function preload() {
   firefish.img1 = loadImage(`assets/images/firefish1.png`);
   firefish.img2 = loadImage(`assets/images/firefish2.png`);
@@ -164,26 +169,34 @@ function preload() {
   moreFoodButton.img = loadImage(`assets/images/moreFood.png`);
   bg.rocks.img = loadImage(`assets/images/rocks.png`);
   bg.sand.img = loadImage(`assets/images/sand.png`);
+
   title.font = loadFont(`assets/fonts/Slackey-Regular.ttf`);
 }
 
-// setup()
+// setup() -----------------------------------------------------------------------
 //
-// Set up canvas and remove cursor
+// Set up canvas, remove cursor, create arrays for fishfoods and poemLines
 function setup() {
   createCanvas(1300, 800);
   noCursor();
   noStroke();
 
+  // Create array for fishfoods (for animation state)
   for (let i = 0; i < numFishfoods; i++) {
     fishfoods[i] = new Fishfood();
   }
 
+  // Create array for poemLines (for end state)
+  for (let i = 0; i < numPoemLines; i++) {
+    poemLines[i] = new PoemLine(line[i], width/2, i*spaceBetweenEachLine + yLocationOfFirstLine);
+  }
 }
 
-// draw()
+
+
+// draw() -----------------------------------------------------------------------
 //
-// Set up background color and states
+// Set up background color, background rocks and sand, and states
 function draw() {
   background(bg.fill.r, bg.fill.g, bg.fill.b);
   push();
@@ -200,16 +213,32 @@ function draw() {
     animation();
   }
 
-  // loopFirefishImages = setInterval(switchFireFishImage(), 2000);
+  if (state === `ending`) {
+    ending();
+  }
+
+  // loopFirefishImages = setInterval(switchFireFishImages(), 2000);
 
 }
 
+let fishImg1Displayed = true;
+
 // let test;
 //
-// function switchFirefishImage() {
-//   test = setTimeout(displayFirefish({img: firefish.img1, x: firefish.x, y: firefish.y, length: firefish.length, width: firefish.width}), 1000);
-// }
+function switchFirefishImages() {
+  if (fishImg1Displayed) {
+    setTimeout(displayFirefish({img: firefish.img2, x: firefish.x, y: firefish.y, length: firefish.length, width: firefish.width}), 2000);
+    fishImg1Displayed = false;
+  }
+  else {
+    setTimeout(displayFirefish({img: firefish.img1, x: firefish.x, y: firefish.y, length: firefish.length, width: firefish.width}), 2000);
+    fishImg1Displayed = true;
+  }
+}
 
+// intro() -----------------------------------------------------------------------
+//
+// Display title, start button, finger, and fishes
 function intro() {
   displayTitle(); // display "Hungry Fishies"
   displayStartButton(); // Drawing the start button
@@ -219,6 +248,7 @@ function intro() {
   displayFinger(); // display user circle
 
   displayFirefish({img: firefish.img1, x: firefish.x, y: firefish.y, length: firefish.length, width: firefish.width});
+  //beautiful
 
   firefishCasualSwimming({tx:firefish.tx, ty:firefish.ty, txChange:firefish.txChange, tyChange:firefish.tyChange, speedCasualSwimming:firefish.speed.casualSwimming});
 }
@@ -237,72 +267,17 @@ function displayTitle() {
   pop();
 }
 
-// Display More Food Button
-function displayMoreFoodButton() {
-  push();
-  imageMode(CENTER);
-  moreFoodButton.x = width - moreFoodButton.distFromEdge;
-  moreFoodButton.y = moreFoodButton.distFromEdge;
-  image(moreFoodButton.img, moreFoodButton.x, moreFoodButton.y, moreFoodButton.size.current, moreFoodButton.size.current);
-  pop();
-}
 
-// Checks if finger is hovering on More Food Button
-function fingerIsOnMoreFoodButton() {
-  if (finger.x < moreFoodButton.x+(moreFoodButton.size.current/2) && finger.x > moreFoodButton.x-(moreFoodButton.size.current/2)) {
-    if (finger.y < moreFoodButton.y+(moreFoodButton.size.current/2) && finger.y > moreFoodButton.y-(moreFoodButton.size.current/2)) {
-      return true;
-    }
-  }
-  else{
-    return false;
-  }
-}
+//
+// function mousePressed() {
+//   if (timeForFood === true) {
+//       // generateRandomFoodPosition = true;
+//   }
+// }
 
-// More Food Button enlarges if finger hovers over it
-function hoverOnMoreFoodButton() {
-  if (fingerIsOnMoreFoodButton()) {
-    moreFoodButton.size.current = moreFoodButton.size.bigger;
-  }
-  else {
-    // More food button keeps its initial size
-    moreFoodButton.size.current = moreFoodButton.size.smaller;
-  }
 
-}
-
-function clickMoreFoodButton(){
-  if (mouseIsPressed && fingerIsOnMoreFoodButton()) {
-    timeForFood = true;
-  }
-
-  if (timeForFood) {
-    showFood = true;
-    timeForFood = false;
-  }
-
-  if (showFood) {
-    for (let i = fishfoods.length-1; i >= 0; i--) {
-      fishfoods[i].move();
-      fishfoods[i].show();
-
-      if (fishfoods[i].foodEaten()) {
-        firefish.numFoodEaten ++;
-      }
-
-      if (fishfoods[i].foodEaten() || fishfoods[i].offScreen()) {
-        fishfoods.splice(i,1);
-      }
-    }
-  }
-}
-
-function mousePressed() {
-  if (timeForFood === true) {
-      // generateRandomFoodPosition = true;
-  }
-}
-
+// animation() -----------------------------------------------------------------------
+//
 // Animation state: finger and firefish are displayed. Finger moves with mouse. Firefish moves randomly (Perlin noise) until it spots the finger and follows it.
 function animation() {
 
@@ -313,7 +288,9 @@ function animation() {
   displayFoodTracker();
   updateFoodTracker();
 
-  displayFirefish({img: firefish.img1, x: firefish.x, y: firefish.y, length: firefish.length, width: firefish.width});
+  // displayFirefish({img: firefish.img1, x: firefish.x, y: firefish.y, length: firefish.length, width: firefish.width});
+  // beautiful
+  switchFirefishImages();
 
   displayFinger();
 
@@ -333,11 +310,19 @@ function animation() {
   }
 }
 
+// ending() -----------------------------------------------------------------------
+//
+// Display end poem and finger
+function ending() {
+  displayFinger();
+  displayEndPoem();
+}
 
 function displayFoodTracker(){
   push();
   // display food tracker image
   image(firefish.foodTracker.img, firefish.foodTracker.x, firefish.foodTracker.y, firefish.foodTracker.length, firefish.foodTracker.height);
+
   // display bar that updates when fish eats food
   fill(foodTracker.fillR, foodTracker.fillG, foodTracker.fillB);
   rect(foodTracker.x, foodTracker.y, foodTracker.length, foodTracker.height, foodTracker.radius);
@@ -345,7 +330,7 @@ function displayFoodTracker(){
 }
 
 function updateFoodTracker(){
-  foodTracker.length = map(firefish.numFoodEaten, 0, numFishfoods, 0, foodTracker.totalLength);
+  foodTracker.length = map(firefish.numFoodEaten, 0, totalFood, 0, foodTracker.totalLength);
 }
 
 // Finger is a circle that follows cursor.
@@ -464,8 +449,6 @@ function setFishAngle() {
   }
   pop();
 }
-
-
 
 // Fish faces direction it is swimming
 function setFishDirection({x,y,vx}) {
