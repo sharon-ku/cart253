@@ -4,8 +4,30 @@ function displayMoreFoodButton() {
   imageMode(CENTER);
   moreFoodButton.x = width - moreFoodButton.distFromEdge;
   moreFoodButton.y = moreFoodButton.distFromEdge;
+
+  tint(moreFoodButton.tint.gray, moreFoodButton.tint.alpha);
   image(moreFoodButton.img, moreFoodButton.x, moreFoodButton.y, moreFoodButton.size.current, moreFoodButton.size.current);
   pop();
+
+  if (timeForFood) {
+    moreFoodButton.tint.alpha = 255;
+  }
+  else {
+    moreFoodButton.tint.alpha = 90;
+  }
+}
+
+// Once all fishfoods are gone, reactivate the MoreFoodButton and create new fishfoods
+function resetMoreFoodButton() {
+  if (fishfoods.length === 0) {
+    timeForFood = true;
+    showFood = false;
+
+    // Create new fishfoods in array
+    for (let i = 0; i < numFishfoods; i++) {
+      fishfoods[i] = new Fishfood();
+    }
+  }
 }
 
 // Checks if finger is hovering on More Food Button
@@ -34,11 +56,7 @@ function hoverOnMoreFoodButton() {
 
 // If finger clicks on More Food Button, release food
 function clickMoreFoodButton(){
-  if (mouseIsPressed && fingerIsOnMoreFoodButton()) {
-    timeForFood = true;
-  }
-
-  if (timeForFood) {
+  if (mouseIsPressed && fingerIsOnMoreFoodButton() && moreFoodButton.tint.alpha === 255) {
     showFood = true;
     timeForFood = false;
   }
@@ -57,4 +75,5 @@ function clickMoreFoodButton(){
       }
     }
   }
+
 }
