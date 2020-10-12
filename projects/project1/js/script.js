@@ -7,7 +7,7 @@ Sharon Ku
 
 "use strict"; // because strict is good
 
-let state = `animation`; // other states: animation, end
+let state = `intro`; // other states: animation, end
 
 let changeFirefishImage = undefined;
 
@@ -20,10 +20,46 @@ let fishfoods = [];
 
 // title text
 let title = {
-  line1: `Hungry`,
-  line2: `Fishies`,
+  line1: `HUNGRY`,
+  line2: `FISHIES`,
   font: undefined,
   fill: 255,
+};
+
+// start text
+let start = {
+  text: `START`,
+  font: `Arial`,
+  x: 100,
+  y: 100,
+  size: 25,
+  sizeBigger: 30,
+  sizeSmaller: 25,
+  fill: {
+    r: 255,
+    g: 255,
+    b: 255,
+  },
+};
+
+// start button
+let startButton = {
+  size: 130,
+  sizeBigger: 150,
+  sizeSmaller: 130,
+  x: 100,
+  y: 100,
+  fill: {
+    // coral
+    r: 254,
+    g: 158,
+    b: 146,
+    // vivid sky blue
+    rHover: 10,
+    gHover: 205,
+    bHover: 255,
+    alpha: 200,
+  },
 };
 
 let foodTracker = {
@@ -267,6 +303,10 @@ class Fishfood {
 
 function intro() {
   displayTitle(); // display "Hungry Fishies"
+  displayStartButton(); // Drawing the start button
+  displayStart(); // Drawing the start text
+  hoverOnStartButton(); // Start button and Start text enlarge if mouse's position is on start button
+
   displayFinger(); // display user circle
 
   displayFirefish({img: firefish.img1, x: firefish.x, y: firefish.y, length: firefish.length, width: firefish.width});
@@ -279,12 +319,12 @@ function intro() {
 function displayTitle() {
   push();
   fill(title.fill);
-  textSize(height/15);
+  textSize(height/8);
   textAlign(CENTER,CENTER);
 
   textFont(title.font);
-  text(title.line1, width/3, height/3);
-  text(title.line2, width/2, height/2);
+  text(title.line1, width/2, height/5);
+  text(title.line2, width/2, height/3);
   pop();
 }
 
@@ -347,13 +387,6 @@ function clickMoreFoodButton(){
       if (fishfoods[i].foodEaten() || fishfoods[i].offScreen()) {
         fishfoods.splice(i,1);
       }
-
-      // if fishfood is off screen, than it will be removed from the array
-      // if (fishfoods[i].offScreen()) {
-      //   fishfoods.splice(i,1);
-      // }
-
-
     }
   }
 }
@@ -371,12 +404,14 @@ function animation() {
   hoverOnMoreFoodButton();
   clickMoreFoodButton();
 
+  displayFoodTracker();
+  updateFoodTracker();
+
   displayFirefish({img: firefish.img1, x: firefish.x, y: firefish.y, length: firefish.length, width: firefish.width});
 
   displayFinger();
 
-  displayFoodTracker();
-  updateFoodTracker();
+
   console.log(firefish.numFoodEaten);
 
   // Constraining firefish's movement
@@ -395,7 +430,9 @@ function animation() {
 
 function displayFoodTracker(){
   push();
+  // display food tracker image
   image(firefish.foodTracker.img, firefish.foodTracker.x, firefish.foodTracker.y, firefish.foodTracker.length, firefish.foodTracker.height);
+  // display bar that updates when fish eats food
   fill(foodTracker.fillR, foodTracker.fillG, foodTracker.fillB);
   rect(foodTracker.x, foodTracker.y, foodTracker.length, foodTracker.height, foodTracker.radius);
   pop();
@@ -534,5 +571,79 @@ function setFishDirection({x,y,vx}) {
   else {
     firefish.scale.x = 1; // face left
   }
+  pop();
+}
+
+
+
+
+
+function hoverOnStartButton() {
+  if (mouseIsInStartButton()) {
+    push();
+    // Start button enlarges and changes color
+    startButton.size = startButton.sizeBigger;
+    fill(startButton.fill.rHover, startButton.fill.gHover, startButton.fill.bHover, startButton.fill.alpha);
+    ellipse(startButton.x, startButton.y, startButton.size);
+
+    // Start text enlarges
+    start.size = start.sizeBigger;
+    fill(start.fill.r, start.fill.g, start.fill.b);
+    textAlign(CENTER, CENTER);
+    textSize(start.size);
+    textFont(start.font);
+    text(start.text, start.x, start.y);
+    pop();
+  }
+  else {
+    // Start button and text keep size of initial setup
+    startButton.size = startButton.sizeSmaller;
+    start.size = start.sizeSmaller;
+  }
+}
+
+// If user clicks on Start button, cue `animation` state
+function mouseClicked() {
+  if (mouseIsInStartButton()) {
+    state = `animation`;
+  }
+}
+
+// Checks if mouse's position is inside the Start button
+function mouseIsInStartButton() {
+  if (mouseX < startButton.x+(startButton.size/2) && mouseX > startButton.x-(startButton.size/2)) {
+    if (mouseY < startButton.y+(startButton.size/2) && mouseY > startButton.y-(startButton.size/2)) {
+      return true;
+    }
+  }
+  else{
+    return false;
+  }
+}
+
+// Display the circular Start button
+function displayStartButton() {
+  push();
+  startButton.x = start.x;
+  startButton.y = start.y;
+
+  fill(startButton.fill.r, startButton.fill.g, startButton.fill.b, startButton.fill.alpha);
+  ellipse(startButton.x, startButton.y, startButton.size);
+  pop();
+}
+
+
+// Display the Start text
+function displayStart() {
+  push();
+  fill(start.fill.r, start.fill.g, start.fill.b);
+  textSize(start.size);
+  textAlign(CENTER, CENTER);
+
+  start.x = width*1/5;
+  start.y = height*4/5;
+
+  textFont(start.font);
+  text(start.text, start.x, start.y);
   pop();
 }
