@@ -7,7 +7,7 @@ Sharon Ku
 
 "use strict"; // because strict is good
 
-let state = `animation`; // other states: animation, ending
+let state = `instructions`; // other states: instructions, animation, ending
 
 let changeFirefishImage = undefined;
 
@@ -81,7 +81,7 @@ let foodTracker = {
   fillR: 219,
   fillG: 220,
   fillB: 100,
-}
+};
 
 let firefish = {
   img1: undefined,
@@ -144,7 +144,7 @@ let moreFoodButton = {
   x: 100,
   y: 100,
   distFromEdge: 100,
-}
+};
 
 let bg = {
   fill: { // sky blue
@@ -177,10 +177,18 @@ let nightFilter = {
     alphaChangeRate: 1,
     finalAlpha: 130,
   },
-}
+};
 
 let fishtank = {
   border: 100,
+};
+
+let rules = {
+  img: undefined,
+  length: 869,
+  height: 632,
+  x: 200,
+  y: 200,
 };
 
 
@@ -191,6 +199,8 @@ function preload() {
   firefish.img1 = loadImage(`assets/images/firefish1.png`);
   firefish.img2 = loadImage(`assets/images/firefish2.png`);
   firefish.foodTracker.img = loadImage(`assets/images/firefishFoodTracker.png`);
+
+  rules.img = loadImage(`assets/images/rules.png`);
 
   moreFoodButton.img = loadImage(`assets/images/moreFood.png`);
   bg.rocks.img = loadImage(`assets/images/rocks.png`);
@@ -234,6 +244,10 @@ function draw() {
 
   if (state === `intro`) {
     intro();
+  }
+
+  if (state === `instructions`) {
+    instructions();
   }
 
   if (state === `animation`) {
@@ -302,6 +316,22 @@ function displayTitle() {
 //   }
 // }
 
+
+// instructions() ----------------------------------------------------------------------
+//
+// instruction state: display rules on the canvas, players can return to home page by clicking on "Return" button, or return to the animation by clicking "Start"
+function instructions() {
+  displayRules();
+}
+
+function displayRules() {
+  push();
+  imageMode(CENTER);
+  rules.x = width/2;
+  rules.y = height/2;
+  image(rules.img, rules.x, rules.y, rules.length, rules.height);
+  pop();
+}
 
 // animation() -----------------------------------------------------------------------
 //
