@@ -84,6 +84,7 @@ let foodTracker = {
 };
 
 let firefish = {
+  buffer: 10,
   img1: undefined,
   img2: undefined,
   x: 500,
@@ -105,8 +106,6 @@ let firefish = {
     x: 1,
     y: 1,
   },
-  // angle: 0,
-  // finalAngle: 90,
   numFoodEaten: 0,
   foodTracker: {
     img: undefined,
@@ -374,6 +373,7 @@ function animation() {
 //
 // Display end poem and finger
 function ending() {
+  noCursor();
   displayNightFilter();
   displayFinger();
   displayEndPoem();
@@ -435,24 +435,20 @@ function fishStaysInTank({x,y}) {
 // The fish follows the finger
 function fishFollowsFinger({x, y, vx, vy, speed}) {
   // Calculating distance from fish to finger
-  let distX;
+  let distX = firefish.x - mouseX;
   let distY = firefish.y - mouseY;
 
-  if (firefish.x < mouseX) {
-    // distX = firefish.x - mouseX + firefish.length/2;
-    distX = firefish.x - mouseX;
-  }
-  else {
-    // distX = firefish.x - mouseX - firefish.length/2;
-    distX = firefish.x - mouseX;
-  }
+  firefish.butter = firefish.length/2;
 
   // Firefish's velocity changes depending on where the finger is with respect to its body
-  if (distX < 0) {
+  if (distX < -firefish.buffer) {
     vx = speed;
   }
-  else {
+  else if (distX > firefish.buffer) {
     vx = -speed;
+  }
+  else {
+    vx = 0; // Stop moving if the fish is within buffer of the finger
   }
   if (distY < 0) {
     vy = speed;
@@ -471,10 +467,9 @@ function fishFollowsFinger({x, y, vx, vy, speed}) {
   if (vx > 0) {
     firefish.scale.x = -1; // face right
   }
-  else {
+  else if (vx < 0 || vx === 0) {
     firefish.scale.x = 1; // face left
   }
-
 }
 
 // Returns true if finger is within the fish's field of vision

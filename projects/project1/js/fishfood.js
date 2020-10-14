@@ -68,16 +68,16 @@ class Fishfood {
     let distToFishMouth;
     let fishMouthLocation;
 
-    if (firefish.scale.x > 0) {
-      fishMouthLocation = firefish.x - (firefish.length/3);
-    }
-    else if (firefish.scale.x < 0) {
+    if (firefish.scale.x < 0) {
       fishMouthLocation = firefish.x + (firefish.length/3);
+    }
+    else {
+      fishMouthLocation = firefish.x - (firefish.length/3);
     }
 
     distToFishMouth = dist(this.x, this.y, fishMouthLocation, firefish.y);
 
-    if (distToFishMouth < firefish.length/6) {
+    if (distToFishMouth < firefish.length/5) {
       return true;
     }
     else {
