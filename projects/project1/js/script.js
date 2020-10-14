@@ -7,7 +7,7 @@ Sharon Ku
 
 "use strict"; // because strict is good
 
-let state = `instructions`; // other states: instructions, animation, ending
+let state = `animation`; // other states: instructions, animation, ending
 
 let changeFirefishImage = undefined;
 
@@ -105,8 +105,8 @@ let firefish = {
     x: 1,
     y: 1,
   },
-  angle: 0,
-  finalAngle: 90,
+  // angle: 0,
+  // finalAngle: 90,
   numFoodEaten: 0,
   foodTracker: {
     img: undefined,
@@ -345,14 +345,6 @@ function animation() {
 
   displayFoodTracker();
   updateFoodTracker();
-
-  // displayFirefish({img: firefish.img1, x: firefish.x, y: firefish.y, length: firefish.length, width: firefish.width});
-  // beautiful
-  switchFirefishImages();
-
-  displayFinger();
-
-
   console.log(firefish.numFoodEaten);
 
   // Constraining firefish's movement
@@ -366,6 +358,13 @@ function animation() {
     firefishCasualSwimming({speedCasualSwimming:firefish.speed.casualSwimming});
   }
 
+  // need to figure out how to switch between images - animated sprite?
+  // displayFirefish({img: firefish.img1, x: firefish.x, y: firefish.y, length: firefish.length, width: firefish.width});
+  switchFirefishImages();
+
+  displayFinger();
+
+  // Cue ending if firefish has eaten the total number of food
   if (firefish.numFoodEaten === totalFood) {
     state = `ending`;
   }
@@ -396,6 +395,10 @@ function displayNightFilter() {
   pop();
 }
 
+
+// Other functions -----------------------------------------------------------------------
+//
+// Display food tracker on canvas
 function displayFoodTracker() {
   push();
   // display food tracker image
@@ -407,6 +410,7 @@ function displayFoodTracker() {
   pop();
 }
 
+// Update food tracker every time food is eaten by fish
 function updateFoodTracker(){
   foodTracker.length = map(firefish.numFoodEaten, 0, totalFood, 0, foodTracker.totalLength);
 }
@@ -430,6 +434,7 @@ function fishStaysInTank({x,y}) {
 
 // The fish follows the finger
 function fishFollowsFinger({x, y, vx, vy, speed}) {
+  // Calculating distance from fish to finger
   let distX;
   let distY = firefish.y - mouseY;
 
@@ -442,19 +447,13 @@ function fishFollowsFinger({x, y, vx, vy, speed}) {
     distX = firefish.x - mouseX;
   }
 
-  // push();
-  // translate(firefish.x,firefish.y);
-  // setFishAngle();
-  // pop();
-
-
+  // Firefish's velocity changes depending on where the finger is with respect to its body
   if (distX < 0) {
     vx = speed;
   }
   else {
     vx = -speed;
   }
-
   if (distY < 0) {
     vy = speed;
   }
@@ -462,15 +461,20 @@ function fishFollowsFinger({x, y, vx, vy, speed}) {
     vy = -speed;
   }
 
-  if (vx > 0) {
-    firefish.scale.x = -1;
-  }
-  else {
-    firefish.scale.x = 1;
-  }
-
   firefish.x += vx;
   firefish.y += vy;
+
+  // Setting the fish's direction (facing left or facing right)
+
+  // setFishDirection({x: firefish.x, y: firefish.y, vx: firefish.vx});
+
+  if (vx > 0) {
+    firefish.scale.x = -1; // face right
+  }
+  else {
+    firefish.scale.x = 1; // face left
+  }
+
 }
 
 // Returns true if finger is within the fish's field of vision
@@ -510,7 +514,6 @@ function displayFirefish({img, x, y, length, width}) {
   push();
   translate(x,y);
   imageMode(CENTER);
-  // setFishAngle(); //Fish swims at an angle
 
   scale(firefish.scale.x, firefish.scale.y);
   setFishDirection({x: firefish.x, y: firefish.y, vx: firefish.vx}); // Fish faces the direction it is swimming
@@ -530,22 +533,3 @@ function setFishDirection({x,y,vx}) {
   }
   pop();
 }
-
-
-/**
-// Firefish's angle changes depending on the direction it is going
-function setFishAngle() {
-  push();
-  translate(firefish.x,firefish.y);
-  rotate(firefish.angle);
-  firefish.finalAngle = atan(firefish.vx,firefish.vy) / 4;
-
-  if (firefish.angle < firefish.finalAngle) {
-    firefish.angle += 0.001; //0.0005
-  }
-  else {
-    firefish.angle -= 0.001; //0.0005
-  }
-  pop();
-}
-**/
