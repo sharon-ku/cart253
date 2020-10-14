@@ -359,8 +359,8 @@ function animation() {
   }
 
   // need to figure out how to switch between images - animated sprite?
-  // displayFirefish({img: firefish.img1, x: firefish.x, y: firefish.y, length: firefish.length, width: firefish.width});
-  switchFirefishImages();
+  displayFirefish({img: firefish.img1, x: firefish.x, y: firefish.y, length: firefish.length, width: firefish.width});
+  // switchFirefishImages();
 
   displayFinger();
 
