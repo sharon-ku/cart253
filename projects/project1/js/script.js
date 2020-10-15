@@ -1,8 +1,8 @@
 /**************************************************
-Project 1: Simulation
+Project 1: Simulation - Hungry Fishies
 Sharon Ku
 
-3 fishes (nemo, firefish, and goby) swim around the tank. When the fishes spot the finger (user circle), they follow it. The user adds food to the tank by clicking the "Add Food" button and tries to get the fishes to eat the food by guiding them with the finger. When the fishes are full, the simulation ends.
+In the intro, the title "Hungry Fishies" is displayed with a firefish swimming around the tank. Once the user clicks the "Start" button, the instructions are shown (instructions state). When the user clicks "Ready!", the animation state starts. When the fish spots the finger (user circle), it follows it. The user adds food to the tank by clicking the "More Food" button and tries to get the fish to eat the food by guiding it with the finger. When the fish is full, the simulation ends (cue ending state). A poem is featured as the tank plunges into darkness.
 **************************************************/
 
 "use strict"; // because strict is good
@@ -10,12 +10,10 @@ Sharon Ku
 // State of program
 let state = `intro`; // other states: instructions, animation, ending
 
-let changeFirefishImage = undefined;
-
 // Variables related to fishfood
 let fishfoods = []; // fishfoods array that contains food objects
 let numFishfoods = 5; // number of fish food in the tank at once
-let totalFood = 5; // total amount of food that fish needs to consume
+let totalFood = 30; // total amount of food that fish needs to consume
 
 let timeForFood = true; // when no more food in tank, it is time for food
 let showFood = false;  // when user clicks More Food button, show food
@@ -228,6 +226,14 @@ let readyButton = {
     alpha: 220,
   },
 };
+
+// Variables pertaining to end poem
+let poemLines = [];
+let numPoemLines = 4;
+let yLocationOfFirstLine = 210;
+let spaceBetweenEachLine = 40;
+
+let line = [`All your fishies are now well fed,`, `Watch them go, off to bed...`, `They suddenly feel something moving in their belly,`, `Looks like they gave birth to adorable food babies!`];
 
 // Nighttime shade rectangle
 let nightFilter = {

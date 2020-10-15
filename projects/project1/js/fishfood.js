@@ -1,4 +1,4 @@
-// This is what it means to be fishfood
+// This is what it means to be fishfood. It can be displayed and moved. The user can use the left and right arrow keys to change the current and water bend the fish food that way.
 
 class Fishfood {
   constructor() {
@@ -28,7 +28,7 @@ class Fishfood {
     pop();
   }
 
-  // move fish food
+  // move fishfood + change current using left and right arrow keys
   move() {
     this.ax = this.accelerationX;
     this.ay = this.accelerationY;

@@ -1,12 +1,5 @@
 // This is what it means to be an end poem. Its lines are displayed.
 
-let poemLines = [];
-let numPoemLines = 4;
-let yLocationOfFirstLine = 210;
-let spaceBetweenEachLine = 40;
-
-let line = [`All your fishies are now well fed,`, `Watch them go, off to bed...`, `They suddenly feel something moving in their belly,`, `Looks like they gave birth to adorable food babies!`];
-
 class PoemLine {
   constructor(lineText, x, y) {
     this.line = lineText;
