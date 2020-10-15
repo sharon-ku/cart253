@@ -7,7 +7,7 @@ Sharon Ku
 
 "use strict"; // because strict is good
 
-let state = `animation`; // other states: instructions, animation, ending
+let state = `intro`; // other states: instructions, animation, ending
 
 let changeFirefishImage = undefined;
 
@@ -53,16 +53,10 @@ let startButton = {
   x: 100,
   y: 100,
   fill: {
-    // // coral
-    // r: 254,
-    // g: 158,
-    // b: 146,
-
     // vivid sky blue
     r: 10,
     g: 205,
     b: 255,
-    // vivid sky blue
     rHover: 10,
     gHover: 205,
     bHover: 255,
@@ -184,12 +178,59 @@ let fishtank = {
 
 let rules = {
   img: undefined,
-  length: 869,
-  height: 632,
+  length: 782,
+  height: 569,
   x: 200,
   y: 200,
 };
 
+let rulesRect = {
+  x: 500,
+  y: 500,
+  distToEdge: 50,
+  length: 1300,
+  height: 800,
+  cornerRadius: 50,
+  fill: {
+    r: 4,
+    g: 81,
+    b: 101,
+    alpha: 220,
+  },
+};
+
+let begin = {
+  text: `BEGIN!`,
+  x: 1150,
+  y: 640,
+  size: 40,
+  sizeBigger: 50,
+  sizeSmaller: 40,
+  fill: {
+    r: 255,
+    g: 255,
+    b: 255,
+  },
+};
+
+// "Begin" button
+let beginButton = {
+  size: 170,
+  sizeBigger: 200,
+  sizeSmaller: 170,
+  x: 700,
+  y: 100,
+  fill: {
+    // coral
+    r: 254,
+    g: 158,
+    b: 146,
+    rHover: 254,
+    gHover: 158,
+    bHover: 146,
+    alpha: 220,
+  },
+};
 
 // setup() -----------------------------------------------------------------------
 //
@@ -283,6 +324,7 @@ function intro() {
   displayTitle(); // display "Hungry Fishies"
   displayStartButton(); // Drawing the start button
   displayStart(); // Drawing the start text
+
   hoverOnStartButton(); // Start button and Start text enlarge if mouse's position is on start button
 
   displayFinger(); // display user circle
@@ -308,27 +350,103 @@ function displayTitle() {
 }
 
 
-//
-// function mousePressed() {
-//   if (timeForFood === true) {
-//       // generateRandomFoodPosition = true;
-//   }
-// }
 
 
 // instructions() ----------------------------------------------------------------------
 //
 // instruction state: display rules on the canvas, players can return to home page by clicking on "Return" button, or return to the animation by clicking "Start"
 function instructions() {
+  displayMoreFoodButton();
+
+  displayFoodTracker();
+
+  firefishCasualSwimming({speedCasualSwimming:firefish.speed.casualSwimming});
+  displayFirefish({img: firefish.img1, x: firefish.x, y: firefish.y, length: firefish.length, width: firefish.width});
+
+  displayRulesRect();
   displayRules();
+  displayBeginButton();
+  hoverOnBeginButton();
+
+  // Display "Let's Feed!" text
+  push();
+  fill(begin.fill.r, begin.fill.g, begin.fill.b);
+  textSize(begin.size);
+  textAlign(CENTER, CENTER);
+
+  textFont(bodyTextFont);
+  text(begin.text, begin.x, begin.y);
+  pop();
+
+  displayFinger();
 }
 
+// Display rules page
 function displayRules() {
   push();
   imageMode(CENTER);
   rules.x = width/2;
   rules.y = height/2;
   image(rules.img, rules.x, rules.y, rules.length, rules.height);
+  pop();
+}
+
+// If finger hovers on Start button, Start button and text enlarges
+function hoverOnBeginButton() {
+  if (mouseIsInButton({x:beginButton.x, y:beginButton.y, size:beginButton.size})) {
+    push();
+    // Begin button enlarges
+    beginButton.size = beginButton.sizeBigger;
+    fill(beginButton.fill.rHover, beginButton.fill.gHover, beginButton.fill.bHover, beginButton.fill.alpha);
+    ellipse(beginButton.x, beginButton.y, beginButton.size);
+
+    // Start text enlarges
+    begin.size = begin.sizeBigger;
+    fill(begin.fill.r, begin.fill.g, begin.fill.b);
+    textAlign(CENTER, CENTER);
+    textSize(begin.size);
+    textFont(bodyTextFont);
+    text(begin.text,begin.x, begin.y);
+    pop();
+  }
+  else {
+    // Start button and text keep size of initial setup
+    beginButton.size = beginButton.sizeSmaller;
+    begin.size = begin.sizeSmaller;
+  }
+}
+
+// Display the circular Start button
+function displayBeginButton() {
+  push();
+  beginButton.x = begin.x;
+  beginButton.y = begin.y;
+
+  fill(beginButton.fill.r, beginButton.fill.g, beginButton.fill.b, beginButton.fill.alpha);
+  ellipse(beginButton.x, beginButton.y, beginButton.size);
+  pop();
+
+  console.log(mouseIsInButton({x:beginButton.x, y:beginButton.y, size:beginButton.size}));
+}
+
+// If finger clicks on Start button, cue `animation` state
+function mouseClicked() {
+  if (mouseIsInButton({x:beginButton.x, y:beginButton.y, size:beginButton.size})) {
+    state = `animation`;
+  }
+}
+
+// Display Rules rectangle
+function displayRulesRect() {
+  rulesRect.x = width/2;
+  rulesRect.y = height/2;
+  rulesRect.length = width - rulesRect.distToEdge;
+  rulesRect.height = height - rulesRect.distToEdge;
+
+  push();
+  fill(rulesRect.fill.r, rulesRect.fill.g, rulesRect.fill.b, rulesRect.fill.alpha);
+  rectMode(CENTER);
+  rect(rulesRect.x, rulesRect.y, rulesRect.length, rulesRect.height, rulesRect.cornerRadius);
   pop();
 }
 
@@ -373,9 +491,7 @@ function animation() {
 //
 // Display end poem and finger
 function ending() {
-  noCursor();
   displayNightFilter();
-  displayFinger();
   displayEndPoem();
 }
 

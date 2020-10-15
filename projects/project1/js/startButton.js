@@ -2,7 +2,7 @@
 
 // If finger hovers on Start button, Start button and text enlarges
 function hoverOnStartButton() {
-  if (mouseIsInStartButton()) {
+  if (mouseIsInButton({x:startButton.x, y:startButton.y, size:startButton.size})) {
     push();
     // Start button enlarges and changes color
     startButton.size = startButton.sizeBigger;
@@ -27,15 +27,15 @@ function hoverOnStartButton() {
 
 // If finger clicks on Start button, cue `animation` state
 function mouseClicked() {
-  if (mouseIsInStartButton()) {
-    state = `animation`;
+  if (mouseIsInButton({x:startButton.x, y:startButton.y, size:startButton.size})) {
+    state = `instructions`;
   }
 }
 
 // Checks if finger's position is inside the Start button
-function mouseIsInStartButton() {
-  if (mouseX < startButton.x+(startButton.size/2) && mouseX > startButton.x-(startButton.size/2)) {
-    if (mouseY < startButton.y+(startButton.size/2) && mouseY > startButton.y-(startButton.size/2)) {
+function mouseIsInButton({x, y, size}) {
+  if (mouseX < x+(size/2) && mouseX > x-(size/2)) {
+    if (mouseY < y+(size/2) && mouseY > y-(size/2)) {
       return true;
     }
   }
