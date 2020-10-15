@@ -1,4 +1,4 @@
-// End poem
+// This is what it means to be an end poem. Its lines are displayed.
 
 let poemLines = [];
 let numPoemLines = 4;
@@ -28,13 +28,4 @@ class PoemLine {
     text(this.line, this.x, this.y);
     pop();
   }
-}
-
-// display end poem
-function displayEndPoem() {
-  push();
-  for (let i = 0; i < numPoemLines; i++) {
-    poemLines[i].show();
-  }
-  pop();
 }

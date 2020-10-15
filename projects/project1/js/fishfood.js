@@ -1,16 +1,18 @@
+// This is what it means to be fishfood
+
 class Fishfood {
   constructor() {
     this.x = random(fishtank.border, width - fishtank.border);
     this.y = 0;
     this.vx = 0;
     this.vy = 0;
-    this.speedMax = 1.5; //dne before
-    this.speed = random(0, this.speedMax); //1.5
+    this.speedMax = 1.5;
+    this.speed = random(0, this.speedMax);
     this.ax = 0;
     this.ay = 0;
-    this.accelerationMax = 3; //3
-    this.accelerationX = random(-this.accelerationMax, this.accelerationMax); //0
-    this.accelerationY = 0;
+    this.accelerationMax = 3;
+    this.accelerationX = random(-this.accelerationMax, this.accelerationMax);
+    this.accelerationY = 0.5;
     this.size = 15;
     this.fillR = 255;  // beige
     this.fillG = 221;
@@ -18,6 +20,7 @@ class Fishfood {
     this.fillAlpha = 255;
   }
 
+  // display fish food
   show() {
     push();
     fill(this.fillR, this.fillG, this.fillB, this.fillAlpha);
@@ -25,9 +28,8 @@ class Fishfood {
     pop();
   }
 
+  // move fish food
   move() {
-    // this.x = constrain(this.x, fishtank.border, width - fishtank.border);
-
     this.ax = this.accelerationX;
     this.ay = this.accelerationY;
 
@@ -44,7 +46,7 @@ class Fishfood {
     this.x += this.vx + this.ax;
     this.y += this.vy + this.ay;
 
-    // Change current
+    // Change current direction if user clicks left or right arrow key
     if (keyIsDown(LEFT_ARROW)) {
       this.accelerationX -= 0.05;
     }
@@ -63,21 +65,9 @@ class Fishfood {
     }
   }
 
-  // checks if food has been eaten by fish
+  // returns true if food is close enough to fish's body to be eaten
   foodEaten() {
-    let distToFishMouth;
-    let fishMouthLocation;
-
-    if (firefish.scale.x < 0) {
-      fishMouthLocation = firefish.x + (firefish.length/3);
-    }
-    else {
-      fishMouthLocation = firefish.x - (firefish.length/3);
-    }
-
-    distToFishMouth = dist(this.x, this.y, fishMouthLocation, firefish.y);
-
-    if (distToFishMouth < firefish.length/5) {
+    if ((this.x < firefish.x + firefish.length/2) && (this.x > firefish.x - firefish.length/2) && (this.y < firefish.y+firefish.width/2) && (this.y > firefish.y-firefish.width/2)) {
       return true;
     }
     else {
