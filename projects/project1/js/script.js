@@ -2,7 +2,12 @@
 Project 1: Simulation - Hungry Fishy
 Sharon Ku
 
-In the intro, the title "Hungry Fishy" is displayed with a firefish swimming around the tank. Once the user clicks the "Start" button, the instructions are shown (instructions state). When the user clicks "Ready!", the animation state starts. When the fish spots the finger (user circle), it follows it. The user adds food to the tank by clicking the "More Food" button and tries to get the fish to eat the food by guiding it with the finger. When the fish is full, the simulation ends (cue ending state). A poem is featured as the tank plunges into darkness and the fish releases a little surprise.
+-Intro state & Instructions state:
+The title "Hungry Fishy" is displayed with a firefish swimming around the tank. Once the user clicks the "Start" button, the instructions are shown (instructions state). When the user clicks "Ready!", the animation state starts.
+-Animation state:
+When the finger/user circle is close enough to the fish for it to notice it (within the fish's field of vision), the fish follows it. The user adds food to the tank by clicking the "More Food" button and tries to get the fish to eat the food by guiding it with the finger. The user can change the current direction by using the left and right arrow keys. When the fish is full, the simulation ends (cue ending state).
+-Ending state:
+A poem is featured as the tank plunges into darkness and the fish releases a little surprise from its behind.
 
 Background music from Mixkit.co: Smooth Like Jazz by Ajhay Stelino
 **************************************************/
@@ -18,7 +23,7 @@ let backgroundMusic = undefined;
 // Variables related to fishfood
 let fishfoods = []; // fishfoods array that contains food objects
 let numFishfoods = 5; // number of fish food in the tank at once
-let totalFood = 20; // total amount of food that fish needs to consume
+let totalFood = 15; // total amount of food that fish needs to consume
 
 let timeForFood = true; // when no more food in tank, it is time for food
 let showFood = false;  // when user clicks More Food button, show food
@@ -104,7 +109,7 @@ let firefish = {
   ty: 10,
   txChange: 0.025,
   tyChange: 0.025,
-  fieldOfVision: 300,
+  fieldOfVision: 350,
   scale: {
     x: 1,
     y: 1,
