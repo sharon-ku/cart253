@@ -3,12 +3,17 @@ Project 1: Simulation - Hungry Fishy
 Sharon Ku
 
 In the intro, the title "Hungry Fishy" is displayed with a firefish swimming around the tank. Once the user clicks the "Start" button, the instructions are shown (instructions state). When the user clicks "Ready!", the animation state starts. When the fish spots the finger (user circle), it follows it. The user adds food to the tank by clicking the "More Food" button and tries to get the fish to eat the food by guiding it with the finger. When the fish is full, the simulation ends (cue ending state). A poem is featured as the tank plunges into darkness and the fish releases a little surprise.
+
+Background music from Mixkit.co: Smooth Like Jazz by Ajhay Stelino
 **************************************************/
 
 "use strict"; // because strict is good
 
 // State of program
 let state = `intro`; // other states: instructions, animation, ending
+
+// Background music
+let backgroundMusic = undefined;
 
 // Variables related to fishfood
 let fishfoods = []; // fishfoods array that contains food objects
@@ -265,7 +270,7 @@ let poop = {
 
 // setup() -----------------------------------------------------------------------
 //
-// Preload all images and fonts
+// Preload all images, music, and fonts
 function preload() {
   // Load firefish images
   firefish.img1 = loadImage(`assets/images/firefish1.png`);
@@ -287,6 +292,9 @@ function preload() {
   // Load title font and body text font
   title.font = loadFont(`assets/fonts/Slackey-Regular.ttf`);
   bodyTextFont = loadFont(`assets/fonts/Grandstander-Regular.ttf`);
+
+  // Load background music
+  backgroundMusic = loadSound(`assets/sounds/backgroundMusic.mp3`);
 }
 
 // setup() -----------------------------------------------------------------------
@@ -337,6 +345,23 @@ function draw() {
   }
   else if (state === `ending`) {
     ending();
+  }
+}
+
+// Try playing music if mouse is pressed
+function mousePressed() {
+  tryMusic();
+}
+
+// Try playing music if key is pressed
+function keyPressed() {
+  tryMusic();
+}
+
+// Play music if first interaction and loop it
+function tryMusic() {
+  if (!backgroundMusic.isPlaying()) {
+    backgroundMusic.loop();
   }
 }
 
