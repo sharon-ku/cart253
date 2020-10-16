@@ -1,8 +1,8 @@
 /**************************************************
-Project 1: Simulation - Hungry Fishies
+Project 1: Simulation - Hungry Fishy
 Sharon Ku
 
-In the intro, the title "Hungry Fishies" is displayed with a firefish swimming around the tank. Once the user clicks the "Start" button, the instructions are shown (instructions state). When the user clicks "Ready!", the animation state starts. When the fish spots the finger (user circle), it follows it. The user adds food to the tank by clicking the "More Food" button and tries to get the fish to eat the food by guiding it with the finger. When the fish is full, the simulation ends (cue ending state). A poem is featured as the tank plunges into darkness.
+In the intro, the title "Hungry Fishy" is displayed with a firefish swimming around the tank. Once the user clicks the "Start" button, the instructions are shown (instructions state). When the user clicks "Ready!", the animation state starts. When the fish spots the finger (user circle), it follows it. The user adds food to the tank by clicking the "More Food" button and tries to get the fish to eat the food by guiding it with the finger. When the fish is full, the simulation ends (cue ending state). A poem is featured as the tank plunges into darkness and the fish releases a little surprise.
 **************************************************/
 
 "use strict"; // because strict is good
@@ -24,7 +24,7 @@ let bodyTextFont = undefined;
 // Title text
 let title = {
   line1: `HUNGRY`,
-  line2: `FISHIES`,
+  line2: `FISHY`,
   font: undefined,
   fill: 255,
 };
@@ -112,6 +112,10 @@ let firefish = {
     x: 50,
     y: 50,
   },
+  // cloaca means orifice from which fish releases the poop
+  cloacaX: 0,
+  cloacaY: 0,
+  vertDistBtwFishAndCloaca: 10,
 };
 
 // User circle
@@ -233,7 +237,7 @@ let numPoemLines = 4;
 let yLocationOfFirstLine = 210;
 let spaceBetweenEachLine = 40;
 
-let line = [`All your fishies are now well fed,`, `Watch them go, off to bed...`, `They suddenly feel something moving in their belly,`, `Looks like they gave birth to adorable food babies!`];
+let line = [`Little Firefishy is now well fed,`, `Watch it go, off to bed...`, `It suddenly feels something moving in its belly,`, `Looks like it gave birth to adorable food babies!`];
 
 // Nighttime shade rectangle
 let nightFilter = {
@@ -249,6 +253,14 @@ let nightFilter = {
     alphaChangeRate: 1,
     finalAlpha: 130,
   },
+};
+
+// Array containing poop pebbles
+let poops = [];
+
+// Total number of poop that the fish can release in a single swimming
+let poop = {
+  totalNumOfPoop: 50,
 };
 
 // setup() -----------------------------------------------------------------------
@@ -274,7 +286,7 @@ function preload() {
 
   // Load title font and body text font
   title.font = loadFont(`assets/fonts/Slackey-Regular.ttf`);
-  bodyTextFont = loadFont(`assets/fonts/CabinSketch-Regular.ttf`);
+  bodyTextFont = loadFont(`assets/fonts/Grandstander-Regular.ttf`);
 }
 
 // setup() -----------------------------------------------------------------------
@@ -296,6 +308,11 @@ function setup() {
   // Create array for poemLines (for end state)
   for (let i = 0; i < numPoemLines; i++) {
     poemLines[i] = new PoemLine(line[i], width/2, i*spaceBetweenEachLine + yLocationOfFirstLine);
+  }
+
+  // Create array for poop (for end state)
+  for (let i = 0; i < poop.totalNumOfPoop; i++) {
+    poops[i] = new Poop();
   }
 }
 
@@ -598,24 +615,28 @@ function displayReadyButton() {
 // Changes states when mouse clicks on Start or Ready button
 function mouseClicked() {
   // If finger clicks on Start button, cue `instructions` state
-  if (mouseIsInButton({x:startButton.x, y:startButton.y, size:startButton.size})) {
-    state = `instructions`;
+  if (state === `intro`) {
+    if (mouseIsInButton({x:startButton.x, y:startButton.y, size:startButton.size})) {
+      state = `instructions`;
+    }
   }
 
   // If finger clicks on Ready button, cue `animation` state
-  if (mouseIsInButton({x:readyButton.x, y:readyButton.y, size:readyButton.size})) {
-    state = `animation`;
+  if (state === `instructions`) {
+    if (mouseIsInButton({x:readyButton.x, y:readyButton.y, size:readyButton.size})) {
+      state = `animation`;
+    }
   }
 }
 
-// Checks if finger's position is inside the Start button
+// Checks if finger's position is inside a button
 function mouseIsInButton({x, y, size}) {
   if (mouseX < x+(size/2) && mouseX > x-(size/2)) {
     if (mouseY < y+(size/2) && mouseY > y-(size/2)) {
       return true;
     }
   }
-  else{
+  else {
     return false;
   }
 }
@@ -758,8 +779,27 @@ function fishIsFull() {
 //
 // Ending state: Display end poem. Night filter slowly appears and gives the tank an ominous feeling
 function ending() {
+  // Determine the location of firefish's cloaca (where poop comes out)
+  determineCloacaLocation();
+  // Display and move poop
+  displayAndMovePoop();
+  // Release a line of poop
+  releasePoopLine();
+  // Remove poop when there are too many to handle
+  removePoop();
+
+  // Display firefish casually swimming
+  switchFishImages();
+  displayFirefish({img: firefish.currentImage, x: firefish.x, y: firefish.y, length: firefish.length, width: firefish.width});
+  firefishCasualSwimming({tx:firefish.tx, ty:firefish.ty, txChange:firefish.txChange, tyChange:firefish.tyChange, speedCasualSwimming:firefish.speed.casualSwimming});
+
+  // Display night filter and end poem
   displayNightFilter();
   displayEndPoem();
+
+  // Display and move finger based on user's mouse position
+  displayFinger();
+  moveFinger();
 }
 
 // Displays filter that plunges tank into darkness
@@ -782,5 +822,75 @@ function displayNightFilter() {
 function displayEndPoem() {
   for (let i = 0; i < numPoemLines; i++) {
     poemLines[i].show();
+  }
+}
+
+// This is what it means to be a piece of poop: it is displayed and it moves
+class Poop {
+  constructor(fishX, fishY) {
+    this.x = fishX;
+    this.y = fishY;
+    this.vx = 0;
+    this.vy = 0;
+    this.speed = 1;
+    this.ax = 0;
+    this.ay = 0;
+    this.acceleration = 3;
+    this.size = 5;
+    this.fillR = 102;  // poop brown color
+    this.fillG = 75;
+    this.fillB = 0;
+  }
+
+  // display poop pebble
+  show() {
+    push();
+    fill(this.fillR, this.fillG, this.fillB);
+    ellipse(this.x, this.y, this.size);
+    pop();
+  }
+
+  // poop flows upwards --> it knows how to fly!
+  move() {
+    this.ay = -this.acceleration;
+    this.vx = this.speed;
+    this.vy = this.speed;
+    this.x +=  this.vx + this.ax;
+    this.y +=  this.vy + this.ay;
+  }
+}
+
+// Display and move poop; the poop comes out of the fish's cloaca
+function displayAndMovePoop() {
+  for (let i = poops.length-1; i >= 0; i--) {
+    poops[i].show(firefish.cloacaX, firefish.cloacaY);
+    poops[i].move();
+  }
+}
+
+// Release a line of poop by adding more poop pebbles to the poops array
+function releasePoopLine() {
+  let addPoop = new Poop(firefish.cloacaX, firefish.cloacaY);
+  poops.push(addPoop);
+}
+
+// Calculating position of firefish's cloaca
+function determineCloacaLocation() {
+  // Calculating x position of cloaca
+  if (firefish.scale.x > 0) { // fish is facing left
+    firefish.cloacaX = firefish.x + firefish.length/2;
+  }
+  else { // fish is facing right
+    firefish.cloacaX = firefish.x - firefish.length/2;
+  }
+
+  // Calculating y position of cloaca
+  firefish.cloacaY = firefish.y + firefish.vertDistBtwFishAndCloaca;
+}
+
+// To ensure that poop does not get too long, cut off array after a certain amount of poop pebbles have been released
+function removePoop() {
+  if (poops.length > poop.totalNumOfPoop) {
+    poops.splice(0,1);
   }
 }
