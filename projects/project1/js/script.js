@@ -18,7 +18,7 @@ let backgroundMusic = undefined;
 // Variables related to fishfood
 let fishfoods = []; // fishfoods array that contains food objects
 let numFishfoods = 5; // number of fish food in the tank at once
-let totalFood = 30; // total amount of food that fish needs to consume
+let totalFood = 20; // total amount of food that fish needs to consume
 
 let timeForFood = true; // when no more food in tank, it is time for food
 let showFood = false;  // when user clicks More Food button, show food
