@@ -12,37 +12,35 @@ let user = {
 }
 
 // first food object
-let food1;
-let food2;
-let food3;
-let food4;
-let food5;
-let food6;
+let fish1;
+let fish2;
+let fish3;
+let fish4;
 
+let school=[];
 
 // setup()
 //
 // Description of setup() goes here.
 function setup() {
-  createCanvas(windowWidth, windowHeight);
+  createCanvas(600, 600);
 
-    food1 = createFood(250,height/2);
-    food2 = createFood(350,height/2);
-    food3 = createFood(450,height/2);
-    food4 = createFood(550,height/2);
-    food5 = createFood(650,height/2);
-    food6 = createFood(750,height/2);
+    for (i=0; i<4; i++) {
+      school[i] = createFish(random(0,width),random(0,height));
+    }
 
 }
 
-function createFood(x,y) {
-  let food = {
+function createFish(x,y) {
+  let fish = {
     x:x,
     y:y,
     size:50,
-    eaten:false // we want to track whether the user has eaten the food
+    vx:0,
+    vy:0,
+    speed:2,
   };
-  return food;
+  return fish;
 }
 
 // draw()
@@ -51,30 +49,39 @@ function createFood(x,y) {
 function draw() {
   background(0);
 
-  moveUser();
+  moveFish(fish1);
+  moveFish(fish2);
+  moveFish(fish3);
+  moveFish(fish4);
 
-  // check wehtehr user has eaten either food
-  checkFood(food1);
-  checkFood(food2);
-  checkFood(food3);
-  checkFood(food4);
-  checkFood(food5);
-  checkFood(food6);
-
-  displayUser();
-  displayFood(food1);
-  displayFood(food2);
-  displayFood(food3);
-  displayFood(food4);
-  displayFood(food5);
-  displayFood(food6);
+  displayFish(fish1);
+  displayFish(fish2);
+  displayFish(fish3);
+  displayFish(fish4);
 }
 
-function moveUser() {
-  user.x = mouseX;
-  user.y = mouseY;
+function moveFish(fish) {
+  let change = random(0,1);
+  if (change<0.05) {
+    fish.vx = random(-fish.speed,fish.speed);
+    fish.vy = random(-fish.speed,fish.speed);
+  }
+
+  fish.x += fish.vx;
+  fish.y += fish.vy;
+
+  fish.x = constrain(fish.x,0,width);
+  fish.y = constrain(fish.y,0,height);
 }
 
+
+function displayFish(fish){
+  push();
+  fill(200,100,100);
+  noStroke();
+  ellipse(fish.x,fish.y,fish.size);
+  pop();
+}
 function checkFood(food) {
   if (!food.eaten) {
     let d= dist(user.x, user.y, food.x, food.y);
