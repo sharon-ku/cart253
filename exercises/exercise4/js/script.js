@@ -8,10 +8,13 @@ Here is a description of this template p5 project.
 "use strict";
 
 let user = {
-  x:0,
-  y:0,
-  size: 100,
-}
+  x: 0,
+  y: 0,
+  size: 25,
+  vx: 0,
+  vy: 0,
+  speed: 5,
+};
 
 let school = [];
 let schoolSize = 4;
@@ -21,6 +24,7 @@ let schoolSize = 4;
 // Description of setup() goes here.
 function setup() {
   createCanvas(600, 600);
+  noStroke();
 
   for (let i=0; i < schoolSize; i++) {
     // Create a fish
@@ -55,8 +59,9 @@ function draw() {
    displayFish(school[i]);
  }
 
- displayUser();
  moveUser();
+ displayUser();
+
 }
 
 function moveFish(fish) {
@@ -74,7 +79,7 @@ function moveFish(fish) {
 }
 
 
-function displayFish(fish){
+function displayFish(fish) {
   push();
   fill(200,100,100);
   noStroke();
@@ -82,14 +87,14 @@ function displayFish(fish){
   pop();
 }
 
-function checkFood(food) {
-  if (!food.eaten) {
-    let d = dist(user.x, user.y, food.x, food.y);
-    if (d < user.size/2 + food.size/2) {
-      food.eaten = true;
-    }
-  }
-}
+// function checkFood(food) {
+//   if (!food.eaten) {
+//     let d = dist(user.x, user.y, food.x, food.y);
+//     if (d < user.size/2 + food.size/2) {
+//       food.eaten = true;
+//     }
+//   }
+// }
 
 function displayUser() {
   push();
@@ -102,20 +107,33 @@ function moveUser() {
   if (keyIsDown(LEFT_ARROW)) {
     user.vx = -user.speed;
   }
-  else (keyIsDown(RIGHT_ARROW)) {
+  else if (keyIsDown(RIGHT_ARROW)) {
     user.vx = user.speed;
   }
   else {
     user.vx = 0;
   }
+
   if (keyIsDown(UP_ARROW)) {
-    
+    user.vy = -user.speed;
   }
+  else if (keyIsDown(DOWN_ARROW)) {
+    user.vy = user.speed;
+  }
+  else {
+    user.vy = 0;
+  }
+  
+  user.x += user.vx;
+  user.y += user.vy;
+
+  user.x = constrain(user.x,0,width);
+  user.y = constrain(user.y,0,height);
 }
 
-function mousePressed() {
-  let fish = createFish(mouseX,mouseY); // Create a fish at the mouse position
-  school.push(fish); // Add the fish to our array
-  // Now the school array has our new fish and it will be moved and drawn
-  // with all the others in the for loop!
-}
+// function mousePressed() {
+//   let fish = createFish(mouseX,mouseY); // Create a fish at the mouse position
+//   school.push(fish); // Add the fish to our array
+//   // Now the school array has our new fish and it will be moved and drawn
+//   // with all the others in the for loop!
+// }
