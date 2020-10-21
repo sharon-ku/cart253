@@ -8,8 +8,8 @@ Here is a description of this template p5 project.
 "use strict";
 
 let user = {
-  x: 0,
-  y: 0,
+  x: 500,
+  y: 400,
   size: 25,
   vx: 0,
   vy: 0,
@@ -17,13 +17,13 @@ let user = {
 };
 
 let school = [];
-let schoolSize = 4;
+let schoolSize = 7;
 
 // setup()
 //
 // Description of setup() goes here.
 function setup() {
-  createCanvas(600, 600);
+  createCanvas(1000, 800);
   noStroke();
 
   for (let i=0; i < schoolSize; i++) {
@@ -36,15 +36,23 @@ function setup() {
 
 // createFish(x,y)
 // Creates a new JavaScript Object describing a fish and returns it
-function createFish(x,y) {
+function createFish(x, y) {
   let fish = {
     x: x,
     y: y,
-    size: 50,
+    minSize: 30,
+    maxSize: 150,
+    size: 0,
     vx: 0,
     vy: 0,
     speed: 2,
+    minSpeed: 1.5,
+    maxSpeed: 4.5,
   };
+
+  fish.size = random(fish.minSize, fish.maxSize);
+  fish.speed = map(fish.size, fish.maxSize, fish.minSize, fish.minSpeed, fish.maxSpeed);
+
   return fish;
 }
 
@@ -67,9 +75,37 @@ function draw() {
 function moveFish(fish) {
   let chance = random(0,1);
   if (chance < 0.05) {
-    fish.vx = random(-fish.speed,fish.speed);
-    fish.vy = random(-fish.speed,fish.speed);
+
+    if (fish.x < user.x) {
+      // fish.vx = random(0, fish.speed);
+      fish.vx = fish.speed;
+    }
+    else if (fish.x > user.x) {
+      // fish.vx = random(-fish.speed,0);
+      fish.vx = random(-fish.speed,0);
+    }
+    else {
+      fish.vx = 0;
+    }
+
+    if (fish.y < user.y) {
+      fish.vy = fish.speed;
+      // fish.vy = random(0, fish.speed);
+    }
+    else if (fish.y > user.y) {
+      fish.vy = -fish.speed;
+      // fish.vy = random(-fish.speed,0);
+    }
+    else {
+      fish.vy = 0;
+    }
   }
+
+
+  // if (chance < 0.05) {
+  //   fish.vx = random(-fish.speed,fish.speed);
+  //   fish.vy = random(-fish.speed,fish.speed);
+  // }
 
   fish.x += fish.vx;
   fish.y += fish.vy;
@@ -123,7 +159,7 @@ function moveUser() {
   else {
     user.vy = 0;
   }
-  
+
   user.x += user.vx;
   user.y += user.vy;
 
