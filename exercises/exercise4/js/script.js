@@ -7,13 +7,16 @@ Here is a description of this template p5 project.
 
 "use strict";
 
+let state = `animation`; // other possible states: eatenEnd, treasureAppears, congratulationsEnd
+
 let user = {
-  x: 500,
-  y: 400,
+  x: 0,
+  y: 0,
   size: 25,
   vx: 0,
   vy: 0,
   speed: 5,
+  eaten: false,
 };
 
 let school = [];
@@ -47,7 +50,7 @@ function createFish(x, y) {
     vy: 0,
     speed: 2,
     minSpeed: 1.5,
-    maxSpeed: 4.5,
+    maxSpeed: 4,
   };
 
   fish.size = random(fish.minSize, fish.maxSize);
@@ -62,14 +65,25 @@ function createFish(x, y) {
 function draw() {
   background(0);
 
+ if (state === `animation`) {
+   animation();
+ }
+ if (state === `eatenEnd`) {
+   eatenEnd();
+ }
+}
+
+function animation() {
   for (let i = 0; i < school.length; i++) {
    moveFish(school[i]);
+   checkUserEaten(school[i]);
    displayFish(school[i]);
- }
+
+   cueEatenEnd(school[i]);
+  }
 
  moveUser();
  displayUser();
-
 }
 
 function moveFish(fish) {
@@ -165,6 +179,29 @@ function moveUser() {
 
   user.x = constrain(user.x,0,width);
   user.y = constrain(user.y,0,height);
+}
+
+// Checks if user touched/has been eaten by the fish
+function checkUserEaten(fish) {
+  let d = dist(user.x, user.y, fish.x, fish.y);
+  if (d < (user.size/2 + fish.size/2)) {
+    user.eaten = true;
+  }
+  else {
+    user.eaten = false;
+  }
+  console.log(d);
+}
+
+// If the fish touches the user, cue eatenEnd
+function cueEatenEnd(fish) {
+  if (user.eaten) {
+    state = `eatenEnd`;
+  }
+}
+
+function eatenEnd() {
+
 }
 
 // function mousePressed() {
