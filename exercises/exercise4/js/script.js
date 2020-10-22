@@ -49,7 +49,7 @@ let treasureFoundText = {
 // golden clam that appears after a certain number of seconds passes
 let goldenClam = {
   framesElapsed: 0,
-  framesToAppear: 1800,
+  framesToAppear: 1000,
   x: 50,
   y: 50,
   size: 50,
@@ -88,8 +88,8 @@ function setup() {
     // Create a fish at a random location
 
     // Determining the margin of the canvas in which the fish can appear
-    fishAccessibleZone.horizontal = width/2;
-    fishAccessibleZone.vertical = height/2;
+    fishAccessibleZone.horizontal = width/3;
+    fishAccessibleZone.vertical = height/3;
 
     // Determining x position of fish (it can appear anywhere on the screen except the middle area, where the user circle will initially appear)
     let x;
