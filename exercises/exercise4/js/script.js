@@ -2,7 +2,9 @@
 Exercise 4: The Age of Aquariums
 Sharon Ku
 
-Here is a description of this template p5 project.
+Underwater treasure hunt
+
+The piranhas (red circles) of different sizes and speeds chase after the user circle whose movement is controlled by arrow keys. If the piranha touches the user circle, then the eatenEnd state occurs (text displaying in the middle of screen that says you have been eaten). If the user circle succeeds in dodging the piranhas for a certain amount of seconds, then a golden clam (golden circle) appears at a random location. If the user snatches it, then it cues the treasureEnd state (text displaying in the middle of the screen saying that you found the treasure).
 **************************************************/
 
 "use strict"; // because strict is good
@@ -38,47 +40,93 @@ let eatenText = {
 let treasureFoundText = {
   sentence: `Congratulations!
   You found the golden clam!
-  The pinranhas bow down to you, parting a way for you to get home safely.`,
+  The pinranhas bow down to you,
+  parting a path so you can return home safely.`,
   size: 25,
   fill: 255,
 };
 
-// golden clam that appears after 30 sec passes
+// golden clam that appears after a certain number of seconds passes
 let goldenClam = {
   framesElapsed: 0,
-  framesToAppear: 300, //1800
+  framesToAppear: 1800,
   x: 50,
   y: 50,
-  size: 100,
+  size: 50,
   vx: 0,
   vy: 0,
-  speed: 5.5,
-  fill: { //golden
+  speed: 7,
+  fill: { // golden
     r: 247,
     g: 214,
     b: 0,
   },
 };
 
+// fish's color
 let fishFill = { // light red
   r: 200,
   g: 100,
   b: 100,
 };
 
+// The area in which the fish can appear
+let fishAccessibleZone =  {
+  horizontal: 100,
+  vertical: 100,
+}
+
 // setup()
 //
 // Create canvas, remove strokes from all shapes, and creates initial fishes to school array
 function setup() {
-  createCanvas(1000, 700);
+  createCanvas(windowWidth, windowHeight);
   noStroke();
 
-  for (let i=0; i < schoolSize; i++) {
-    // Create a fish
-    let fish = createFish(random(0, width), random(0, height));
+  // Creating the initial school array (filling it with fishes)
+  for (let i = 0; i < schoolSize; i++) {
+    // Create a fish at a random location
+
+    // Determining the margin of the canvas in which the fish can appear
+    fishAccessibleZone.horizontal = width*1/2;
+    fishAccessibleZone.vertical = height*1/2;
+
+    // Determining x position of fish (it can appear anywhere on the screen except the middle area, where the user circle will initially appear)
+    let x;
+
+    let leftOrRight = random();
+    if (leftOrRight < 0.5) {
+      x = random(0,fishAccessibleZone.horizontal);
+    }
+    else {
+      x = random(width-fishAccessibleZone.horizontal, width);
+    }
+
+    // Determining y position of fish (anywhere on screen except middle area)
+    let y;
+
+    let topOrBottom = random();
+    if (topOrBottom < 0.5) {
+      y = random(0,fishAccessibleZone.vertical);
+    }
+    else {
+      y = random(height-fishAccessibleZone.vertical, height);
+    }
+    // Create fish at (x,y) location
+    let fish = createFish(x, y);
+
     // Add the fish to school array
     school.push(fish);
   }
+
+  // Setting the user circle's initial position in middle of the screen
+  user.x = width/2;
+  user.y = height/2;
+
+  // Setting the goldenClam's initial position to a random location
+  goldenClam.x = random(0, width);
+  goldenClam.y = random(0, height);
+
 }
 
 // createFish(x,y)
@@ -94,7 +142,7 @@ function createFish(x, y) {
     vy: 0,
     speed: 2,
     minSpeed: 1.5,
-    maxSpeed: 2.5,
+    maxSpeed: 3.5,
   };
 
   // The fish's size is random and ranges between the minimum size and maximum size
@@ -122,6 +170,7 @@ function draw() {
  }
 }
 
+// animation()
 // The user circle moves across the screen (controlled by arrow keys) while the fishes chase after it.
 function animation() {
   for (let i = 0; i < school.length; i++) {
@@ -139,11 +188,11 @@ function animation() {
     moveUser();
     displayUser();
 
-    // Display golden clam after 30 seconds
+    // Display golden clam after a certain amount of seconds
     treasureAppears();
 }
 
-// moveFish
+// moveFish()
 // fish follows the user circle's position
 function moveFish(fish) {
   let chance = random(0,1);
@@ -176,8 +225,8 @@ function moveFish(fish) {
   fish.y += fish.vy;
 
   // constraining the fish to the inside of the canvas
-  fish.x = constrain(fish.x,0,width);
-  fish.y = constrain(fish.y,0,height);
+  fish.x = constrain(fish.x, 0, width);
+  fish.y = constrain(fish.y, 0, height);
 }
 
 // checkUserEaten()
@@ -193,7 +242,7 @@ function checkUserEaten(fish) {
 }
 
 // displayFish()
-// Display the fish
+// Display the fish as a circle
 function displayFish(fish) {
   push();
   fill(fishFill.r,fishFill.g,fishFill.b);
@@ -244,7 +293,7 @@ function displayUser() {
 }
 
 // treasureAppears()
-// Displays golden clam after 30 seconds have elapsed. The clam moves around randomly. If user catches it, it triggers ending2: treasureEnd
+// Displays golden clam after a certain amount of seconds have elapsed. The clam moves around randomly. If user catches it, it triggers ending2: treasureEnd
 function treasureAppears() {
   // Count how many frames have passed
   goldenClam.framesElapsed++;
@@ -267,8 +316,8 @@ function treasureAppears() {
 // display the golden clam circle
 function displayGoldenClam() {
   push();
-  fill(goldenClam.fill.r,goldenClam.fill.g,goldenClam.fill.b);
-  ellipse(goldenClam.x,goldenClam.y,goldenClam.size);
+  fill(goldenClam.fill.r, goldenClam.fill.g, goldenClam.fill.b);
+  ellipse(goldenClam.x, goldenClam.y, goldenClam.size);
   pop();
 }
 
@@ -277,20 +326,19 @@ function displayGoldenClam() {
 function moveGoldenClam() {
   let chance = random(0,1);
 
-  // setting probability of 50% for goldenclam to change directions to reduce its "shakiness"
-  if (chance < 0.5) {
-      goldenClam.vx = random(-goldenClam.speed,goldenClam.speed);
-      goldenClam.vy = random(-goldenClam.speed,goldenClam.speed);
+  // setting probability for goldenclam to change directions to reduce its "shakiness"
+  if (chance < 0.05) {
+      goldenClam.vx = random(-goldenClam.speed, goldenClam.speed);
+      goldenClam.vy = random(-goldenClam.speed, goldenClam.speed);
     }
 
   goldenClam.x += goldenClam.vx;
   goldenClam.y += goldenClam.vy;
 
   // constraining the goldenClam to the inside of the canvas
-  goldenClam.x = constrain(goldenClam.x,0,width);
-  goldenClam.y = constrain(goldenClam.y,0,height);
+  goldenClam.x = constrain(goldenClam.x, 0, width);
+  goldenClam.y = constrain(goldenClam.y, 0, height);
 }
-
 
 // cueEatenEnd()
 // If the fish touches the user, cue eatenEnd state
