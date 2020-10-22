@@ -88,8 +88,8 @@ function setup() {
     // Create a fish at a random location
 
     // Determining the margin of the canvas in which the fish can appear
-    fishAccessibleZone.horizontal = width*1/2;
-    fishAccessibleZone.vertical = height*1/2;
+    fishAccessibleZone.horizontal = width/2;
+    fishAccessibleZone.vertical = height/2;
 
     // Determining x position of fish (it can appear anywhere on the screen except the middle area, where the user circle will initially appear)
     let x;
