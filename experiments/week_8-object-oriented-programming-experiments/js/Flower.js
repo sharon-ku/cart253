@@ -47,7 +47,7 @@ class Flower {
     // Choose a random amount to grow
     let growth = random(0, 0.5);
     // Increase the petal thickness (divide by 10 to make it less rapid)
-    this.petalThickness = this.petalThickness + growth / 10;
+    this.petalThickness =  this.petalThickness + growth / 10;
     // Increase the centre of the flower
     this.size = this.size + growth;
 
