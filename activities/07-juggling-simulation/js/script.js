@@ -2,7 +2,17 @@
 Exercise 5: Juggle Garden
 Sharon Ku
 
-Here is a description of this template p5 project.
+There are 3 states in total: animation, success, fail.
+
+In the animation, a set of good balls (green-colored) and bad balls (red-colored) are released from the top of the canvas. The user can move a paddle horizontally to juggle the balls, causing the balls to bounce back up. If the user juggles a green ball, the progress bar goes up. If the user juggles a red ball, the progress bar goes down. If the user does not touch the ball, it falls to the bottom of the canvas.
+
+The user can click on the canvas to release a new set of good and bad balls.
+
+Possible end state #1: success
+Once the progress bar is full, the success state occurs. It displays a positive message addressing the user's potential as a juggler in the middle of the canvas.
+
+Possible end state #2: fail
+If, however, the progress bar goes below 0, the fail state occurs. It displays a negative message about the user's lack of potential as a juggler in the middle of the canvas.
 **************************************************/
 
 "use strict";
@@ -14,7 +24,7 @@ let state = `animation`;
 let numSuccessfulJuggles = 0;
 
 // total number of juggles to fill up the counter and pass
-let totalJugglesForPass = 3;
+let totalJugglesForPass = 20;
 
 // gravitational force exerted on the balls
 let gravityForce = 0.0025;
@@ -52,10 +62,16 @@ let progressBar = {
   counter: 0,
   x: 50,
   y: 50,
-  width: 50,
-  height: 10,
-  totalWidth: 100,
+  width: 150,
+  totalWidth: 150,
+  height: 25,
+  roundedCorner: 20,
   fill: 255,
+  outline: {
+    strokeWeight: 5,
+    strokeFill: 255,
+    fill: 0,
+  },
 };
 
 // message that is displayed on canvas in `success` state
@@ -79,22 +95,28 @@ let failMessage = {
 
 // setup()
 //
-// Create a canvas, remove strokes from all shapes, create a new paddle, create good balls in goodBall array, create bad balls in badBall array.
+// Create a canvas, create a new paddle, create good balls in goodBall array, create bad balls in badBall array.
 function setup() {
-  createCanvas(600,600);
-  noStroke();
+  createCanvas(800,800);
 
   // create variables for our paddle arguments
-  let w = 100;
-  let h = 20;
+  let w = 100; // paddle's width
+  let h = 20; // paddle's height
   // create a new paddle
   paddle = new Paddle(w,h);
 
+  // releases a group of good and bad balls from top of canvas
+  releaseBalls();
+
+}
+
+// releases a group of good and bad balls from top of canvas
+function releaseBalls() {
   // create good balls by counting up to the number of good balls
   for (let i = 0; i < numGoodBalls;i++) {
     // create variables for our good ball arguments
     let x = random(0,width);
-    let y = random(-400,-100);
+    let y = random(-800,-100);
     let size = random(25,50);
 
     // create a new good ball
@@ -107,7 +129,7 @@ function setup() {
   for (let i = 0; i < numBadBalls;i++) {
     // create variables for our bad ball arguments
     let x = random(0,width);
-    let y = random(-400,-100);
+    let y = random(-800,-100);
     let size = random(25,50);
 
     // create a new bad ball
@@ -115,7 +137,6 @@ function setup() {
     // add the ball to the array of bad balls
     badBalls.push(badBall);
   }
-
 }
 
 // draw()
@@ -180,20 +201,43 @@ function animation() {
       if (badBall.overlapsWithPaddle(paddle)) {
         progressBar.counter--;
       }
-
     }
   }
 
+  // display progress bar outline (static)
+  push();
+  strokeWeight(progressBar.outline.strokeWeight);
+  stroke(progressBar.outline.strokeFill);
+  fill(progressBar.outline.fill);
+  rect(progressBar.x, progressBar.y, progressBar.totalWidth, progressBar.height, progressBar.roundedCorner);
+  pop();
+
+  // map the progress bar's width to the number of juggles of good and bad balls
+  progressBar.width = map(progressBar.counter,0,totalJugglesForPass,0,progressBar.totalWidth);
+  // display progress bar that updates with progressBar.counter
+  push();
+  noStroke();
+  fill(progressBar.fill);
+  rect(progressBar.x, progressBar.y, progressBar.width, progressBar.height, progressBar.roundedCorner);
+  pop();
+
   console.log(progressBar.counter);
 
+  // if the counter bar goes below 0, cue `fail` state
   if (progressBar.counter < 0) {
     state = `fail`;
   }
+  // if the counter bar reaches the total number of juggles needed to pass, cue `success` state
   else if (progressBar.counter >= totalJugglesForPass) {
     state = `success`;
   }
 }
 
+// mousePressed()
+// click once on canvas to release a new set of good and bad balls
+function mousePressed() {
+  releaseBalls();
+}
 
 // success()
 // possible end state #1: displays positive message advising the user of its status as a professional juggler.
