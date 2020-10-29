@@ -21,10 +21,10 @@ class GoodBall {
     };
   }
 
+  // gravitational force exerted on the ball (affects ball's y acceleration)
   gravity(force) {
     this.ay += force;
   }
-
 
   // move the ball
   move() {
@@ -54,7 +54,22 @@ class GoodBall {
     pop();
   }
 
-  // if ball exceeds bottom of canvas, make it bounce
+  // returns true if ball is overlapping with paddle
+  overlapsWithPaddle(paddle) {
+    if (this.x > paddle.x - paddle.width/2 &&
+        this.x < paddle.x + paddle.width/2 &&
+        this.y + this.size/2 > paddle.y - paddle.height/2 &&
+        this.y - this.size/2 < paddle.y + paddle.height/2) {
+
+        return true;
+    }
+    else {
+      return false;
+
+    }
+  }
+
+  // if ball overlaps with paddle, make it bounce
   bounce(paddle, bounceImpact) {
     if (this.x > paddle.x - paddle.width/2 &&
         this.x < paddle.x + paddle.width/2 &&
@@ -71,4 +86,6 @@ class GoodBall {
         this.ay = 0; // the ball will not lose its bounce height
     }
   }
+
+
 }

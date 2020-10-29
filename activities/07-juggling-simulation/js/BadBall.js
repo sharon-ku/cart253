@@ -14,17 +14,17 @@ class BadBall {
     // active if ball is still on canvas
     this.active = true;
     // color information
-    this.fill = { //lime green
-      r: 207,
-      g: 255,
-      b: 105,
+    this.fill = { // red
+      r: 224,
+      g: 83,
+      b: 58,
     };
   }
 
+  // gravitational force exerted on the ball (affects ball's y acceleration)
   gravity(force) {
     this.ay += force;
   }
-
 
   // move the ball
   move() {
@@ -54,7 +54,22 @@ class BadBall {
     pop();
   }
 
-  // if ball exceeds bottom of canvas, make it bounce
+  // returns true if ball is overlapping with paddle
+  overlapsWithPaddle(paddle) {
+    if (this.x > paddle.x - paddle.width/2 &&
+        this.x < paddle.x + paddle.width/2 &&
+        this.y + this.size/2 > paddle.y - paddle.height/2 &&
+        this.y - this.size/2 < paddle.y + paddle.height/2) {
+
+        return true;
+    }
+    else {
+      return false;
+
+    }
+  }
+
+  // if ball overlaps with paddle, make it bounce
   bounce(paddle, bounceImpact) {
     if (this.x > paddle.x - paddle.width/2 &&
         this.x < paddle.x + paddle.width/2 &&
