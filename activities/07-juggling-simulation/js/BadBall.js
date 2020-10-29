@@ -1,4 +1,4 @@
-class Ball {
+class BadBall {
   constructor(x,y,size) {
     // position and size information
     this.x = x;

@@ -12,10 +12,11 @@ let gravityForce = 0.0025;
 let paddle;
 
 
-// an array to store individual balls
-let balls = [];
-// how many balls in juggling juggling field
-let numBalls = 6;
+// an array to store individual good balls
+let goodBalls = [];
+// how many good balls in juggling juggling field
+let numGoodBalls = 6;
+
 // max distance that ball will bounce away in the horizontal direction once it hits the pedal
 let bounceImpact = 2;
 
@@ -45,17 +46,17 @@ function setup() {
   // create a new paddle
   paddle = new Paddle(w,h);
 
-  // create ball by counting up to the number of balls
-  for (let i = 0; i < numBalls;i++) {
-    // create variables for our ball arguments
+  // create good ball by counting up to the number of good balls
+  for (let i = 0; i < numGoodBalls;i++) {
+    // create variables for our good ball arguments
     let x = random(0,width);
     let y = random(-400,-100);
     let size = random(25,50);
 
-    // create a new ball
-    let ball = new Ball(x,y,size);
-    // add the ball to the array of balls
-    balls.push(ball);
+    // create a new good ball
+    let goodBall = new GoodBall(x,y,size);
+    // add the ball to the array of good balls
+    goodBalls.push(goodBall);
   }
 }
 
@@ -70,15 +71,15 @@ function draw() {
   paddle.move();
   paddle.display();
 
-  // loop through all the balls in the array and display, move with gravity, and bounce them
-  for (let i = 0; i < balls.length; i++) {
-    let ball = balls[i];
-    // if ball is active, then show ball
-    if (ball.active) {
-      ball.gravity(gravityForce);
-      ball.move();
-      ball.bounce(paddle, bounceImpact);
-      ball.display();
+  // loop through all the good balls in the array and display, move with gravity, and bounce them
+  for (let i = 0; i < goodBalls.length; i++) {
+    let goodBall = goodBalls[i];
+    // if good ball is active, then show good ball
+    if (goodBall.active) {
+      goodBall.gravity(gravityForce);
+      goodBall.move();
+      goodBall.bounce(paddle, bounceImpact);
+      goodBall.display();
     }
   }
 
