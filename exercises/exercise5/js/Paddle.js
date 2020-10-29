@@ -17,6 +17,7 @@ class Paddle {
   // display paddle as a rectangle
   display() {
     push();
+    noStroke();
     fill(this.fill.r, this.fill.g, this.fill.b);
     rectMode(CENTER);
     rect(this.x,this.y,this.width,this.height);
@@ -27,6 +28,9 @@ class Paddle {
   // paddle's vertical position stays the same
   move() {
     this.x = mouseX;
+
+    // constrain paddle's horizontal movement to inside of canvas
+    this.x = constrain(this.x,0,width);
   }
 
 }

@@ -49,6 +49,7 @@ class BadBall {
   // display ball as circle
   display() {
     push();
+    noStroke();
     fill(this.fill.r, this.fill.g, this.fill.b);
     ellipse(this.x,this.y,this.size);
     pop();
@@ -58,7 +59,7 @@ class BadBall {
   overlapsWithPaddle(paddle) {
     if (this.x > paddle.x - paddle.width/2 &&
         this.x < paddle.x + paddle.width/2 &&
-        this.y + this.size/2 > paddle.y - paddle.height/2 &&
+        this.y + this.size/2 >= paddle.y - paddle.height/2 &&
         this.y - this.size/2 < paddle.y + paddle.height/2) {
 
         return true;
@@ -71,10 +72,7 @@ class BadBall {
 
   // if ball overlaps with paddle, make it bounce
   bounce(paddle, bounceImpact) {
-    if (this.x > paddle.x - paddle.width/2 &&
-        this.x < paddle.x + paddle.width/2 &&
-        this.y + this.size/2 > paddle.y - paddle.height/2 &&
-        this.y - this.size/2 < paddle.y + paddle.height/2) {
+    if (this.overlapsWithPaddle(paddle)) {
 
         // bounce
         // depending on which side of the paddle the ball falls on, it will bounce off in that direction
@@ -83,6 +81,7 @@ class BadBall {
         this.vx += map(dx,-paddle.width/2,paddle.width/2,-bounceImpact,bounceImpact);
 
         this.vy = -this.vy; // switch ball's direction to up
+        this.y = paddle.y - paddle.height/2 - this.size/2; // snaps ball's position to the top of paddle
         this.ay = 0; // the ball will not lose its bounce height
     }
   }
