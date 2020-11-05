@@ -6,6 +6,7 @@ class Fly {
     this.vy = 0;
     this.speed = 2;
     this.fill = 255;
+    this.alpha = 255;
     this.size = 15;
   }
 
@@ -13,7 +14,7 @@ class Fly {
   display() {
     push();
     noStroke();
-    fill(this.fill);
+    fill(this.fill, this.fill, this.fill, this.alpha);
     ellipse(this.x, this.y, this.size);
     pop();
   }
@@ -47,10 +48,10 @@ class Fly {
     // calculating distance between frog and bug depending on direction that frog is facing
     if (frog.scale.x > 0) { // if frog is facing right side
       // calculate distance from right end of frog to fly's center
-      distBtwFlyAndFrog = dist(frog.x + (frog.width / 2), frog.y, this.x, this.y);
+      distBtwFlyAndFrog = dist(frog.x, frog.y, this.x, this.y);
     } else { // if frog is facing left side
       // calculate distance from left end of frog to fly's center
-      distBtwFlyAndFrog = dist(frog.x - (frog.width / 2), frog.y, this.x, this.y);
+      distBtwFlyAndFrog = dist(frog.x, frog.y, this.x, this.y);
     }
 
     // return calculated distance value
@@ -68,8 +69,9 @@ class Fly {
 
   // if the distance between the fly and the frog is within slapping distance, cue frog's method slapTongueDown()
   getSlappedByFrog(frog) {
-    // IF FLY IS WITHIN RANGE PLUS GETS SLAPPED - NEED TO CALCULATE OVERLAP - THEN REMOVE FROM ARRAY
-    if (this.isWithinSlappingRange(frog)) {
+    // IF FLY IS WITHIN RANGE PLUS GETS SLAPPED - NEED TO CALCULATE OVERLAP - THEN REMOVE FROM ARRAY (to work on later)
+    if (this.isWithinSlappingRange(frog) && !frog.stopSlap) {
+      this.alpha=0;
       // frog.slapTongueDown();
       // I NEED TO REMOVE FLY FROM ARRAY HERE
     }

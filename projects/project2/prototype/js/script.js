@@ -2,14 +2,17 @@
 Project 2: Prototype
 Sharon Ku
 
-Here is a description of this template p5 project.
+The user controls the frog's movement using arrow keys. Click on the canvas to slap tongue down. The flies fly everywhere randomly. If the fly is close to the tongue when it is slapping, then the fly gets consumed (becomes invisible for now, but I will later work out a way to remove it from the array). Temporarily, I enabled a barking sound effect when the tongue slaps down (just to see what it's like), though that sound effect will change for sure.
+
+What I focused on for this prototype: getting an animation to work.
 **************************************************/
 
 "use strict";
 
+let barkSFX; // bark sound effect
+
 // frog controlled by user
 let frog;
-
 
 // using an array to store all images
 let frogImages = [];
@@ -24,7 +27,7 @@ let flies = [];
 let numFlies = 10;
 
 // distance between frog and bug needed to slap the bug
-let slappingDistance = 50;
+let slappingDistance = 80;
 
 
 
@@ -36,6 +39,8 @@ function preload() {
     let loadedImage = loadImage(`assets/images/frog-drawings/frog-${i}.png`);
     frogImages.push(loadedImage);
   }
+
+  barkSFX = loadSound(`assets/sounds/bark.wav`);
 }
 
 
@@ -66,26 +71,21 @@ function setup() {
 function draw() {
   background(0);
 
-
-  // imageMode(CENTER);
-  // image(frogImages[0], width/2, height/2);
-
-  // display my frog
-  frog.move();
-  frog.display();
-  frog.slapTongueDown();
-
-  // loop through all the flies in the array and display them
+  // loop through all the flies in the array and display them, allow them to get slapped by the frog, and move them randomly
   for (let i=0; i<flies.length; i++) {
     let fly = flies[i];
     fly.move(frog);
     fly.getSlappedByFrog(frog);
     fly.display();
-
   }
 
+  // display my frog, move it, and let it slap its tongue down
+  frog.move();
+  frog.display();
+  frog.slapTongueDown();
 }
 
+// when mouse is clicked, call the mousePressed method in Frog.js
 function mousePressed() {
   frog.mousePressed();
 }

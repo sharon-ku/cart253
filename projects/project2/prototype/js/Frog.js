@@ -58,21 +58,24 @@ class Frog {
       this.y += 5;
     }
 
-    console.log(this.stopSlap);
+    // console.log(this.stopSlap);
 
   }
 
   // frog slaps its tongue down in the direction it is facing
   // the slapping effect is done by switching between images
+  // TEMPORARY: plays a bark sound when it slaps its tongue
   slapTongueDown() {
     console.log(this.currentImage);
-    if (this.stopSlap === false) {
+    if (!this.stopSlap) {
           this.framesElapsed.forTongueSwing++;
           if (this.framesElapsed.forTongueSwing === this.framesBtwEachImage) {
             if (this.currentImage === 0) {
               this.currentImage = 4;
+              barkSFX.play();
             } else if (this.currentImage === 4) {
               this.currentImage = 5;
+
             } else if (this.currentImage === 5) {
               this.currentImage = 6;
               this.framesBtwEachImage = this.framesBtwEachImageForFinalSlap;
