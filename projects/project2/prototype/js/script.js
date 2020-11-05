@@ -69,10 +69,12 @@ function setup() {
 function draw() {
   background(0);
 
+
   // imageMode(CENTER);
   // image(frogImages[0], width/2, height/2);
 
   // display my frog
+  frog.move();
   frog.display();
 
   // loop through all the flies in the array and display them
@@ -85,6 +87,10 @@ function draw() {
 
 }
 
-function keyPressed() {
-  frog.keyPressed();
-}
+let a=3;
+
+// function keyPressed() {
+//   frog.keyPressed();
+//
+//
+// }
