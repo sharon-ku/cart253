@@ -19,10 +19,10 @@ class Fly {
   }
 
   // move fly randomly
-  move() {
+  move(frog) {
     // constraining the fly's movement to the inside of the canvas
-    this.x = constrain(this.x, 0, width);
-    this.y = constrain(this.y, 0, height);
+    this.x = constrain(this.x, frog.width/2, width-frog.width/2);
+    this.y = constrain(this.y, frog.height/2, height-frog.height/2);
 
     // change allows me to adjust the jitteriness of the fly's movement
     let change = random();
@@ -37,5 +37,9 @@ class Fly {
     // adding velocity to fly's position
     this.x += this.vx;
     this.y += this.vy;
+  }
+
+  getSlappedByFrog() {
+
   }
 }
