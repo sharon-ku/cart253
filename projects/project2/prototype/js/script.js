@@ -14,7 +14,7 @@ let frog;
 // using an array to store all images
 let frogImages = [];
 // this variable stores the number of images
-let numFrogImages = 4;
+let numFrogImages = 7;
 
 
 // array that stores fly variables
@@ -32,22 +32,23 @@ let slappingDistance = 50;
 //
 // loads all images + sound effects
 function preload() {
-  // for (let i=0; i<numImages; i++) {
-  //   let loadedImage = loadImage(`assets/images/frog-drawings/frog-${i}.png`);
-  //   images.push(loadedImage);
-  // }
-
-// load frog images without tongue
-  frogImages[0] = loadImage(`assets/images/frog-drawings/frog-1.png`);
-  frogImages[1] = loadImage(`assets/images/frog-drawings/frog-2.png`);
-  frogImages[2] = loadImage(`assets/images/frog-drawings/frog-3.png`);
-  frogImages[3] = loadImage(`assets/images/frog-drawings/frog-4.png`);
-
-// load frog images with tongue
-  frogImages[4] = loadImage(`assets/images/frog-drawings/frog-tongue1.png`);
-  frogImages[5] = loadImage(`assets/images/frog-drawings/frog-tongue2.png`);
-  frogImages[6] = loadImage(`assets/images/frog-drawings/frog-tongue3.png`);
+  for (let i=0; i<numFrogImages; i++) {
+    let loadedImage = loadImage(`assets/images/frog-drawings/frog-${i}.png`);
+    frogImages.push(loadedImage);
+  }
 }
+
+// // load frog images without tongue
+//   frogImages[0] = loadImage(`assets/images/frog-drawings/frog-1.png`);
+//   frogImages[1] = loadImage(`assets/images/frog-drawings/frog-2.png`);
+//   frogImages[2] = loadImage(`assets/images/frog-drawings/frog-3.png`);
+//   frogImages[3] = loadImage(`assets/images/frog-drawings/frog-4.png`);
+//
+// // load frog images with tongue
+//   frogImages[4] = loadImage(`assets/images/frog-drawings/frog-5.png`);
+//   frogImages[5] = loadImage(`assets/images/frog-drawings/frog-6.png`);
+//   frogImages[6] = loadImage(`assets/images/frog-drawings/frog-7.png`);
+// }
 
 
 
@@ -84,11 +85,13 @@ function draw() {
   // display my frog
   frog.move();
   frog.display();
+  frog.slapTongueDown();
 
   // loop through all the flies in the array and display them
   for (let i=0; i<flies.length; i++) {
     let fly = flies[i];
     fly.move(frog);
+    fly.getSlappedByFrog(frog);
     fly.display();
 
   }
