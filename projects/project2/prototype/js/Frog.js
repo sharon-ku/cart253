@@ -2,15 +2,23 @@ class Frog {
   constructor() {
     this.x = 100;
     this.y = 100;
-    this.width = 125 * 1.7; // original width: 250
-    this.height = 100 * 1.7; //original height: 200
+    this.width = 212.5; // original width: 250
+    this.height = 170; //original height: 200
     this.vx = 0;
     this.vy = 0;
     this.speed = 2;
 
     this.currentImage = 0; // sets the frog image
-    this.framesElapsed = 0;
-    this.framesBtwEachImage = 5;
+    this.framesElapsed = {
+      forTongueSwing: 0,
+      forTongueSlap: 0,
+    };
+    // this.framesElapsedForTongueSlap = 0;
+    this.framesBtwEachImage = 7;
+    this.framesBtwEachImageForSwing = 5;
+    this.framesBtwEachImageForFinalSlap = 20;
+
+    this.stopSlap = true;
 
     // scale affects direction that frog is facing
     this.scale = {
@@ -49,37 +57,45 @@ class Frog {
     } else if (keyIsDown(DOWN_ARROW)) {
       this.y += 5;
     }
+
+    console.log(this.stopSlap);
+
   }
 
   // frog slaps its tongue down in the direction it is facing
   // the slapping effect is done by switching between images
   slapTongueDown() {
     console.log(this.currentImage);
-    // if frog is facing right
-    if (this.scale.x > 0) {
-      if (mouseIsPressed) {
-        // if left button on mouse is clicked,
-        if (mouseButton === LEFT) {
-          this.framesElapsed++;
-          if (this.framesElapsed === this.framesBtwEachImage) {
+    if (this.stopSlap === false) {
+          this.framesElapsed.forTongueSwing++;
+          if (this.framesElapsed.forTongueSwing === this.framesBtwEachImage) {
             if (this.currentImage === 0) {
               this.currentImage = 4;
             } else if (this.currentImage === 4) {
               this.currentImage = 5;
             } else if (this.currentImage === 5) {
               this.currentImage = 6;
+              this.framesBtwEachImage = this.framesBtwEachImageForFinalSlap;
             } else if (this.currentImage === 6) {
+              this.stopSlap = true;
               this.currentImage = 0;
+              this.framesBtwEachImage = this.framesBtwEachImageForSwing;
             }
-            this.framesElapsed = 0;
+            this.framesElapsed.forTongueSwing = 0;
           }
-        }
+      }
+    }
 
+    // if mouse's left button is clicked, cue tongue slapping animation
+    mousePressed() {
+      if (mouseButton === LEFT) {
+        this.stopSlap = false;
+        this.slapTongueDown();
       }
     }
 
 
 
-  }
+
 
 }

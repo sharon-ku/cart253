@@ -38,18 +38,6 @@ function preload() {
   }
 }
 
-// // load frog images without tongue
-//   frogImages[0] = loadImage(`assets/images/frog-drawings/frog-1.png`);
-//   frogImages[1] = loadImage(`assets/images/frog-drawings/frog-2.png`);
-//   frogImages[2] = loadImage(`assets/images/frog-drawings/frog-3.png`);
-//   frogImages[3] = loadImage(`assets/images/frog-drawings/frog-4.png`);
-//
-// // load frog images with tongue
-//   frogImages[4] = loadImage(`assets/images/frog-drawings/frog-5.png`);
-//   frogImages[5] = loadImage(`assets/images/frog-drawings/frog-6.png`);
-//   frogImages[6] = loadImage(`assets/images/frog-drawings/frog-7.png`);
-// }
-
 
 
 // setup()
@@ -96,6 +84,10 @@ function draw() {
 
   }
 
+}
+
+function mousePressed() {
+  frog.mousePressed();
 }
 
 
