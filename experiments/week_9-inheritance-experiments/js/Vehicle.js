@@ -1,11 +1,10 @@
 class Vehicle {
-  constructor(x,y) {
+  constructor(x, y, vx) {
     this.x = x;
     this.y = y;
-    // it knows about width and height but it doesn't have one
     this.width = undefined;
     this.height = undefined;
-    this.vx = 0; // it knows about velocity but it doesn't have one
+    this.vx = 0;
     this.vy = 0;
   }
 
@@ -21,6 +20,6 @@ class Vehicle {
   }
 
   display() {
-    // define this in the subclasses!
+
   }
 }
