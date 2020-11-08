@@ -48,5 +48,14 @@ class Pedestrian {
     pop();
   }
 
+  checkHit(vehicle) {
+    if (this.x < vehicle.x+vehicle.width/2 &&
+      this.x > vehicle.x-vehicle.width/2 &&
+      this.y <vehicle.y + vehicle.height/2 &&
+      this.y > vehicle.y-vehicle.height/2) {
+        this.alive = false;
+    }
+  }
+
 
 }

@@ -10,17 +10,8 @@ class Vehicle {
 
   }
 
-  // SUPER COOL VIBRATING/EARTHQUAKE EFFECT
   move() {
-    if (random()<0.5) {
-      this.vx = this.speed;
-    }
-    else {
-      this.vx = -this.speed;
-    }
-
     this.x += this.vx;
-
     this.y += this.vy;
   }
 
@@ -32,6 +23,8 @@ class Vehicle {
       this.x += width;
     }
   }
+
+
 
   display() {
     push();

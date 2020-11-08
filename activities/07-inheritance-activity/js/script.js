@@ -22,8 +22,7 @@ let numTrucks = 10;
 let string;
 
 let titleText = `welcome`;
-let successText = `good job,
-you pass`;
+let successText = `BINGO!`;
 let failureText = `boo`;
 
 // setup()
@@ -62,6 +61,18 @@ function setup() {
     let y=random(0,height);
     let truck = new Truck(x,y);
     vehicles.push(truck);
+  }
+
+  // set random directions
+  for (let i=0; i<vehicles.length; i++) {
+    let vehicle = vehicles[i];
+    let r=random(0,1);
+    if (r<0.5) {
+      vehicle.vx = -vehicle.speed;
+    }
+    else {
+      vehicle.vx = vehicle.speed;
+    }
   }
 }
 
@@ -119,17 +130,33 @@ function simulation() {
   pedestrian.move();
   pedestrian.display();
 
+
   for (let i=0; i<vehicles.length; i++) {
     let vehicle = vehicles[i];
     vehicle.move();
     vehicle.wrap();
     vehicle.display();
+    
+    pedestrian.checkHit(vehicle);
   }
+
+  if (!pedestrian.alive) {
+    state = `failure`;
+  }
+
+  if (pedestrian.y < 0) {
+    state = `success`;
+  }
+
 }
 
 // success state
 function success() {
+  push();
+    background(255,100,255);
   displayText(successText);
+
+  pop();
 }
 
 // failure state
