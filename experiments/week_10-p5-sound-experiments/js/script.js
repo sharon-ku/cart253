@@ -6,8 +6,10 @@ Here is a description of this template p5 project.
 **************************************************/
 "use strict";
 
-let oscillator;
-let angle = 0;
+
+let synth;
+let notes = [`F2`, `G2`, `Ab3`, `Bb3`, `C3`, `Db3`, `Eb3`, `F3`]; //F-minor
+let currentNote = 0;
 
 // setup()
 //
@@ -16,9 +18,7 @@ function setup() {
   createCanvas(600,600);
   userStartAudio();
 
-  oscillator = new p5.Oscillator(440,`sine`);
-  oscillator.amp(0.2);
-
+  synth = new p5.PolySynth();
 }
 
 // draw()
@@ -26,18 +26,19 @@ function setup() {
 // Description of draw() goes here.
 function draw() {
   background(0);
-
-  let sinAngle = sin(angle);
-  let newFreq = map(sinAngle, -1,1,440,880);
-  oscillator.freq(newFreq);
-
-  angle += 0.1;
 }
 
-function mousePressed() {
-  oscillator.start();
+function keyPressed() {
+  // start the ghost player
+  setInterval(playRandomNote, 500);
 }
 
-function mouseReleased() {
-  oscillator.stop();
+function playRandomNote() {
+  let note = notes[currentNote];
+  synth.play(note, 1,0,0.1);
+
+  currentNote +=1;
+  if (currentNote === notes.length) {
+    currentNote = 0;
+  }
 }
