@@ -12,12 +12,15 @@ The result will hopefully be a kind of musical instrument based on some basic ph
 // array that stores balls
 let balls = [];
 
+// F-minor notes
+let notes = [`F3`, `G3`, `Ab4`, `Bb4`, `C4`, `Db4`, `Eb4`, `F4`];
 
 // setup()
 //
 // Just creates the canvas
 function setup() {
   createCanvas(windowWidth, windowHeight);
+  userStartAudio();
 }
 
 // draw()
@@ -35,10 +38,11 @@ function draw() {
 }
 
 function mousePressed() {
-  createBall(mouseX, mouseY);
+  createBall(mouseX, mouseY); // create a new ball
 }
 
-function createBall(x,y) {
-  let ball = new Ball(x, y);
+function createBall(x, y) {
+  let note = random(notes); // assign a random note from the notes array
+  let ball = new Ball(x, y, note);
   balls.push(ball);
 }
