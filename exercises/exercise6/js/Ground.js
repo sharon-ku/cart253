@@ -9,9 +9,9 @@ class Ground {
 
     // color information (dark brown)
     this.fill = {
-      r: 127,
-      g: 71,
-      b: 5,
+      r: 77,
+      g: 72,
+      b: 67,
     };
   }
 

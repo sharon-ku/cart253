@@ -13,6 +13,12 @@ let raindropLength = 20;
 // ground
 let ground;
 
+// microphone
+let mic;
+
+// volume needed to cue lightning
+let volumeToCueLightning = 0.2;
+
 // gravitational force exerted on raindrops
 let gravitationalForce = 0.005;
 
@@ -36,8 +42,10 @@ let lightningBg = {
 //
 // Description of setup() goes here.
 function setup() {
-  createCanvas(windowWidth, windowHeight);
-  // createCanvas(600,600);
+  // createCanvas(windowWidth, windowHeight);
+  createCanvas(600,600);
+
+  userStartAudio();
 
   // add new raindrops to raindrops array
   for (let i = 0; i < numRaindrops; i++) {
@@ -57,6 +65,11 @@ function setup() {
   let x = width / 2;
   let y = height - (h / 2);
   ground = new Ground(w, h, x, y);
+
+  // create AudioIn object
+  mic = new p5.AudioIn();
+  // try to connect to user's microphone
+  mic.start();
 }
 
 // draw()
@@ -65,6 +78,16 @@ function setup() {
 function draw() {
   // display background color
   background(rainBg.r, rainBg.g, rainBg.b);
+
+  // get current volume of sound that goes into the microphone
+  let level = mic.getLevel();
+  console.log(level);
+
+  // check if volume is loud enough to cue lightning
+  if (level > volumeToCueLightning) {
+    background(255);
+  }
+
 
   // display the ground
   ground.display();
