@@ -5,6 +5,16 @@ Sharon Ku
 Here is a description of this template p5 project.
 **************************************************/
 
+
+// frog controlled by user
+let frog;
+
+// using an array to store all images
+let frogImages = [];
+// this variable stores the number of images
+let numFrogImages = 7;
+
+
 // array that stores raindrops
 let raindrops = [];
 let numRaindrops = 100;
@@ -36,6 +46,15 @@ let lightningBg = {
   b: 117,
 };
 
+// preload()
+//
+// load images
+function preload() {
+  for (let i=0; i<numFrogImages; i++) {
+    let loadedImage = loadImage(`assets/images/frog-drawings/frog-${i}.png`);
+    frogImages.push(loadedImage);
+  }
+}
 
 
 // setup()
@@ -47,7 +66,23 @@ function setup() {
 
   userStartAudio();
 
-  // add new raindrops to raindrops array
+  // ground height
+  let groundHeight = height/4;
+
+  createRaindrops();
+  createGround(groundHeight);
+  createFrog(groundHeight);
+
+  // create AudioIn object
+  mic = new p5.AudioIn();
+  // try to connect to user's microphone
+  mic.start();
+
+
+}
+
+// add new raindrops to raindrops array
+function createRaindrops() {
   for (let i = 0; i < numRaindrops; i++) {
     let x1 = random(0, width);
     let y1 = random(0, height);
@@ -56,20 +91,23 @@ function setup() {
     let raindrop = new Raindrop(x1, y1, x2, y2);
     raindrops.push(raindrop);
   }
+}
 
-  // create a new ground
+// create a new ground
+function createGround(groundHeight) {
   // size information
   let w = width;
-  let h = height / 6;
   // position information
   let x = width / 2;
-  let y = height - (h / 2);
-  ground = new Ground(w, h, x, y);
+  let y = height - (groundHeight / 2);
+  ground = new Ground(w, groundHeight, x, y);
+}
 
-  // create AudioIn object
-  mic = new p5.AudioIn();
-  // try to connect to user's microphone
-  mic.start();
+// create a new frog
+function createFrog(groundHeight) {
+  let frogX= width/2;
+  let frogY= height - groundHeight;
+  frog = new Frog(frogX, frogY);
 }
 
 // draw()
@@ -86,11 +124,19 @@ function draw() {
   // check if volume is loud enough to cue lightning
   if (level > volumeToCueLightning) {
     background(255);
+    for (let i = 0; i < raindrops.length; i++) {
+      let raindrop = raindrops[i];
+      raindrop.changeColor();
+    }
   }
 
 
   // display the ground
   ground.display();
+
+  // display the frog
+  frog.display();
+  frog.blink();
 
   // display raindrops
   for (let i = 0; i < raindrops.length; i++) {
@@ -100,6 +146,8 @@ function draw() {
     raindrop.gravity(gravitationalForce);
     raindrop.display();
   }
+
+
 
 
 }

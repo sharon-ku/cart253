@@ -18,6 +18,11 @@ class Raindrop {
       r: 0,
       g: 0,
       b: 0,
+      normal: {
+        r: 0,
+        g: 0,
+        b: 0,
+      },
       lightning : {
         r: 255,
         g: 255,
@@ -51,6 +56,13 @@ class Raindrop {
       this.y1 -= height * 1.1;
       this.y2 -= height * 1.1;
     }
+  }
+
+  // change stroke color due to lightning
+  changeColor() {
+    this.stroke.r = this.stroke.lightning.r;
+    this.stroke.g = this.stroke.lightning.g;
+    this.stroke.b = this.stroke.lightning.b;
   }
 
   // display a raindrop
