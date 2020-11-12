@@ -6,7 +6,6 @@ class Ground {
     // position information
     this.x = x;
     this.y = y;
-
     // color information (dark brown)
     this.fill = {
       r: 77,

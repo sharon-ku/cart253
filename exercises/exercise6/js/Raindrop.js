@@ -1,29 +1,32 @@
 class Raindrop {
-  constructor(x1, y1, x2, y2) {
+  constructor() {
+    // size information
+    this.length = random(10,50);
     // position information
-    this.x1 = x1;
-    this.y1 = y1;
-    this.x2 = x2;
-    this.y2 = y2;
+    this.x1 = random(0, width);
+    this.y1 = random(-height, 0);
+    this.x2 = this.x1;
+    this.y2 = this.y1 + this.length;
     // velocity information
     this.vx = 0;
-    this.vy = 5;
-    this.maxSpeed = random(7,10);
+    this.vy = 8;
+    this.maxSpeed = random(10,30);
     // acceleration information
     this.ax = 0;
     this.ay = 0;
     // for appearance
     this.strokeWeight = 2;
     this.stroke = {
-      r: 0,
-      g: 0,
-      b: 0,
-      normal: {
-        r: 0,
-        g: 0,
-        b: 0,
+      r: random(135,255),
+      g: random(135,255),
+      b: random(135,255),
+      alpha: random(50,150),
+      normal: { // stroke color when no lightning
+        r: random(135,255),
+        g: random(135,255),
+        b: random(135,255),
       },
-      lightning : {
+      lightning : { // stroke color when there is lightning
         r: 255,
         g: 255,
         b: 255,
@@ -50,25 +53,32 @@ class Raindrop {
     this.y2 += this.vy;
   }
 
-  // wrap the raindrop back to the top if it goes off canvas
+  // wrap the raindrop back to the top if it goes off canvas + play a note
   wrap() {
-    if (this.y1 > height) {
+    if (this.y1 > height - random(-100,200)) {
       this.y1 -= height * 1.1;
       this.y2 -= height * 1.1;
     }
   }
 
   // change stroke color due to lightning
-  changeColor() {
+  changeToLightningColor() {
     this.stroke.r = this.stroke.lightning.r;
     this.stroke.g = this.stroke.lightning.g;
     this.stroke.b = this.stroke.lightning.b;
   }
 
+  // after lightning, reset stroke color
+  resetColor() {
+    this.stroke.r = this.stroke.normal.r;
+    this.stroke.g = this.stroke.normal.g;
+    this.stroke.b = this.stroke.normal.b;
+  }
+
   // display a raindrop
   display() {
     push();
-    stroke(this.stroke.r, this.stroke.g, this.stroke.b);
+    stroke(this.stroke.r, this.stroke.g, this.stroke.b, this.stroke.alpha);
     strokeWeight(this.strokeWeight);
     line(this.x1, this.y1, this.x2, this.y2);
     pop();
