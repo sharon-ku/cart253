@@ -32,12 +32,15 @@ let showFood = false;  // when user clicks More Food button, show food
 let bodyTextFont = undefined;
 
 // Title text
-let title = {
-  line1: `HUNGRY`,
-  line2: `FISHIES`,
-  font: undefined,
-  fill: 255,
-};
+// let title = {
+//   line1: `HUNGRY`,
+//   line2: `FISHIES`,
+//   font: undefined,
+//   fill: 255,
+// };
+
+let title;
+let titleFont;
 
 // start button and text inside it
 let startButton;
@@ -258,7 +261,7 @@ function preload() {
   bg.sand.img = loadImage(`assets/images/sand.png`);
 
   // Load title font and body text font
-  title.font = loadFont(`assets/fonts/Slackey-Regular.ttf`);
+  titleFont = loadFont(`assets/fonts/Slackey-Regular.ttf`);
   bodyTextFont = loadFont(`assets/fonts/Grandstander-Regular.ttf`);
 
   // Load background music
@@ -275,6 +278,9 @@ function setup() {
 
   // Create a new finger
   finger = new Finger;
+
+  // Create a new title
+  title = new Title;
 
   // Create a new start button + text inside start button
   startButton = new StartButton;
@@ -355,7 +361,8 @@ function setBackground() {
 // Intro state: Display title, start button, finger, and fish
 function intro() {
   // Display the title, start button, and start text
-  displayTitle();
+  // displayTitle();
+  title.display(titleFont);
 
   // if finger is in button, call hover method (increases button size and changes color)
   if (mouseIsInButton({x:startButton.x, y:startButton.y, size:startButton.size})) {
@@ -384,16 +391,16 @@ function intro() {
 }
 
 // Display title "Hungry Fishies"
-function displayTitle() {
-  push();
-  fill(title.fill);
-  textSize(height/8);
-  textAlign(CENTER,CENTER);
-  textFont(title.font);
-  text(title.line1, width/2, height/5);
-  text(title.line2, width/2, height/3);
-  pop();
-}
+// function displayTitle() {
+//   push();
+//   fill(title.fill);
+//   textSize(height/8);
+//   textAlign(CENTER,CENTER);
+//   textFont(title.font);
+//   text(title.line1, width/2, height/5);
+//   text(title.line2, width/2, height/3);
+//   pop();
+// }
 
 // Moves and displays finger (user circle)
 function moveAndDisplayFinger() {
