@@ -15,7 +15,7 @@ Background music from Mixkit.co: Smooth Like Jazz by Ajhay Stelino
 "use strict"; // because strict is good
 
 // State of program
-let state = `ending`; // other states: instructions, animation, ending
+let state = `intro`; // other states: instructions, animation, ending
 
 // Background music
 let backgroundMusic = undefined;
@@ -39,39 +39,9 @@ let title = {
   fill: 255,
 };
 
-// Start text
-let start = {
-  text: `START`,
-  x: 100,
-  y: 100,
-  size: 30,
-  sizeBigger: 40,
-  sizeSmaller: 30,
-  fill: {
-    r: 255,
-    g: 255,
-    b: 255,
-  },
-};
-
-// Start button
-let startButton = {
-  size: 130,
-  sizeBigger: 150,
-  sizeSmaller: 130,
-  x: 100,
-  y: 100,
-  fill: {
-    // vivid sky blue
-    r: 10,
-    g: 205,
-    b: 255,
-    rHover: 10,
-    gHover: 205,
-    bHover: 255,
-    alpha: 200,
-  },
-};
+// start button and text inside it
+let startButton;
+let startButtonText;
 
 // Food tracker
 let foodTracker = {
@@ -237,7 +207,10 @@ let numPoemLines = 4;
 let yLocationOfFirstLine = 210;
 let spaceBetweenEachLine = 40;
 
-let line = [`Little Firefishy is now well fed,`, `Watch it go, off to bed...`, `It suddenly feels something moving in its belly,`, `Looks like it gave birth to adorable food babies!`];
+let line = [`Little Firefishy is now well fed,`,
+  `Watch it go, off to bed...`,
+  `It suddenly feels something moving in its belly,`,
+  `Looks like it gave birth to adorable food babies!`];
 
 // Nighttime shade rectangle
 let nightFilter = {
@@ -302,6 +275,10 @@ function setup() {
 
   // Create a new finger
   finger = new Finger;
+
+  // Create a new start button + text inside start button
+  startButton = new StartButton;
+  startButtonText = new StartButtonText;
 
   // Set firefish's current image to first image
   firefish.currentImage = firefish.img1;
@@ -379,11 +356,20 @@ function setBackground() {
 function intro() {
   // Display the title, start button, and start text
   displayTitle();
-  displayStartButton();
-  displayStart();
 
-  // Start button and text enlarge if finger hovers over Start Button
-  hoverOnStartButton();
+  // if finger is in button, call hover method (increases button size and changes color)
+  if (mouseIsInButton({x:startButton.x, y:startButton.y, size:startButton.size})) {
+    startButton.hover();
+    startButtonText.hover(bodyTextFont);
+  }
+  else { // set the button to its normal size
+    startButton.setNormalSize();
+    startButtonText.setNormalSize();
+  }
+
+  // display the start button with the text inside
+  startButton.display(startButtonText);
+  startButtonText.display(bodyTextFont);
 
   // Display user circle and move with mouse
   moveAndDisplayFinger();
@@ -407,57 +393,6 @@ function displayTitle() {
   text(title.line1, width/2, height/5);
   text(title.line2, width/2, height/3);
   pop();
-}
-
-// Display the circular Start button
-function displayStartButton() {
-  push();
-  startButton.x = start.x;
-  startButton.y = start.y;
-
-  fill(startButton.fill.r, startButton.fill.g, startButton.fill.b, startButton.fill.alpha);
-  ellipse(startButton.x, startButton.y, startButton.size);
-  pop();
-}
-
-// Display the Start text
-function displayStart() {
-  push();
-  fill(start.fill.r, start.fill.g, start.fill.b);
-  textSize(start.size);
-  textAlign(CENTER, CENTER);
-
-  start.x = width*1/5;
-  start.y = height*4/5;
-
-  textFont(bodyTextFont);
-  text(start.text, start.x, start.y);
-  pop();
-}
-
-// If finger hovers on Start button, Start button and text enlarges
-function hoverOnStartButton() {
-  if (mouseIsInButton({x:startButton.x, y:startButton.y, size:startButton.size})) {
-    push();
-    // Start button enlarges and changes color
-    startButton.size = startButton.sizeBigger;
-    fill(startButton.fill.rHover, startButton.fill.gHover, startButton.fill.bHover, startButton.fill.alpha);
-    ellipse(startButton.x, startButton.y, startButton.size);
-
-    // Start text enlarges
-    start.size = start.sizeBigger;
-    fill(start.fill.r, start.fill.g, start.fill.b);
-    textAlign(CENTER, CENTER);
-    textSize(start.size);
-    textFont(bodyTextFont);
-    text(start.text, start.x, start.y);
-    pop();
-  }
-  else {
-    // Start button and text keep size of initial setup
-    startButton.size = startButton.sizeSmaller;
-    start.size = start.sizeSmaller;
-  }
 }
 
 // Moves and displays finger (user circle)
@@ -835,9 +770,6 @@ function displayEndPoem() {
     poemLines[i].show();
   }
 }
-
-// This is what it means to be a piece of poop: it is displayed and it moves
-
 
 // Display and move poop; the poop comes out of the fish's cloaca
 function displayAndMovePoop() {

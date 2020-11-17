@@ -1,5 +1,3 @@
-// This is what it means to be an end poem. Its lines are displayed.
-
 class PoemLine {
   constructor(lineText, x, y) {
     this.line = lineText;
