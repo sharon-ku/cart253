@@ -15,12 +15,12 @@ let barkSFX; // bark sound effect
 let frog;
 
 let frogSpr;
-let anim;
+let frogSlapAnimation;
 
 // using an array to store all images
 let frogImages = [];
 // this variable stores the number of images
-let numFrogImages = 7;
+let numFrogImages = 4;
 
 
 // array that stores fly variables
@@ -39,13 +39,13 @@ let slappingDistance = 80;
 // loads all images + sound effects
 function preload() {
   for (let i=0; i<numFrogImages; i++) {
-    let loadedImage = loadImage(`assets/images/frog-drawings/frog-${i}.png`);
+    let loadedImage = loadImage(`assets/images/frog/frog-${i}.png`);
     frogImages.push(loadedImage);
   }
 
-  barkSFX = loadSound(`assets/sounds/bark.wav`);
+  // barkSFX = loadSound(`assets/sounds/bark.wav`);
 
-  anim = loadAnimation("assets/images/frog-drawings/frog-1.png", "assets/images/frog-drawings/frog-2.png", "assets/images/frog-drawings/frog-3.png");
+  frogSlapAnimation = loadAnimation("assets/images/frog/frogSlap1.png", "assets/images/frog/frogSlap2.png", "assets/images/frog/frogSlap3.png");
 
 }
 
@@ -69,7 +69,7 @@ function setup() {
   }
 
   frogSpr = createSprite(width/2, height/2);
-  frogSpr.addAnimation("default", anim);
+  frogSpr.addAnimation("default", frogSlapAnimation);
 }
 
 // draw()
@@ -89,7 +89,7 @@ function draw() {
   // display my frog, move it, and let it slap its tongue down
   frog.move();
   frog.display();
-  frog.slapTongueDown();
+  // frog.slapTongueDown();
 
   frogSpr.position.x = mouseX;
   frogSpr.position.y = mouseY;
