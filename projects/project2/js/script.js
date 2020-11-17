@@ -14,6 +14,9 @@ let barkSFX; // bark sound effect
 // frog controlled by user
 let frog;
 
+let frogSpr;
+let anim;
+
 // using an array to store all images
 let frogImages = [];
 // this variable stores the number of images
@@ -41,6 +44,9 @@ function preload() {
   }
 
   barkSFX = loadSound(`assets/sounds/bark.wav`);
+
+  anim = loadAnimation("assets/images/frog-drawings/frog-1.png", "assets/images/frog-drawings/frog-2.png", "assets/images/frog-drawings/frog-3.png");
+
 }
 
 
@@ -62,7 +68,8 @@ function setup() {
     flies.push(fly);
   }
 
-
+  frogSpr = createSprite(width/2, height/2);
+  frogSpr.addAnimation("default", anim);
 }
 
 // draw()
@@ -83,6 +90,13 @@ function draw() {
   frog.move();
   frog.display();
   frog.slapTongueDown();
+
+  frogSpr.position.x = mouseX;
+  frogSpr.position.y = mouseY;
+  if (mouseIsPressed) {
+    frogSpr.rotation -=2;
+  }
+  drawSprites();
 }
 
 // when mouse is clicked, call the mousePressed method in Frog.js
