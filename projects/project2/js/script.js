@@ -15,14 +15,14 @@ Background music from Mixkit.co: Smooth Like Jazz by Ajhay Stelino
 "use strict"; // because strict is good
 
 // State of program
-let state = `intro`; // other states: instructions, animation, ending
+let state = `ending`; // other states: instructions, animation, ending
 
 // Background music
 let backgroundMusic = undefined;
 
-// Variables related to fishfood
-let fishfoods = []; // fishfoods array that contains food objects
-let numFishfoods = 5; // number of fish food in the tank at once
+// Variables related to fishFood
+let fishFoods = []; // fishfoods array that contains food objects
+let numFishFoods = 5; // number of fish food in the tank at once
 let totalFood = 15; // total amount of food that fish needs to consume
 
 let timeForFood = true; // when no more food in tank, it is time for food
@@ -34,7 +34,7 @@ let bodyTextFont = undefined;
 // Title text
 let title = {
   line1: `HUNGRY`,
-  line2: `FISHY`,
+  line2: `FISHIES`,
   font: undefined,
   fill: 255,
 };
@@ -129,17 +129,7 @@ let firefish = {
 };
 
 // User circle
-let finger = {
-  size: 40,
-  x: 100,
-  y: 100,
-  fill: { // light cyan
-    r: 220,
-    g: 255,
-    b: 250,
-    alpha: 180,
-  },
-};
+let finger;
 
 // More Food button
 let moreFoodButton = {
@@ -304,18 +294,21 @@ function preload() {
 
 // setup() -----------------------------------------------------------------------
 //
-// Set up canvas, hide cursor, create arrays for fishfoods and poemLines
+// Set up canvas, hide cursor, create arrays for fishFoods and poemLines
 function setup() {
   createCanvas(1300, 800);
   noCursor();
   noStroke();
 
+  // Create a new finger
+  finger = new Finger;
+
   // Set firefish's current image to first image
   firefish.currentImage = firefish.img1;
 
-  // Create array for fishfoods (for animation state)
-  for (let i = 0; i < numFishfoods; i++) {
-    fishfoods[i] = new Fishfood();
+  // Create array for fishFoods (for animation state)
+  for (let i = 0; i < numFishFoods; i++) {
+    fishFoods[i] = new FishFood();
   }
 
   // Create array for poemLines (for end state)
@@ -393,8 +386,7 @@ function intro() {
   hoverOnStartButton();
 
   // Display user circle and move with mouse
-  displayFinger();
-  moveFinger();
+  moveAndDisplayFinger();
 
   // Display firefish casually swimming
   switchFishImages();
@@ -468,18 +460,10 @@ function hoverOnStartButton() {
   }
 }
 
-// Display finger (user circle)
-function displayFinger() {
-  push();
-  fill(finger.fill.r, finger.fill.g, finger.fill.b, finger.fill.alpha);
-  ellipse(finger.x, finger.y, finger.size);
-  pop();
-}
-
-// Finger follows mouse position
-function moveFinger() {
-  finger.x = mouseX;
-  finger.y = mouseY;
+// Moves and displays finger (user circle)
+function moveAndDisplayFinger() {
+  finger.move();
+  finger.display();
 }
 
 // Firefish switches between image 1 and image 2
@@ -568,8 +552,7 @@ function instructions() {
   displayReadyText();
   hoverOnReadyButton();
 
-  displayFinger();
-  moveFinger();
+  moveAndDisplayFinger();
 }
 
 // Display food tracker on canvas
@@ -702,7 +685,7 @@ function animation() {
   resetMoreFoodButton();
 
   // Release fish food if the More Food Button is clicked and it is active
-  releaseFishfood();
+  releaseFishFood();
 
   // Display and update food tracker every time fish eats scrumptious food
   displayFoodTracker();
@@ -721,28 +704,27 @@ function animation() {
   displayFirefish({img: firefish.currentImage, x: firefish.x, y: firefish.y, length: firefish.length, width: firefish.width});
 
   // Display and move finger
-  displayFinger();
-  moveFinger();
+  moveAndDisplayFinger();
 
   // Cue ending if firefish has eaten the total number of food
   fishIsFull();
 }
 
 // Display and move 5 pieces of food
-function releaseFishfood() {
+function releaseFishFood() {
   if (showFood) {
-    for (let i = fishfoods.length-1; i >= 0; i--) {
-      fishfoods[i].move();
-      fishfoods[i].show();
+    for (let i = fishFoods.length-1; i >= 0; i--) {
+      fishFoods[i].move();
+      fishFoods[i].show();
 
       // If fish eats food, at numFoodEaten counter
-      if (fishfoods[i].foodEaten()) {
+      if (fishFoods[i].foodEaten()) {
         firefish.numFoodEaten ++;
       }
 
-      // Everytime a food goes off screen, remove food item from fishfoods array
-      if (fishfoods[i].foodEaten() || fishfoods[i].offScreen()) {
-        fishfoods.splice(i,1);
+      // Everytime a food goes off screen, remove food item from fishFoods array
+      if (fishFoods[i].foodEaten() || fishFoods[i].offScreen()) {
+        fishFoods.splice(i,1);
       }
     }
   }
@@ -828,8 +810,7 @@ function ending() {
   displayEndPoem();
 
   // Display and move finger based on user's mouse position
-  displayFinger();
-  moveFinger();
+  moveAndDisplayFinger();
 }
 
 // Displays filter that plunges tank into darkness
@@ -856,39 +837,7 @@ function displayEndPoem() {
 }
 
 // This is what it means to be a piece of poop: it is displayed and it moves
-class Poop {
-  constructor(fishX, fishY) {
-    this.x = fishX;
-    this.y = fishY;
-    this.vx = 0;
-    this.vy = 0;
-    this.speed = 1;
-    this.ax = 0;
-    this.ay = 0;
-    this.acceleration = 3;
-    this.size = 5;
-    this.fillR = 102;  // poop brown color
-    this.fillG = 75;
-    this.fillB = 0;
-  }
 
-  // display poop pebble
-  show() {
-    push();
-    fill(this.fillR, this.fillG, this.fillB);
-    ellipse(this.x, this.y, this.size);
-    pop();
-  }
-
-  // poop flows upwards --> it knows how to fly!
-  move() {
-    this.ay = -this.acceleration;
-    this.vx = this.speed;
-    this.vy = this.speed;
-    this.x +=  this.vx + this.ax;
-    this.y +=  this.vy + this.ay;
-  }
-}
 
 // Display and move poop; the poop comes out of the fish's cloaca
 function displayAndMovePoop() {

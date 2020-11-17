@@ -62,15 +62,15 @@ function clickMoreFoodButton(){
   }
 }
 
-// Once all fishfoods are gone (off the canvas or eaten), reactivate the MoreFoodButton and create new fishfoods
+// Once all fishFoods are gone (off the canvas or eaten), reactivate the MoreFoodButton and create new fishFoods
 function resetMoreFoodButton() {
-  if (fishfoods.length === 0) {
+  if (fishFoods.length === 0) {
     timeForFood = true;
     showFood = false;
 
-    // Create new fishfoods in array
-    for (let i = 0; i < numFishfoods; i++) {
-      fishfoods[i] = new Fishfood();
+    // Create new fishFoods in array
+    for (let i = 0; i < numFishFoods; i++) {
+      fishFoods[i] = new FishFood();
     }
   }
 }

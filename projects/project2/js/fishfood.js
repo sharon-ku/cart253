@@ -1,5 +1,3 @@
-// This is what it means to be fishfood. It can be displayed and moved. The user can use the left and right arrow keys to change the current and water bend the fish food that way.
-
 class FishFood {
   constructor() {
     this.x = random(fishtank.border, width - fishtank.border);
