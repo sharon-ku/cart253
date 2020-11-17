@@ -1,5 +1,5 @@
 /**************************************************
-Project 1: Simulation - Hungry Fishy
+Project 2: Hungry Fishies
 Sharon Ku
 
 -Intro state & Instructions state:
