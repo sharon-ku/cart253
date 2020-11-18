@@ -9,15 +9,18 @@ class Poop {
     this.ay = 0;
     this.acceleration = 3;
     this.size = 5;
-    this.fillR = 102;  // poop brown color
-    this.fillG = 75;
-    this.fillB = 0;
+    // poop brown color
+    this.fill = {
+      r: 102,
+      g: 75,
+      b: 0,
+    };
   }
 
   // display poop pebble
   show() {
     push();
-    fill(this.fillR, this.fillG, this.fillB);
+    fill(this.fill.r, this.fill.g, this.fill.b);
     ellipse(this.x, this.y, this.size);
     pop();
   }

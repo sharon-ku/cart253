@@ -15,7 +15,7 @@ Background music from Mixkit.co: Smooth Like Jazz by Ajhay Stelino
 "use strict"; // because strict is good
 
 // State of program
-let state = `intro`; // other states: instructions, animation, ending
+let state = `instructions`; // other states: instructions, animation, ending
 
 // Background music
 let backgroundMusic = undefined;
@@ -250,7 +250,7 @@ function setup() {
   let startButtonY = height*4/5;
   // Create a new start button + text inside start button
   startButton = new StartButton(startButtonX, startButtonY);
-  startButtonText = new StartButtonText(startButtonX, startButtonY);
+  startButtonText = new StartButtonText(startButtonX, startButtonY, bodyTextFont);
 
   // Set firefish's current image to first image
   firefish.currentImage = firefish.img1;
@@ -348,7 +348,8 @@ function intro() {
 
   // display the start button with the text inside
   startButton.display();
-  startButtonText.display(bodyTextFont);
+  // startButtonText.display(bodyTextFont);
+  startButtonText.display();
 
   // Display user circle and move with mouse
   moveAndDisplayFinger();
