@@ -18,7 +18,7 @@ class ButtonShape extends Button {
     pop();
   }
 
-  // move the button
+  // move the button randomly
   move() {
     // generates a random number between 0 and 1
     this.change = random();

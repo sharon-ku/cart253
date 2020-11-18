@@ -18,8 +18,9 @@ class ButtonText extends Button {
     pop();
   }
 
-  move(startButtonCircle) {
-    this.x = startButtonCircle.x;
-    this.y = startButtonCircle.y;
+  // set the text to move with the button shape's position
+  move(buttonShape) {
+    this.x = buttonShape.x;
+    this.y = buttonShape.y;
   }
 }
