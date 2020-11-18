@@ -54,7 +54,7 @@ let firefish = {
   vy: 0,
   speed: {
     casualSwimming: 5,
-    followingMouse: 1.5,
+    followingFinger: 1.5,
   },
   buffer: 10,
   tx: 0,
@@ -346,7 +346,7 @@ function moveAndDisplayFinger() {
   finger.display();
 }
 
-// Firefish switches between image 1 and image 2
+// Fish switches between image 1 and image 2
 function switchFishImages(fishName) {
   fishName.framesElapsed++;
   if (fishName.framesElapsed === fishName.framesBtwEachImage) {
@@ -359,7 +359,7 @@ function switchFishImages(fishName) {
   }
 }
 
-// Firefish swims randomly using Perlin noise
+// Fish swims randomly using Perlin noise
 function fishCasualSwimming(fishName) {
   fishName.tx += fishName.txChange;
   fishName.ty += fishName.tyChange;
@@ -381,7 +381,7 @@ function fishCasualSwimming(fishName) {
   fishName.y = constrain(fishName.y, fishtank.border, height - fishtank.border);
 }
 
-// Display firefish
+// Display fish
 function displayFish(fishName) {
   push();
   translate(fishName.x, fishName.y);
@@ -534,13 +534,7 @@ function animation() {
 
   // Firefish follows finger if the fish senses the finger, or else it swims casually around the tank.
   if (fishSensesFinger(firefish)) {
-    fishFollowsFinger({
-      x: firefish.x,
-      y: firefish.y,
-      vx: firefish.vx,
-      vy: firefish.vy,
-      speed: firefish.speed.followingMouse
-    });
+    fishFollowsFinger(firefish);
   } else {
     fishCasualSwimming(firefish);
   }
@@ -577,39 +571,33 @@ function releaseFishFood() {
 }
 
 // The fish follows the finger
-function fishFollowsFinger({
-  x,
-  y,
-  vx,
-  vy,
-  speed
-}) {
+function fishFollowsFinger(fishName) {
   // Calculating distance from fish to finger
-  let distX = firefish.x - mouseX;
-  let distY = firefish.y - mouseY;
+  let distX = fishName.x - mouseX;
+  let distY = fishName.y - mouseY;
 
   // Firefish's velocity changes depending on where the finger is with respect to its body
-  if (distX < -firefish.buffer) {
-    vx = speed;
-  } else if (distX > firefish.buffer) {
-    vx = -speed;
+  if (distX < -fishName.buffer) {
+    fishName.vx = fishName.speed.followingFinger;
+  } else if (distX > fishName.buffer) {
+    fishName.vx = -fishName.speed.followingFinger;
   } else {
-    vx = 0; // Stop moving if the fish is within buffer of the finger
+    fishName.vx = 0; // Stop moving if the fish is within buffer of the finger
   }
   if (distY < 0) {
-    vy = speed;
+    fishName.vy = fishName.speed.followingFinger;
   } else if (distY > 0) {
-    vy = -speed;
+    fishName.vy = -fishName.speed.followingFinger;
   }
 
-  firefish.x += vx;
-  firefish.y += vy;
+  fishName.x += fishName.vx;
+  fishName.y += fishName.vy;
 
   // Setting the fish's direction (facing left or facing right)
-  if (vx > 0) {
-    firefish.scale.x = 1; // face right
-  } else if (vx < 0 || vx === 0) {
-    firefish.scale.x = -1; // face left
+  if (fishName.vx > 0) {
+    fishName.scale.x = 1; // face right
+  } else if (fishName.vx < 0 || fishName.vx === 0) {
+    fishName.scale.x = -1; // face left
   }
 }
 
