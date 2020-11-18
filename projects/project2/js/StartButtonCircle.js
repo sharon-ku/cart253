@@ -1,4 +1,4 @@
-class StartButton extends ButtonShape {
+class StartButtonCircle extends ButtonShape {
   constructor(x,y) {
     super(x,y);
 

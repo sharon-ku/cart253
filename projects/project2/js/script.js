@@ -15,7 +15,7 @@ Background music from Mixkit.co: Smooth Like Jazz by Ajhay Stelino
 "use strict"; // because strict is good
 
 // State of program
-let state = `instructions`; // other states: instructions, animation, ending
+let state = `ending`; // other states: instructions, animation, ending
 
 // Background music
 let backgroundMusic = undefined;
@@ -35,8 +35,8 @@ let bodyTextFont = undefined;
 let title;
 let titleFont;
 
-// start button and text inside it
-let startButton;
+// start button circle and text inside it
+let startButtonCircle;
 let startButtonText;
 
 // Food tracker
@@ -195,11 +195,8 @@ let nightFilter;
 
 // Array containing poop pebbles
 let poops = [];
-
 // Total number of poop that the fish can release in a single swimming
-let poop = {
-  totalNumOfPoop: 50,
-};
+let totalNumPoops = 50;
 
 // setup() -----------------------------------------------------------------------
 //
@@ -249,7 +246,7 @@ function setup() {
   let startButtonX = width*1/5;
   let startButtonY = height*4/5;
   // Create a new start button + text inside start button
-  startButton = new StartButton(startButtonX, startButtonY);
+  startButtonCircle = new StartButtonCircle(startButtonX, startButtonY);
   startButtonText = new StartButtonText(startButtonX, startButtonY, bodyTextFont);
 
   // Set firefish's current image to first image
@@ -273,7 +270,7 @@ function setup() {
   }
 
   // Create array for poop (for end state)
-  for (let i = 0; i < poop.totalNumOfPoop; i++) {
+  for (let i = 0; i < totalNumPoops; i++) {
     poops[i] = new Poop();
   }
 }
@@ -337,18 +334,22 @@ function intro() {
   title.display(titleFont);
 
   // if finger is in button, call hover method (increases button size and changes color)
-  if (mouseIsInButton(startButton)) {
-    startButton.hover();
+  if (mouseIsInButton(startButtonCircle)) {
+    startButtonCircle.hover();
     startButtonText.hover();
   }
   else { // set the button to its normal size
-    startButton.setNormalSize();
+    startButtonCircle.setNormalSize();
     startButtonText.setNormalSize();
   }
 
-  // display the start button with the text inside
-  startButton.display();
-  // startButtonText.display(bodyTextFont);
+  // move the start button with the "start" text inside it
+  startButtonCircle.move();
+  startButtonText.move(startButtonCircle); // "start" text has same position as start button
+  stayInTank(startButtonCircle);
+
+  // display the start button with "start" text inside it
+  startButtonCircle.display();
   startButtonText.display();
 
   // Display user circle and move with mouse
@@ -360,7 +361,7 @@ function intro() {
   firefishCasualSwimming({tx:firefish.tx, ty:firefish.ty, txChange:firefish.txChange, tyChange:firefish.tyChange, speedCasualSwimming:firefish.speed.casualSwimming});
 
   // Constraining firefish's movement to the inside of the tank
-  fishStaysInTank(firefish);
+  stayInTank(firefish);
 }
 
 // Moves and displays finger (user circle)
@@ -429,10 +430,10 @@ function setFishDirection({x,y,vx}) {
   pop();
 }
 
-// Constraining fish's position to the inside of the tank
-function fishStaysInTank(fish) {
-  fish.x = constrain(fish.x, fishtank.border, width - fishtank.border);
-  fish.y = constrain(fish.y, fishtank.border, height - fishtank.border);
+// Constraining object/animal's position to the inside of the tank
+function stayInTank(subject) {
+  subject.x = constrain(subject.x, fishtank.border, width - fishtank.border);
+  subject.y = constrain(subject.y, fishtank.border, height - fishtank.border);
 }
 
 // instructions() ----------------------------------------------------------------------
@@ -523,7 +524,7 @@ function displayReadyButton() {
 function mouseClicked() {
   // If finger clicks on Start button, cue `instructions` state
   if (state === `intro`) {
-    if (mouseIsInButton(startButton)) {
+    if (mouseIsInButton(startButtonCircle)) {
       state = `instructions`;
     }
   }
@@ -731,7 +732,7 @@ function determineCloacaLocation() {
 
 // To ensure that poop does not get too long, cut off array after a certain amount of poop pebbles have been released
 function removePoop() {
-  if (poops.length > poop.totalNumOfPoop) {
+  if (poops.length > totalNumPoops) {
     poops.splice(0,1);
   }
 }

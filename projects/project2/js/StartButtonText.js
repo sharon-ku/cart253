@@ -13,4 +13,8 @@ class StartButtonText extends ButtonText {
     };
   }
 
+  move(startButtonCircle) {
+    super.move(startButtonCircle);
+  }
+
 }

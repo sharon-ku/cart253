@@ -17,4 +17,9 @@ class ButtonText extends Button {
     text(this.string, this.x, this.y);
     pop();
   }
+
+  move(startButtonCircle) {
+    this.x = startButtonCircle.x;
+    this.y = startButtonCircle.y;
+  }
 }
