@@ -15,13 +15,13 @@ Background music from Mixkit.co: Smooth Like Jazz by Ajhay Stelino
 "use strict"; // because strict is good
 
 // State of program
-let state = `intro`; // other states: instructions, animation, ending
+let state = `ending`; // other states: instructions, animation, ending
 
 // Background music
 let backgroundMusic = undefined;
 
 // Variables related to fishFood
-let fishFoods = []; // fishfoods array that contains food objects
+let fishFoods = []; // fishFoods array that contains food objects
 let numFishFoods = 5; // number of fish food in the tank at once
 let totalFood = 2; // total amount of food that fish needs to consume //originally: 15
 
@@ -32,7 +32,7 @@ let bodyTextFont = undefined;
 let title;
 let titleFont;
 
-// start button circle and text inside it
+// Start button circle and text inside it
 let startButtonCircle;
 let startButtonText;
 
@@ -41,8 +41,10 @@ let foodTracker;
 
 // Firefish
 let firefish;
+// Stores firefish images
 let firefishImg1;
 let firefishImg2;
+// Stores image for firefish food tracker
 let firefishFoodTrackerImg;
 
 // User circle
@@ -76,11 +78,11 @@ let fishtank = {
   border: 100,
 };
 
-// Rules image
+// Rules
 let rules;
+// stores rules image into this variable
 let rulesImg;
-
-// Rules rectangle
+// rounded rectangle behind the rules image
 let rulesRect;
 
 // Ready text that is displayed on button
@@ -118,16 +120,8 @@ let readyButton = {
 };
 
 // Variables pertaining to end poem
-let poemLines = [];
-let numPoemLines = 4;
 let yLocationOfFirstLine = 210;
-let spaceBetweenEachLine = 40;
-
-let line = [`Little Firefishy is now well fed,`,
-  `Watch it go, off to bed...`,
-  `It suddenly feels something moving in its belly,`,
-  `Looks like it gave birth to adorable food babies!`
-];
+let poem;
 
 // Nighttime shade rectangle
 let nightFilter;
@@ -191,16 +185,16 @@ function setup() {
   startButtonCircle = new StartButtonCircle(startButtonX, startButtonY);
   startButtonText = new StartButtonText(startButtonX, startButtonY, bodyTextFont);
 
-  // Create a new rules image and rectangle behind the image
+  // Create a new rules image and place a rectangle behind the image
   rulesRect = new RulesRect();
   rules = new Rules(rulesImg);
 
-  // Create array for fishFoods (for animation state)
+  // Create array for fishFoods
   for (let i = 0; i < numFishFoods; i++) {
     fishFoods[i] = new FishFood();
   }
 
-  // Create a new more food button
+  // Create a new More Food button
   moreFoodButton = new MoreFoodButton(moreFoodButtonImg);
 
   // Create a new food tracker
@@ -209,10 +203,10 @@ function setup() {
   // Create a new night filter
   nightFilter = new NightFilter();
 
-  // Create array for poemLines (for end state)
-  for (let i = 0; i < numPoemLines; i++) {
-    poemLines[i] = new PoemLine(line[i], width / 2, i * spaceBetweenEachLine + yLocationOfFirstLine);
-  }
+  // Create a new end poem
+  let poemLineX = width/2;
+  let poemLineY = yLocationOfFirstLine;
+  poem = new Poem(bodyTextFont, poemLineX, poemLineY);
 
   // Create array for poop (for end state)
   for (let i = 0; i < totalNumPoops; i++) {
@@ -275,7 +269,7 @@ function intro() {
   // Display the title, start button, and start text
   title.display(titleFont);
 
-  // if finger is in button, call hover method (increases button size and changes color)
+  // If finger is in button, call hover method (increases button size and changes color)
   if (mouseIsInButton(startButtonCircle)) {
     startButtonCircle.hover();
     startButtonText.hover();
@@ -284,12 +278,12 @@ function intro() {
     startButtonText.setNormalSize();
   }
 
-  // move the start button with the "start" text inside it
+  // Move the start button with the "start" text inside it
   startButtonCircle.move();
   startButtonText.move(startButtonCircle); // "start" text has same position as start button
   stayInTank(startButtonCircle); // ensure that button does not leave the tank
 
-  // display the start button with "start" text inside it
+  // Display the start button with "start" text inside it
   startButtonCircle.display();
   startButtonText.display();
 
@@ -491,7 +485,7 @@ function fishIsFull(fishName) {
 // Ending state: Display end poem. Night filter slowly appears and gives the tank an ominous feeling
 function ending() {
   // Determine the location of firefish's cloaca (where poop comes out)
-  determineCloacaLocation();
+  firefish.determineCloacaLocation();
   // Display and move poop
   displayAndMovePoop();
   // Release a line of poop
@@ -507,17 +501,10 @@ function ending() {
   // Displays filter that plunges tank into darkness
   nightFilter.display();
   // Display end poem
-  displayEndPoem();
+  poem.display();
 
   // Display and move finger based on user's mouse position
   moveAndDisplayFinger();
-}
-
-// Display end poem
-function displayEndPoem() {
-  for (let i = 0; i < numPoemLines; i++) {
-    poemLines[i].show();
-  }
 }
 
 // Display and move poop; the poop comes out of the fish's cloaca
@@ -532,19 +519,6 @@ function displayAndMovePoop() {
 function releasePoopLine() {
   let addPoop = new Poop(firefish.cloacaX, firefish.cloacaY);
   poops.push(addPoop);
-}
-
-// Calculating position of firefish's cloaca
-function determineCloacaLocation() {
-  // Calculating x position of cloaca
-  if (firefish.scale.x < 0) { // fish is facing left
-    firefish.cloacaX = firefish.x + firefish.length / 2;
-  } else { // fish is facing right
-    firefish.cloacaX = firefish.x - firefish.length / 2;
-  }
-
-  // Calculating y position of cloaca
-  firefish.cloacaY = firefish.y + firefish.vertDistBtwFishAndCloaca;
 }
 
 // To ensure that poop does not get too long, cut off array after a certain amount of poop pebbles have been released

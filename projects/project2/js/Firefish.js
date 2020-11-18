@@ -137,4 +137,17 @@ class Firefish {
     }
   }
 
+  // Calculating position of fish's cloaca
+  determineCloacaLocation() {
+    // Calculating x position of cloaca
+    if (this.scale.x < 0) { // fish is facing left
+      this.cloacaX = this.x + this.length / 2;
+    } else { // fish is facing right
+      this.cloacaX = this.x - this.length / 2;
+    }
+
+    // Calculating y position of cloaca
+    this.cloacaY = this.y + this.vertDistBtwFishAndCloaca;
+  }
+
 }
