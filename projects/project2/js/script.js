@@ -15,7 +15,7 @@ Background music from Mixkit.co: Smooth Like Jazz by Ajhay Stelino
 "use strict"; // because strict is good
 
 // State of program
-let state = `ending`; // other states: instructions, animation, ending
+let state = `animation`; // other states: instructions, animation, ending
 
 // Background music
 let backgroundMusic = undefined;
@@ -24,9 +24,6 @@ let backgroundMusic = undefined;
 let fishFoods = []; // fishfoods array that contains food objects
 let numFishFoods = 5; // number of fish food in the tank at once
 let totalFood = 15; // total amount of food that fish needs to consume
-
-let timeForFood = true; // when no more food in tank, it is time for food
-let showFood = false;  // when user clicks More Food button, show food
 
 // Font that will be used for body text
 let bodyTextFont = undefined;
@@ -98,21 +95,8 @@ let firefish = {
 let finger;
 
 // More Food button
-let moreFoodButton = {
-  img: undefined,
-  size: {
-    current: 120,
-    bigger: 130,
-    smaller: 120,
-  },
-  tint: {
-    gray: 255,
-    alpha: 255,
-  },
-  x: 100,
-  y: 100,
-  distFromEdge: 100,
-};
+let moreFoodButton;
+let moreFoodButtonImg;
 
 // Background color and elements (rocks and sand)
 let bg = {
@@ -213,7 +197,7 @@ function preload() {
   rulesImg = loadImage(`assets/images/rules.png`);
 
   // Load more food button image
-  moreFoodButton.img = loadImage(`assets/images/moreFood.png`);
+  moreFoodButtonImg = loadImage(`assets/images/moreFood.png`);
 
   // Load background rocks and sand images
   bg.rocks.img = loadImage(`assets/images/rocks.png`);
@@ -260,6 +244,9 @@ function setup() {
   for (let i = 0; i < numFishFoods; i++) {
     fishFoods[i] = new FishFood();
   }
+
+  // Create a new more food button
+  moreFoodButton = new MoreFoodButton(moreFoodButtonImg);
 
   // Create a new night filter
   nightFilter = new NightFilter();
@@ -441,7 +428,7 @@ function stayInTank(subject) {
 // Instructions state: display rules on the canvas (with fish, MoreFood button, and food tracker in backgroun), players start the animation by clicking "Ready!" button
 function instructions() {
   // Behind the rules, display More Food Button, food tracker, and firefish casually swimming
-  displayMoreFoodButton();
+  moreFoodButton.display();
   displayFoodTracker();
   firefishCasualSwimming({speedCasualSwimming:firefish.speed.casualSwimming});
   switchFishImages();
@@ -553,17 +540,16 @@ function mouseIsInButton(button) {
 //
 // Animation state: Finger, firefish, food tracker, and MoreFoodButton are displayed. Finger moves with mouse. Firefish moves randomly (Perlin noise) until it spots the finger and follows it. If the fish is close enough to food, it will eat it and the tracker updates.
 function animation() {
-  // All functions pertaining to More Food Button are found on moreFoodButton.js
   // Display More Food Button
-  displayMoreFoodButton();
+  moreFoodButton.display();
   // Change More Food Button's opacity if it is active or inactive
-  changeButtonOpacity();
+  moreFoodButton.changeOpacity();
   // Enlarge More Food Button if user hovers over it
-  hoverOnMoreFoodButton();
+  moreFoodButton.hover(finger);
   // If user clicks on More Food Button while it's active, release food
-  clickMoreFoodButton();
+  moreFoodButton.clicked(finger);
   // Reactivate More Food Button when there is no more food on the canvas
-  resetMoreFoodButton();
+  moreFoodButton.reactivate(fishFoods, numFishFoods);
 
   // Release fish food if the More Food Button is clicked and it is active
   releaseFishFood();
@@ -593,7 +579,7 @@ function animation() {
 
 // Display and move 5 pieces of food
 function releaseFishFood() {
-  if (showFood) {
+  if (moreFoodButton.showFood) {
     for (let i = fishFoods.length-1; i >= 0; i--) {
       fishFoods[i].move();
       fishFoods[i].show();
