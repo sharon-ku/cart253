@@ -15,7 +15,7 @@ Background music from Mixkit.co: Smooth Like Jazz by Ajhay Stelino
 "use strict"; // because strict is good
 
 // State of program
-let state = `animation`; // other states: instructions, animation, ending
+let state = `ending`; // other states: instructions, animation, ending
 
 // Background music
 let backgroundMusic = undefined;
@@ -453,12 +453,12 @@ function animation() {
   fishIsFull(firefish);
 }
 
-// Display and move 5 pieces of food
+// Display and move pieces of food
 function releaseFishFood() {
   if (moreFoodButton.showFood) {
     for (let i = fishFoods.length - 1; i >= 0; i--) {
       fishFoods[i].move();
-      fishFoods[i].changeCurrent();
+      fishFoods[i].changeCurrent(); // let user change current with arrow keys
       fishFoods[i].show();
 
       // If fish eats food, add numFoodEaten counter
@@ -488,9 +488,9 @@ function ending() {
   // Determine the location of firefish's cloaca (where poop comes out)
   firefish.determineCloacaLocation();
   // Display and move poop
-  displayAndMovePoop();
+  displayAndMovePoop(firefish);
   // Release a line of poop
-  releasePoopLine();
+  releasePoopLine(firefish);
   // Remove poop when there are too many to handle
   removePoop();
 
@@ -509,22 +509,22 @@ function ending() {
 }
 
 // Display and move poop; the poop comes out of the fish's cloaca
-function displayAndMovePoop() {
+function displayAndMovePoop(fishName) {
   for (let i = poops.length - 1; i >= 0; i--) {
-    poops[i].show(firefish.cloacaX, firefish.cloacaY);
+    poops[i].show(fishName.cloacaX, fishName.cloacaY);
     poops[i].move();
   }
 }
 
 // Release a line of poop by adding more poop pebbles to the poops array
-function releasePoopLine() {
-  let addPoop = new Poop(firefish.cloacaX, firefish.cloacaY);
+function releasePoopLine(fishName) {
+  let addPoop = new Poop(fishName.cloacaX, fishName.cloacaY);
   poops.push(addPoop);
 }
 
-// To ensure that poop does not get too long, cut off array after a certain amount of poop pebbles have been released
+// To ensure that poop does not get too long, remove first poop from array after a certain amount of poop pebbles have been released
 function removePoop() {
   if (poops.length > totalNumPoops) {
-    poops.splice(0, 1);
+    poops.shift();
   }
 }
