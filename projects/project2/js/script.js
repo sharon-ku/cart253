@@ -15,7 +15,7 @@ Background music from Mixkit.co: Smooth Like Jazz by Ajhay Stelino
 "use strict"; // because strict is good
 
 // State of program
-let state = `ending`; // other states: instructions, animation, ending
+let state = `intro`; // other states: instructions, animation, ending
 
 // Background music
 let backgroundMusic = undefined;
@@ -85,39 +85,9 @@ let rulesImg;
 // rounded rectangle behind the rules image
 let rulesRect;
 
-// Ready text that is displayed on button
-let ready = {
-  text: `READY!`,
-  x: 1150,
-  y: 640,
-  size: 40,
-  sizeBigger: 50,
-  sizeSmaller: 40,
-  fill: {
-    r: 255,
-    g: 255,
-    b: 255,
-  },
-};
-
-// "Ready" button
-let readyButton = {
-  size: 170,
-  sizeBigger: 200,
-  sizeSmaller: 170,
-  x: 700,
-  y: 100,
-  fill: {
-    // coral
-    r: 254,
-    g: 158,
-    b: 146,
-    rHover: 254,
-    gHover: 158,
-    bHover: 146,
-    alpha: 220,
-  },
-};
+// Ready button circle and text inside it
+let readyButtonCircle;
+let readyButtonText;
 
 // Variables pertaining to end poem
 let yLocationOfFirstLine = 210;
@@ -184,6 +154,13 @@ function setup() {
   // Create a new start button + text inside start button
   startButtonCircle = new StartButtonCircle(startButtonX, startButtonY);
   startButtonText = new StartButtonText(startButtonX, startButtonY, bodyTextFont);
+
+  // Setting x and y positions for ready button
+  let readyButtonX = 1150;
+  let readyButtonY = 640;
+  // Create a new ready button + text inside ready button
+  readyButtonCircle = new ReadyButtonCircle(readyButtonX, readyButtonY);
+  readyButtonText = new ReadyButtonText(readyButtonX, readyButtonY, bodyTextFont);
 
   // Create a new rules image and place a rectangle behind the image
   rulesRect = new RulesRect();
@@ -278,6 +255,8 @@ function intro() {
     startButtonText.setNormalSize();
   }
 
+
+
   // Move the start button with the "start" text inside it
   startButtonCircle.move();
   startButtonText.move(startButtonCircle); // "start" text has same position as start button
@@ -287,16 +266,21 @@ function intro() {
   startButtonCircle.display();
   startButtonText.display();
 
+  // Display firefish casually swimming
+  firefish.casualSwimming(fishtank);
+  displayAnimatedFish(firefish);
+
   // Display user circle and move with mouse
   moveAndDisplayFinger();
 
-  // Display firefish casually swimming
-  firefish.switchImages();
-  firefish.casualSwimming(fishtank);
-  firefish.display();
-
   // Constraining firefish's movement to the inside of the tank
   stayInTank(firefish);
+}
+
+// Display a fish and switch its images
+function displayAnimatedFish(fishName) {
+  fishName.switchImages();
+  fishName.display();
 }
 
 // Moves and displays finger (user circle)
@@ -321,67 +305,32 @@ function instructions() {
   foodTracker.display(firefish.foodTracker);
 
   firefish.casualSwimming(fishtank);
-  firefish.switchImages();
-  firefish.display();
+  displayAnimatedFish(firefish);
 
   // Display rules and rounded-rectangle behind it
   rulesRect.display();
   rules.display();
 
-
-  // Display Ready button and when hovering on button, Ready button enlarges
-  displayReadyButton();
-  displayReadyText();
-  hoverOnReadyButton();
-
-  moveAndDisplayFinger();
-}
-
-// Display "Ready!" text
-function displayReadyText() {
-  push();
-  fill(ready.fill.r, ready.fill.g, ready.fill.b);
-  textSize(ready.size);
-  textAlign(CENTER, CENTER);
-
-  textFont(bodyTextFont);
-  text(ready.text, ready.x, ready.y);
-  pop();
-}
-
-// If finger hovers on Ready button, Ready button and text enlarges
-function hoverOnReadyButton() {
-  if (mouseIsInButton(readyButton)) {
-    push();
-    // Ready button enlarges
-    readyButton.size = readyButton.sizeBigger;
-    fill(readyButton.fill.rHover, readyButton.fill.gHover, readyButton.fill.bHover, readyButton.fill.alpha);
-    ellipse(readyButton.x, readyButton.y, readyButton.size);
-
-    // Ready text enlarges
-    ready.size = ready.sizeBigger;
-    fill(ready.fill.r, ready.fill.g, ready.fill.b);
-    textAlign(CENTER, CENTER);
-    textSize(ready.size);
-    textFont(bodyTextFont);
-    text(ready.text, ready.x, ready.y);
-    pop();
-  } else {
-    // Ready button and text keep size of initial setup
-    readyButton.size = readyButton.sizeSmaller;
-    ready.size = ready.sizeSmaller;
+  // If finger is in button, call hover method (increases button size and changes color)
+  if (mouseIsInButton(readyButtonCircle)) {
+    readyButtonCircle.hover();
+    readyButtonText.hover();
+  } else { // set the button to its normal size
+    readyButtonCircle.setNormalSize();
+    readyButtonText.setNormalSize();
   }
-}
 
-// Display the circular Start button
-function displayReadyButton() {
-  push();
-  readyButton.x = ready.x;
-  readyButton.y = ready.y;
+  // Move the start button with the "start" text inside it
+  readyButtonCircle.move();
+  readyButtonText.move(readyButtonCircle); // "start" text has same position as start button
+  stayInTank(readyButtonCircle); // ensure that button does not leave the tank
 
-  fill(readyButton.fill.r, readyButton.fill.g, readyButton.fill.b, readyButton.fill.alpha);
-  ellipse(readyButton.x, readyButton.y, readyButton.size);
-  pop();
+  // Display the start button with "start" text inside it
+  readyButtonCircle.display();
+  readyButtonText.display();
+
+  // Display and move finger
+  moveAndDisplayFinger();
 }
 
 // Changes states when mouse clicks on Start or Ready button
@@ -395,7 +344,7 @@ function mouseClicked() {
 
   // If finger clicks on Ready button, cue `animation` state
   if (state === `instructions`) {
-    if (mouseIsInButton(readyButton)) {
+    if (mouseIsInButton(readyButtonCircle)) {
       state = `animation`;
     }
   }
@@ -442,9 +391,8 @@ function animation() {
     firefish.casualSwimming(fishtank);
   }
 
-  // Display firefish
-  firefish.switchImages();
-  firefish.display();
+  // Display animated firefish
+  displayAnimatedFish(firefish);
 
   // Display and move finger
   moveAndDisplayFinger();
@@ -485,19 +433,13 @@ function fishIsFull(fishName) {
 //
 // Ending state: Display end poem. Night filter slowly appears and gives the tank an ominous feeling
 function ending() {
-  // Determine the location of firefish's cloaca (where poop comes out)
-  firefish.determineCloacaLocation();
-  // Display and move poop
-  displayAndMovePoop(firefish);
-  // Release a line of poop
-  releasePoopLine(firefish);
-  // Remove poop when there are too many to handle
-  removePoop();
+
+  // Make firefish poop
+  pooping(firefish);
 
   // Display firefish casually swimming
-  firefish.switchImages();
-  firefish.display();
   firefish.casualSwimming(fishtank);
+  displayAnimatedFish(firefish);
 
   // Displays filter that plunges tank into darkness
   nightFilter.display();
@@ -506,6 +448,18 @@ function ending() {
 
   // Display and move finger based on user's mouse position
   moveAndDisplayFinger();
+}
+
+// display, move, and release poopline behind fish
+function pooping(fishName) {
+  // Determine the location of fish's cloaca (where poop comes out)
+  fishName.determineCloacaLocation();
+  // Display and move poop
+  displayAndMovePoop(fishName);
+  // Release a line of poop
+  releasePoopLine(fishName);
+  // Remove poop when there are too many to handle
+  removePoop();
 }
 
 // Display and move poop; the poop comes out of the fish's cloaca
