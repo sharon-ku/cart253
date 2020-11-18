@@ -23,7 +23,7 @@ let backgroundMusic = undefined;
 // Variables related to fishFood
 let fishFoods = []; // fishfoods array that contains food objects
 let numFishFoods = 5; // number of fish food in the tank at once
-let totalFood = 15; // total amount of food that fish needs to consume
+let totalFood = 2; // total amount of food that fish needs to consume //originally: 15
 
 // Font that will be used for body text
 let bodyTextFont = undefined;
@@ -333,13 +333,7 @@ function intro() {
 
   // Display firefish casually swimming
   switchFishImages(firefish);
-  displayFirefish({
-    img: firefish.currentImage,
-    x: firefish.x,
-    y: firefish.y,
-    length: firefish.length,
-    width: firefish.width
-  });
+  displayFish(firefish);
   firefishCasualSwimming({
     tx: firefish.tx,
     ty: firefish.ty,
@@ -398,19 +392,13 @@ function firefishCasualSwimming({
 }
 
 // Display firefish
-function displayFirefish({
-  img,
-  x,
-  y,
-  length,
-  width
-}) {
+function displayFish(fishName) {
   push();
-  translate(x, y);
+  translate(fishName.x, fishName.y);
   imageMode(CENTER);
-  scale(firefish.scale.x, firefish.scale.y);
-  setFishDirection(firefish); // Fish faces the direction it is swimming
-  image(img, 0, 0, length, width);
+  scale(fishName.scale.x, fishName.scale.y);
+  setFishDirection(fishName); // Fish faces the direction it is swimming
+  image(fishName.currentImage, 0, 0, fishName.length, fishName.width);
   pop();
 }
 
@@ -444,13 +432,7 @@ function instructions() {
     speedCasualSwimming: firefish.speed.casualSwimming
   });
   switchFishImages(firefish);
-  displayFirefish({
-    img: firefish.currentImage,
-    x: firefish.x,
-    y: firefish.y,
-    length: firefish.length,
-    width: firefish.width
-  });
+  displayFish(firefish);
 
   // Display rules and rounded-rectangle behind it
   rulesRect.display();
@@ -579,13 +561,7 @@ function animation() {
 
   // Display firefish
   switchFishImages(firefish);
-  displayFirefish({
-    img: firefish.currentImage,
-    x: firefish.x,
-    y: firefish.y,
-    length: firefish.length,
-    width: firefish.width
-  });
+  displayFish(firefish);
 
   // Display and move finger
   moveAndDisplayFinger();
@@ -682,13 +658,7 @@ function ending() {
 
   // Display firefish casually swimming
   switchFishImages(firefish);
-  displayFirefish({
-    img: firefish.currentImage,
-    x: firefish.x,
-    y: firefish.y,
-    length: firefish.length,
-    width: firefish.width
-  });
+  displayFish(firefish);
   firefishCasualSwimming({
     tx: firefish.tx,
     ty: firefish.ty,
