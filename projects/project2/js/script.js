@@ -559,7 +559,7 @@ function animation() {
   updateFoodTracker();
 
   // Firefish follows finger if the fish senses the finger, or else it swims casually around the tank.
-  if (fishSensesFinger({x:firefish.x, y:firefish.y, fieldOfVision:firefish.fieldOfVision})) {
+  if (fishSensesFinger(firefish)) {
     fishFollowsFinger({x: firefish.x, y: firefish.y, vx: firefish.vx, vy: firefish.vy, speed: firefish.speed.followingMouse});
   }
   else {
@@ -574,7 +574,7 @@ function animation() {
   moveAndDisplayFinger();
 
   // Cue ending if firefish has eaten the total number of food
-  fishIsFull();
+  fishIsFull(firefish);
 }
 
 // Display and move 5 pieces of food
@@ -584,7 +584,7 @@ function releaseFishFood() {
       fishFoods[i].move();
       fishFoods[i].show();
 
-      // If fish eats food, at numFoodEaten counter
+      // If fish eats food, add numFoodEaten counter
       if (fishFoods[i].foodEaten()) {
         firefish.numFoodEaten ++;
       }
@@ -638,8 +638,8 @@ function fishFollowsFinger({x, y, vx, vy, speed}) {
 }
 
 // Returns true if finger is within the fish's field of vision
-function fishSensesFinger({x, y, fieldOfVision}){
-  if (dist(x, y, mouseX, mouseY) < fieldOfVision) {
+function fishSensesFinger(fish){
+  if (dist(fish.x, fish.y, mouseX, mouseY) < fish.fieldOfVision) {
     return true;
   }
   else {
@@ -648,8 +648,8 @@ function fishSensesFinger({x, y, fieldOfVision}){
 }
 
 // Cue ending if firefish has eaten the total number of food
-function fishIsFull() {
-  if (firefish.numFoodEaten === totalFood) {
+function fishIsFull(fish) {
+  if (fish.numFoodEaten === totalFood) {
     state = `ending`;
   }
 }
