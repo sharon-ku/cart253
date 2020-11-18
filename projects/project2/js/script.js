@@ -15,7 +15,7 @@ Background music from Mixkit.co: Smooth Like Jazz by Ajhay Stelino
 "use strict"; // because strict is good
 
 // State of program
-let state = `instructions`; // other states: instructions, animation, ending
+let state = `ending`; // other states: instructions, animation, ending
 
 // Background music
 let backgroundMusic = undefined;
@@ -191,20 +191,21 @@ let line = [`Little Firefishy is now well fed,`,
   `Looks like it gave birth to adorable food babies!`];
 
 // Nighttime shade rectangle
-let nightFilter = {
-  x: 0,
-  y: 0,
-  length: 100,
-  height: 100,
-  fill: { // dark blue
-    r: 33,
-    g: 63,
-    b: 104,
-    alpha: 0,
-    alphaChangeRate: 1,
-    finalAlpha: 130,
-  },
-};
+// let nightFilter = {
+//   x: 0,
+//   y: 0,
+//   length: 100,
+//   height: 100,
+//   fill: { // dark blue
+//     r: 33,
+//     g: 63,
+//     b: 104,
+//     alpha: 0,
+//     alphaChangeRate: 1,
+//     finalAlpha: 130,
+//   },
+// };
+let nightFilter;
 
 // Array containing poop pebbles
 let poops = [];
@@ -273,6 +274,9 @@ function setup() {
     fishFoods[i] = new FishFood();
   }
 
+  // Create a new night filter
+  nightFilter = new NightFilter();
+
   // Create array for poemLines (for end state)
   for (let i = 0; i < numPoemLines; i++) {
     poemLines[i] = new PoemLine(line[i], width/2, i*spaceBetweenEachLine + yLocationOfFirstLine);
@@ -340,7 +344,6 @@ function setBackground() {
 // Intro state: Display title, start button, finger, and fish
 function intro() {
   // Display the title, start button, and start text
-  // displayTitle();
   title.display(titleFont);
 
   // if finger is in button, call hover method (increases button size and changes color)
@@ -366,7 +369,7 @@ function intro() {
   firefishCasualSwimming({tx:firefish.tx, ty:firefish.ty, txChange:firefish.txChange, tyChange:firefish.tyChange, speedCasualSwimming:firefish.speed.casualSwimming});
 
   // Constraining firefish's movement to the inside of the tank
-  fishStaysInTank({x:firefish.x, y:firefish.y});
+  fishStaysInTank(firefish);
 }
 
 // Moves and displays finger (user circle)
@@ -435,10 +438,10 @@ function setFishDirection({x,y,vx}) {
   pop();
 }
 
-// Constraining firefish's movement
-function fishStaysInTank({x,y}) {
-  x = constrain(x, fishtank.border, width - fishtank.border);
-  y = constrain(y, fishtank.border, height - fishtank.border);
+// Constraining fish's position to the inside of the tank
+function fishStaysInTank(fish) {
+  fish.x = constrain(fish.x, fishtank.border, width - fishtank.border);
+  fish.y = constrain(fish.y, fishtank.border, height - fishtank.border);
 }
 
 // instructions() ----------------------------------------------------------------------
@@ -691,8 +694,9 @@ function ending() {
   displayFirefish({img: firefish.currentImage, x: firefish.x, y: firefish.y, length: firefish.length, width: firefish.width});
   firefishCasualSwimming({tx:firefish.tx, ty:firefish.ty, txChange:firefish.txChange, tyChange:firefish.tyChange, speedCasualSwimming:firefish.speed.casualSwimming});
 
-  // Display night filter and end poem
-  displayNightFilter();
+  // Displays filter that plunges tank into darkness
+  nightFilter.display();
+  // displayNightFilter();
   displayEndPoem();
 
   // Display and move finger based on user's mouse position
@@ -700,20 +704,20 @@ function ending() {
 }
 
 // Displays filter that plunges tank into darkness
-function displayNightFilter() {
-  nightFilter.length = width;
-  nightFilter.height = height;
-
-  push();
-  rectMode(CORNER);
-  // Filter goes from transparent to more opaque
-  nightFilter.fill.alpha += nightFilter.fill.alphaChangeRate;
-  nightFilter.fill.alpha = constrain(nightFilter.fill.alpha, 0, nightFilter.fill.finalAlpha);
-
-  fill(nightFilter.fill.r, nightFilter.fill.g, nightFilter.fill.b, nightFilter.fill.alpha);
-  rect(nightFilter.x, nightFilter.y, nightFilter.length, nightFilter.height);
-  pop();
-}
+// function displayNightFilter() {
+//   nightFilter.length = width;
+//   nightFilter.height = height;
+//
+//   push();
+//   rectMode(CORNER);
+//   // Filter goes from transparent to more opaque
+//   nightFilter.fill.alpha += nightFilter.fill.alphaChangeRate;
+//   nightFilter.fill.alpha = constrain(nightFilter.fill.alpha, 0, nightFilter.fill.finalAlpha);
+//
+//   fill(nightFilter.fill.r, nightFilter.fill.g, nightFilter.fill.b, nightFilter.fill.alpha);
+//   rect(nightFilter.x, nightFilter.y, nightFilter.length, nightFilter.height);
+//   pop();
+// }
 
 // Display end poem
 function displayEndPoem() {
