@@ -409,27 +409,19 @@ function displayFirefish({
   translate(x, y);
   imageMode(CENTER);
   scale(firefish.scale.x, firefish.scale.y);
-  setFishDirection({
-    x: firefish.x,
-    y: firefish.y,
-    vx: firefish.vx
-  }); // Fish faces the direction it is swimming
+  setFishDirection(firefish); // Fish faces the direction it is swimming
   image(img, 0, 0, length, width);
   pop();
 }
 
 // Fish faces direction it is swimming
-function setFishDirection({
-  x,
-  y,
-  vx
-}) {
+function setFishDirection(fishName) {
   push();
-  translate(x, y);
-  if (vx > 0) {
-    firefish.scale.x = -1; // face right
+  translate(fishName.x, fishName.y);
+  if (fishName.vx > 0) {
+    fishName.scale.x = 1; // face right
   } else {
-    firefish.scale.x = 1; // face left
+    fishName.scale.x = -1; // face left
   }
   pop();
 }
@@ -653,9 +645,9 @@ function fishFollowsFinger({
 
   // Setting the fish's direction (facing left or facing right)
   if (vx > 0) {
-    firefish.scale.x = -1; // face right
+    firefish.scale.x = 1; // face right
   } else if (vx < 0 || vx === 0) {
-    firefish.scale.x = 1; // face left
+    firefish.scale.x = -1; // face left
   }
 }
 
@@ -738,7 +730,7 @@ function releasePoopLine() {
 // Calculating position of firefish's cloaca
 function determineCloacaLocation() {
   // Calculating x position of cloaca
-  if (firefish.scale.x > 0) { // fish is facing left
+  if (firefish.scale.x < 0) { // fish is facing left
     firefish.cloacaX = firefish.x + firefish.length / 2;
   } else { // fish is facing right
     firefish.cloacaX = firefish.x - firefish.length / 2;
