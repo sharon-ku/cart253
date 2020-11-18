@@ -14,6 +14,7 @@ class NightFilter {
     };
   }
 
+  // display the rectangle that plunges the tank into darkness
   display() {
     push();
     rectMode(CORNER);

@@ -15,7 +15,7 @@ Background music from Mixkit.co: Smooth Like Jazz by Ajhay Stelino
 "use strict"; // because strict is good
 
 // State of program
-let state = `ending`; // other states: instructions, animation, ending
+let state = `intro`; // other states: instructions, animation, ending
 
 // Background music
 let backgroundMusic = undefined;
@@ -191,20 +191,6 @@ let line = [`Little Firefishy is now well fed,`,
   `Looks like it gave birth to adorable food babies!`];
 
 // Nighttime shade rectangle
-// let nightFilter = {
-//   x: 0,
-//   y: 0,
-//   length: 100,
-//   height: 100,
-//   fill: { // dark blue
-//     r: 33,
-//     g: 63,
-//     b: 104,
-//     alpha: 0,
-//     alphaChangeRate: 1,
-//     finalAlpha: 130,
-//   },
-// };
 let nightFilter;
 
 // Array containing poop pebbles
@@ -258,9 +244,13 @@ function setup() {
   // Create a new title
   title = new Title();
 
+
+  // Setting x and y positions for start button
+  let startButtonX = width*1/5;
+  let startButtonY = height*4/5;
   // Create a new start button + text inside start button
-  startButton = new StartButton();
-  startButtonText = new StartButtonText();
+  startButton = new StartButton(startButtonX, startButtonY);
+  startButtonText = new StartButtonText(startButtonX, startButtonY);
 
   // Set firefish's current image to first image
   firefish.currentImage = firefish.img1;
@@ -349,7 +339,7 @@ function intro() {
   // if finger is in button, call hover method (increases button size and changes color)
   if (mouseIsInButton(startButton)) {
     startButton.hover();
-    startButtonText.hover(bodyTextFont);
+    startButtonText.hover();
   }
   else { // set the button to its normal size
     startButton.setNormalSize();
@@ -357,7 +347,7 @@ function intro() {
   }
 
   // display the start button with the text inside
-  startButton.display(startButtonText);
+  startButton.display();
   startButtonText.display(bodyTextFont);
 
   // Display user circle and move with mouse
@@ -696,28 +686,12 @@ function ending() {
 
   // Displays filter that plunges tank into darkness
   nightFilter.display();
-  // displayNightFilter();
+  // Display end poem
   displayEndPoem();
 
   // Display and move finger based on user's mouse position
   moveAndDisplayFinger();
 }
-
-// Displays filter that plunges tank into darkness
-// function displayNightFilter() {
-//   nightFilter.length = width;
-//   nightFilter.height = height;
-//
-//   push();
-//   rectMode(CORNER);
-//   // Filter goes from transparent to more opaque
-//   nightFilter.fill.alpha += nightFilter.fill.alphaChangeRate;
-//   nightFilter.fill.alpha = constrain(nightFilter.fill.alpha, 0, nightFilter.fill.finalAlpha);
-//
-//   fill(nightFilter.fill.r, nightFilter.fill.g, nightFilter.fill.b, nightFilter.fill.alpha);
-//   rect(nightFilter.x, nightFilter.y, nightFilter.length, nightFilter.height);
-//   pop();
-// }
 
 // Display end poem
 function displayEndPoem() {
