@@ -322,7 +322,7 @@ function intro() {
   // move the start button with the "start" text inside it
   startButtonCircle.move();
   startButtonText.move(startButtonCircle); // "start" text has same position as start button
-  stayInTank(startButtonCircle);
+  stayInTank(startButtonCircle); // ensure that button does not leave the tank
 
   // display the start button with "start" text inside it
   startButtonCircle.display();
@@ -332,7 +332,7 @@ function intro() {
   moveAndDisplayFinger();
 
   // Display firefish casually swimming
-  switchFishImages();
+  switchFishImages(firefish);
   displayFirefish({
     img: firefish.currentImage,
     x: firefish.x,
@@ -359,15 +359,15 @@ function moveAndDisplayFinger() {
 }
 
 // Firefish switches between image 1 and image 2
-function switchFishImages() {
-  firefish.framesElapsed++;
-  if (firefish.framesElapsed === firefish.framesBtwEachImage) {
-    if (firefish.currentImage === firefish.img1) {
-      firefish.currentImage = firefish.img2;
+function switchFishImages(fishName) {
+  fishName.framesElapsed++;
+  if (fishName.framesElapsed === fishName.framesBtwEachImage) {
+    if (fishName.currentImage === fishName.img1) {
+      fishName.currentImage = fishName.img2;
     } else {
-      firefish.currentImage = firefish.img1;
+      fishName.currentImage = fishName.img1;
     }
-    firefish.framesElapsed = 0;
+    fishName.framesElapsed = 0;
   }
 }
 
@@ -451,7 +451,7 @@ function instructions() {
   firefishCasualSwimming({
     speedCasualSwimming: firefish.speed.casualSwimming
   });
-  switchFishImages();
+  switchFishImages(firefish);
   displayFirefish({
     img: firefish.currentImage,
     x: firefish.x,
@@ -538,9 +538,9 @@ function mouseClicked() {
 }
 
 // Checks if finger's position is inside a button
-function mouseIsInButton(button) {
-  if (mouseX < button.x + (button.size / 2) && mouseX > button.x - (button.size / 2)) {
-    if (mouseY < button.y + (button.size / 2) && mouseY > button.y - (button.size / 2)) {
+function mouseIsInButton(buttonName) {
+  if (mouseX < buttonName.x + (buttonName.size / 2) && mouseX > buttonName.x - (buttonName.size / 2)) {
+    if (mouseY < buttonName.y + (buttonName.size / 2) && mouseY > buttonName.y - (buttonName.size / 2)) {
       return true;
     }
   } else {
@@ -586,7 +586,7 @@ function animation() {
   }
 
   // Display firefish
-  switchFishImages();
+  switchFishImages(firefish);
   displayFirefish({
     img: firefish.currentImage,
     x: firefish.x,
@@ -660,8 +660,8 @@ function fishFollowsFinger({
 }
 
 // Returns true if finger is within the fish's field of vision
-function fishSensesFinger(fish) {
-  if (dist(fish.x, fish.y, mouseX, mouseY) < fish.fieldOfVision) {
+function fishSensesFinger(fishName) {
+  if (dist(fishName.x, fishName.y, mouseX, mouseY) < fishName.fieldOfVision) {
     return true;
   } else {
     return false;
@@ -669,8 +669,8 @@ function fishSensesFinger(fish) {
 }
 
 // Cue ending if firefish has eaten the total number of food
-function fishIsFull(fish) {
-  if (fish.numFoodEaten === totalFood) {
+function fishIsFull(fishName) {
+  if (fishName.numFoodEaten === totalFood) {
     state = `ending`;
   }
 }
@@ -689,7 +689,7 @@ function ending() {
   removePoop();
 
   // Display firefish casually swimming
-  switchFishImages();
+  switchFishImages(firefish);
   displayFirefish({
     img: firefish.currentImage,
     x: firefish.x,
