@@ -40,45 +40,10 @@ let startButtonText;
 let foodTracker;
 
 // Firefish
-let firefish = {
-  img1: undefined,
-  img2: undefined,
-  currentImage: undefined,
-  framesElapsed: 0,
-  framesBtwEachImage: 50,
-  x: 500,
-  y: 200,
-  length: 160,
-  width: 66,
-  vx: 0,
-  vy: 0,
-  speed: {
-    casualSwimming: 5,
-    followingFinger: 1.5,
-  },
-  buffer: 10,
-  tx: 0,
-  ty: 10,
-  txChange: 0.025,
-  tyChange: 0.025,
-  fieldOfVision: 350,
-  scale: {
-    x: 1,
-    y: 1,
-  },
-  numFoodEaten: 0,
-  foodTracker: {
-    img: undefined,
-    length: 236,
-    height: 74,
-    x: 50,
-    y: 50,
-  },
-  // cloaca means orifice from which fish releases the poop
-  cloacaX: 0,
-  cloacaY: 0,
-  vertDistBtwFishAndCloaca: 10,
-};
+let firefish;
+let firefishImg1;
+let firefishImg2;
+let firefishFoodTrackerImg;
 
 // User circle
 let finger;
@@ -177,11 +142,11 @@ let totalNumPoops = 50;
 // Preload all images, music, and fonts
 function preload() {
   // Load firefish images
-  firefish.img1 = loadImage(`assets/images/firefish1.png`);
-  firefish.img2 = loadImage(`assets/images/firefish2.png`);
+  firefishImg1 = loadImage(`assets/images/firefish1.png`);
+  firefishImg2 = loadImage(`assets/images/firefish2.png`);
 
   // Load food tracker image
-  firefish.foodTracker.img = loadImage(`assets/images/firefishFoodTracker.png`);
+  firefishFoodTrackerImg = loadImage(`assets/images/firefishFoodTracker.png`);
 
   // Load rules image
   rulesImg = loadImage(`assets/images/rules.png`);
@@ -212,6 +177,9 @@ function setup() {
   // Create a new finger
   finger = new Finger();
 
+  // Create a new firefish
+  firefish = new Firefish(firefishImg1, firefishImg2, firefishFoodTrackerImg);
+
   // Create a new title
   title = new Title();
 
@@ -222,9 +190,6 @@ function setup() {
   // Create a new start button + text inside start button
   startButtonCircle = new StartButtonCircle(startButtonX, startButtonY);
   startButtonText = new StartButtonText(startButtonX, startButtonY, bodyTextFont);
-
-  // Set firefish's current image to first image
-  firefish.currentImage = firefish.img1;
 
   // Create a new rules image and rectangle behind the image
   rulesRect = new RulesRect();
@@ -332,9 +297,9 @@ function intro() {
   moveAndDisplayFinger();
 
   // Display firefish casually swimming
-  switchFishImages(firefish);
-  displayFish(firefish);
-  fishCasualSwimming(firefish);
+  firefish.switchImages();
+  firefish.casualSwimming(fishtank);
+  firefish.display();
 
   // Constraining firefish's movement to the inside of the tank
   stayInTank(firefish);
@@ -344,64 +309,6 @@ function intro() {
 function moveAndDisplayFinger() {
   finger.move();
   finger.display();
-}
-
-// Fish switches between image 1 and image 2
-function switchFishImages(fishName) {
-  fishName.framesElapsed++;
-  if (fishName.framesElapsed === fishName.framesBtwEachImage) {
-    if (fishName.currentImage === fishName.img1) {
-      fishName.currentImage = fishName.img2;
-    } else {
-      fishName.currentImage = fishName.img1;
-    }
-    fishName.framesElapsed = 0;
-  }
-}
-
-// Fish swims randomly using Perlin noise
-function fishCasualSwimming(fishName) {
-  fishName.tx += fishName.txChange;
-  fishName.ty += fishName.tyChange;
-
-  let noiseX = noise(fishName.tx);
-  let noiseY = noise(fishName.ty);
-
-  let chanceOfChangingDirections = random();
-
-  if (chanceOfChangingDirections < 0.05) {
-    fishName.vx = map(noiseX, 0, 1, -fishName.speed.casualSwimming, fishName.speed.casualSwimming);
-    fishName.vy = map(noiseY, 0, 1, -fishName.speed.casualSwimming, fishName.speed.casualSwimming);
-  }
-
-  fishName.x += fishName.vx;
-  fishName.y += fishName.vy;
-
-  fishName.x = constrain(fishName.x, fishtank.border, width - fishtank.border);
-  fishName.y = constrain(fishName.y, fishtank.border, height - fishtank.border);
-}
-
-// Display fish
-function displayFish(fishName) {
-  push();
-  translate(fishName.x, fishName.y);
-  imageMode(CENTER);
-  scale(fishName.scale.x, fishName.scale.y);
-  setFishDirection(fishName); // Fish faces the direction it is swimming
-  image(fishName.currentImage, 0, 0, fishName.length, fishName.width);
-  pop();
-}
-
-// Fish faces direction it is swimming
-function setFishDirection(fishName) {
-  push();
-  translate(fishName.x, fishName.y);
-  if (fishName.vx > 0) {
-    fishName.scale.x = 1; // face right
-  } else {
-    fishName.scale.x = -1; // face left
-  }
-  pop();
 }
 
 // Constraining object/animal's position to the inside of the tank
@@ -416,11 +323,12 @@ function stayInTank(subject) {
 function instructions() {
   // Behind the rules, display More Food Button, food tracker, and firefish casually swimming
   moreFoodButton.display();
-  // displayFoodTracker();
+
   foodTracker.display(firefish.foodTracker);
-  fishCasualSwimming(firefish);
-  switchFishImages(firefish);
-  displayFish(firefish);
+
+  firefish.casualSwimming(fishtank);
+  firefish.switchImages();
+  firefish.display();
 
   // Display rules and rounded-rectangle behind it
   rulesRect.display();
@@ -533,15 +441,16 @@ function animation() {
   foodTracker.display(firefish.foodTracker);
 
   // Firefish follows finger if the fish senses the finger, or else it swims casually around the tank.
-  if (fishSensesFinger(firefish)) {
-    fishFollowsFinger(firefish);
+
+  if (firefish.sensesFinger(finger)) {
+    firefish.followsFinger(finger);
   } else {
-    fishCasualSwimming(firefish);
+    firefish.casualSwimming(fishtank);
   }
 
   // Display firefish
-  switchFishImages(firefish);
-  displayFish(firefish);
+  firefish.switchImages();
+  firefish.display();
 
   // Display and move finger
   moveAndDisplayFinger();
@@ -570,46 +479,6 @@ function releaseFishFood() {
   }
 }
 
-// The fish follows the finger
-function fishFollowsFinger(fishName) {
-  // Calculating distance from fish to finger
-  let distX = fishName.x - mouseX;
-  let distY = fishName.y - mouseY;
-
-  // Firefish's velocity changes depending on where the finger is with respect to its body
-  if (distX < -fishName.buffer) {
-    fishName.vx = fishName.speed.followingFinger;
-  } else if (distX > fishName.buffer) {
-    fishName.vx = -fishName.speed.followingFinger;
-  } else {
-    fishName.vx = 0; // Stop moving if the fish is within buffer of the finger
-  }
-  if (distY < 0) {
-    fishName.vy = fishName.speed.followingFinger;
-  } else if (distY > 0) {
-    fishName.vy = -fishName.speed.followingFinger;
-  }
-
-  fishName.x += fishName.vx;
-  fishName.y += fishName.vy;
-
-  // Setting the fish's direction (facing left or facing right)
-  if (fishName.vx > 0) {
-    fishName.scale.x = 1; // face right
-  } else if (fishName.vx < 0 || fishName.vx === 0) {
-    fishName.scale.x = -1; // face left
-  }
-}
-
-// Returns true if finger is within the fish's field of vision
-function fishSensesFinger(fishName) {
-  if (dist(fishName.x, fishName.y, mouseX, mouseY) < fishName.fieldOfVision) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
 // Cue ending if firefish has eaten the total number of food
 function fishIsFull(fishName) {
   if (fishName.numFoodEaten === totalFood) {
@@ -631,9 +500,9 @@ function ending() {
   removePoop();
 
   // Display firefish casually swimming
-  switchFishImages(firefish);
-  displayFish(firefish);
-  fishCasualSwimming(firefish);
+  firefish.switchImages();
+  firefish.display();
+  firefish.casualSwimming(fishtank);
 
   // Displays filter that plunges tank into darkness
   nightFilter.display();
