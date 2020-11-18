@@ -15,7 +15,7 @@ Background music from Mixkit.co: Smooth Like Jazz by Ajhay Stelino
 "use strict"; // because strict is good
 
 // State of program
-let state = `ending`; // other states: instructions, animation, ending
+let state = `animation`; // other states: instructions, animation, ending
 
 // Background music
 let backgroundMusic = undefined;
@@ -191,7 +191,7 @@ function setup() {
 
   // Create array for fishFoods
   for (let i = 0; i < numFishFoods; i++) {
-    fishFoods[i] = new FishFood();
+    fishFoods[i] = new FishFood(fishtank.border);
   }
 
   // Create a new More Food button
@@ -458,15 +458,16 @@ function releaseFishFood() {
   if (moreFoodButton.showFood) {
     for (let i = fishFoods.length - 1; i >= 0; i--) {
       fishFoods[i].move();
+      fishFoods[i].changeCurrent();
       fishFoods[i].show();
 
       // If fish eats food, add numFoodEaten counter
-      if (fishFoods[i].foodEaten()) {
+      if (fishFoods[i].foodEaten(firefish)) {
         firefish.numFoodEaten++;
       }
 
       // Everytime a food goes off screen, remove food item from fishFoods array
-      if (fishFoods[i].foodEaten() || fishFoods[i].offScreen()) {
+      if (fishFoods[i].foodEaten(firefish) || fishFoods[i].offScreen()) {
         fishFoods.splice(i, 1);
       }
     }

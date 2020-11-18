@@ -1,6 +1,6 @@
 class FishFood {
-  constructor() {
-    this.x = random(fishtank.border, width - fishtank.border);
+  constructor(border) {
+    this.x = random(border, width - border);
     this.y = 0;
     this.vx = 0;
     this.vy = 0;
@@ -12,7 +12,7 @@ class FishFood {
     this.accelerationX = random(-this.accelerationMax, this.accelerationMax);
     this.accelerationY = 0.5;
     this.size = 15;
-    this.fillR = 255;  // beige
+    this.fillR = 255; // beige
     this.fillG = 221;
     this.fillB = 185;
     this.fillAlpha = 255;
@@ -26,7 +26,7 @@ class FishFood {
     pop();
   }
 
-  // move fishfood + change current using left and right arrow keys
+  // move fish food
   move() {
     this.ax = this.accelerationX;
     this.ay = this.accelerationY;
@@ -36,7 +36,7 @@ class FishFood {
     let chance = random();
 
     if (chance < 0.05) {
-    this.vx = random(-this.speed,this.speed);
+      this.vx = random(-this.speed, this.speed);
     }
 
     this.vy = this.speed;
@@ -44,11 +44,13 @@ class FishFood {
     this.x += this.vx + this.ax;
     this.y += this.vy + this.ay;
 
-    // Change current direction if user clicks left or right arrow key
+  }
+
+  // Change current direction if user clicks left or right arrow key
+  changeCurrent() {
     if (keyIsDown(LEFT_ARROW)) {
       this.accelerationX -= 0.05;
-    }
-    else if (keyIsDown(RIGHT_ARROW)) {
+    } else if (keyIsDown(RIGHT_ARROW)) {
       this.accelerationX += 0.05;
     }
   }
@@ -57,18 +59,16 @@ class FishFood {
   offScreen() {
     if (this.y > height || this.x < 0 || this.x > width) {
       return true;
-    }
-    else {
+    } else {
       return false;
     }
   }
 
   // returns true if food is close enough to fish's body to be eaten
-  foodEaten() {
-    if ((this.x < firefish.x + firefish.length/2) && (this.x > firefish.x - firefish.length/2) && (this.y < firefish.y+firefish.width/2) && (this.y > firefish.y-firefish.width/2)) {
+  foodEaten(fishName) {
+    if ((this.x < fishName.x + fishName.length / 2) && (this.x > fishName.x - fishName.length / 2) && (this.y < fishName.y + fishName.width / 2) && (this.y > fishName.y - fishName.width / 2)) {
       return true;
-    }
-    else {
+    } else {
       return false;
     }
   }
