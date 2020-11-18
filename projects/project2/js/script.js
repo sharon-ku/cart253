@@ -334,13 +334,7 @@ function intro() {
   // Display firefish casually swimming
   switchFishImages(firefish);
   displayFish(firefish);
-  firefishCasualSwimming({
-    tx: firefish.tx,
-    ty: firefish.ty,
-    txChange: firefish.txChange,
-    tyChange: firefish.tyChange,
-    speedCasualSwimming: firefish.speed.casualSwimming
-  });
+  fishCasualSwimming(firefish);
 
   // Constraining firefish's movement to the inside of the tank
   stayInTank(firefish);
@@ -366,29 +360,25 @@ function switchFishImages(fishName) {
 }
 
 // Firefish swims randomly using Perlin noise
-function firefishCasualSwimming({
-  vx,
-  vy,
-  speedCasualSwimming
-}) {
-  firefish.tx += firefish.txChange;
-  firefish.ty += firefish.tyChange;
+function fishCasualSwimming(fishName) {
+  fishName.tx += fishName.txChange;
+  fishName.ty += fishName.tyChange;
 
-  let noiseX = noise(firefish.tx);
-  let noiseY = noise(firefish.ty);
+  let noiseX = noise(fishName.tx);
+  let noiseY = noise(fishName.ty);
 
   let chanceOfChangingDirections = random();
 
   if (chanceOfChangingDirections < 0.05) {
-    firefish.vx = map(noiseX, 0, 1, -speedCasualSwimming, speedCasualSwimming);
-    firefish.vy = map(noiseY, 0, 1, -speedCasualSwimming, speedCasualSwimming);
+    fishName.vx = map(noiseX, 0, 1, -fishName.speed.casualSwimming, fishName.speed.casualSwimming);
+    fishName.vy = map(noiseY, 0, 1, -fishName.speed.casualSwimming, fishName.speed.casualSwimming);
   }
 
-  firefish.x += firefish.vx;
-  firefish.y += firefish.vy;
+  fishName.x += fishName.vx;
+  fishName.y += fishName.vy;
 
-  firefish.x = constrain(firefish.x, fishtank.border, width - fishtank.border);
-  firefish.y = constrain(firefish.y, fishtank.border, height - fishtank.border);
+  fishName.x = constrain(fishName.x, fishtank.border, width - fishtank.border);
+  fishName.y = constrain(fishName.y, fishtank.border, height - fishtank.border);
 }
 
 // Display firefish
@@ -428,9 +418,7 @@ function instructions() {
   moreFoodButton.display();
   // displayFoodTracker();
   foodTracker.display(firefish.foodTracker);
-  firefishCasualSwimming({
-    speedCasualSwimming: firefish.speed.casualSwimming
-  });
+  fishCasualSwimming(firefish);
   switchFishImages(firefish);
   displayFish(firefish);
 
@@ -554,9 +542,7 @@ function animation() {
       speed: firefish.speed.followingMouse
     });
   } else {
-    firefishCasualSwimming({
-      speedCasualSwimming: firefish.speed.casualSwimming
-    });
+    fishCasualSwimming(firefish);
   }
 
   // Display firefish
@@ -659,13 +645,7 @@ function ending() {
   // Display firefish casually swimming
   switchFishImages(firefish);
   displayFish(firefish);
-  firefishCasualSwimming({
-    tx: firefish.tx,
-    ty: firefish.ty,
-    txChange: firefish.txChange,
-    tyChange: firefish.tyChange,
-    speedCasualSwimming: firefish.speed.casualSwimming
-  });
+  fishCasualSwimming(firefish);
 
   // Displays filter that plunges tank into darkness
   nightFilter.display();
