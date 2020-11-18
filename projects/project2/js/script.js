@@ -15,7 +15,7 @@ Background music from Mixkit.co: Smooth Like Jazz by Ajhay Stelino
 "use strict"; // because strict is good
 
 // State of program
-let state = `intro`; // other states: instructions, animation, ending
+let state = `instructions`; // other states: instructions, animation, ending
 
 // Background music
 let backgroundMusic = undefined;
@@ -32,13 +32,6 @@ let showFood = false;  // when user clicks More Food button, show food
 let bodyTextFont = undefined;
 
 // Title text
-// let title = {
-//   line1: `HUNGRY`,
-//   line2: `FISHIES`,
-//   font: undefined,
-//   fill: 255,
-// };
-
 let title;
 let titleFont;
 
@@ -146,29 +139,11 @@ let fishtank = {
 };
 
 // Rules image
-let rules = {
-  img: undefined,
-  length: 782,
-  height: 569,
-  x: 200,
-  y: 200,
-};
+let rules;
+let rulesImg;
 
 // Rules rectangle
-let rulesRect = {
-  x: 500,
-  y: 500,
-  distToEdge: 50,
-  length: 1300,
-  height: 800,
-  cornerRadius: 50,
-  fill: {
-    r: 4,
-    g: 81,
-    b: 101,
-    alpha: 220,
-  },
-};
+let rulesRect;
 
 // Ready text that is displayed on button
 let ready = {
@@ -251,7 +226,7 @@ function preload() {
   firefish.foodTracker.img = loadImage(`assets/images/firefishFoodTracker.png`);
 
   // Load rules image
-  rules.img = loadImage(`assets/images/rules.png`);
+  rulesImg = loadImage(`assets/images/rules.png`);
 
   // Load more food button image
   moreFoodButton.img = loadImage(`assets/images/moreFood.png`);
@@ -277,17 +252,21 @@ function setup() {
   noStroke();
 
   // Create a new finger
-  finger = new Finger;
+  finger = new Finger();
 
   // Create a new title
-  title = new Title;
+  title = new Title();
 
   // Create a new start button + text inside start button
-  startButton = new StartButton;
-  startButtonText = new StartButtonText;
+  startButton = new StartButton();
+  startButtonText = new StartButtonText();
 
   // Set firefish's current image to first image
   firefish.currentImage = firefish.img1;
+
+  // Create a new rules image and rectangle behind the image
+  rulesRect = new RulesRect();
+  rules = new Rules(rulesImg);
 
   // Create array for fishFoods (for animation state)
   for (let i = 0; i < numFishFoods; i++) {
@@ -365,7 +344,7 @@ function intro() {
   title.display(titleFont);
 
   // if finger is in button, call hover method (increases button size and changes color)
-  if (mouseIsInButton({x:startButton.x, y:startButton.y, size:startButton.size})) {
+  if (mouseIsInButton(startButton)) {
     startButton.hover();
     startButtonText.hover(bodyTextFont);
   }
@@ -389,18 +368,6 @@ function intro() {
   // Constraining firefish's movement to the inside of the tank
   fishStaysInTank({x:firefish.x, y:firefish.y});
 }
-
-// Display title "Hungry Fishies"
-// function displayTitle() {
-//   push();
-//   fill(title.fill);
-//   textSize(height/8);
-//   textAlign(CENTER,CENTER);
-//   textFont(title.font);
-//   text(title.line1, width/2, height/5);
-//   text(title.line2, width/2, height/3);
-//   pop();
-// }
 
 // Moves and displays finger (user circle)
 function moveAndDisplayFinger() {
@@ -486,8 +453,9 @@ function instructions() {
   displayFirefish({img: firefish.currentImage, x: firefish.x, y: firefish.y, length: firefish.length, width: firefish.width});
 
   // Display rules and rounded-rectangle behind it
-  displayRulesRect();
-  displayRules();
+  rulesRect.display();
+  rules.display();
+
 
   // Display Ready button and when hovering on button, Ready button enlarges
   displayReadyButton();
@@ -521,19 +489,9 @@ function displayReadyText() {
   pop();
 }
 
-// Display rules page
-function displayRules() {
-  push();
-  imageMode(CENTER);
-  rules.x = width/2;
-  rules.y = height/2;
-  image(rules.img, rules.x, rules.y, rules.length, rules.height);
-  pop();
-}
-
 // If finger hovers on Ready button, Ready button and text enlarges
 function hoverOnReadyButton() {
-  if (mouseIsInButton({x:readyButton.x, y:readyButton.y, size:readyButton.size})) {
+  if (mouseIsInButton(readyButton)) {
     push();
     // Ready button enlarges
     readyButton.size = readyButton.sizeBigger;
@@ -571,43 +529,29 @@ function displayReadyButton() {
 function mouseClicked() {
   // If finger clicks on Start button, cue `instructions` state
   if (state === `intro`) {
-    if (mouseIsInButton({x:startButton.x, y:startButton.y, size:startButton.size})) {
+    if (mouseIsInButton(startButton)) {
       state = `instructions`;
     }
   }
 
   // If finger clicks on Ready button, cue `animation` state
   if (state === `instructions`) {
-    if (mouseIsInButton({x:readyButton.x, y:readyButton.y, size:readyButton.size})) {
+    if (mouseIsInButton(readyButton)) {
       state = `animation`;
     }
   }
 }
 
 // Checks if finger's position is inside a button
-function mouseIsInButton({x, y, size}) {
-  if (mouseX < x+(size/2) && mouseX > x-(size/2)) {
-    if (mouseY < y+(size/2) && mouseY > y-(size/2)) {
+function mouseIsInButton(button) {
+  if (mouseX < button.x+(button.size/2) && mouseX > button.x-(button.size/2)) {
+    if (mouseY < button.y+(button.size/2) && mouseY > button.y-(button.size/2)) {
       return true;
     }
   }
   else {
     return false;
   }
-}
-
-// Display Rules rectangle
-function displayRulesRect() {
-  rulesRect.x = width/2;
-  rulesRect.y = height/2;
-  rulesRect.length = width - rulesRect.distToEdge;
-  rulesRect.height = height - rulesRect.distToEdge;
-
-  push();
-  fill(rulesRect.fill.r, rulesRect.fill.g, rulesRect.fill.b, rulesRect.fill.alpha);
-  rectMode(CENTER);
-  rect(rulesRect.x, rulesRect.y, rulesRect.length, rulesRect.height, rulesRect.cornerRadius);
-  pop();
 }
 
 // animation() -----------------------------------------------------------------------
