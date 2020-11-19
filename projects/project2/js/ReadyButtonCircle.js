@@ -14,6 +14,3 @@ class ReadyButtonCircle extends ButtonShape {
     };
   }
 }
-
-// x: 700
-// y: 100

@@ -15,7 +15,7 @@ Background music from Mixkit.co: Smooth Like Jazz by Ajhay Stelino
 "use strict"; // because strict is good
 
 // State of program
-let state = `intro`; // other states: instructions, animation, ending
+let state = `animation`; // other states: instructions, animation, ending
 
 // Background music
 let backgroundMusic = undefined;
@@ -39,6 +39,9 @@ let startButtonText;
 // Food tracker
 let foodTracker;
 
+// Fishes
+let fishes = [];
+
 // Firefish
 let firefish;
 // Stores firefish images
@@ -46,6 +49,14 @@ let firefishImg1;
 let firefishImg2;
 // Stores image for firefish food tracker
 let firefishFoodTrackerImg;
+
+// Goby
+let goby;
+// Stores goby images
+let gobyImg1;
+let gobyImg2;
+// Stores image for goby food tracker
+let gobyFoodTrackerImg;
 
 // User circle
 let finger;
@@ -108,9 +119,15 @@ function preload() {
   // Load firefish images
   firefishImg1 = loadImage(`assets/images/firefish1.png`);
   firefishImg2 = loadImage(`assets/images/firefish2.png`);
-
-  // Load food tracker image
+  // Load firefish food tracker image
   firefishFoodTrackerImg = loadImage(`assets/images/firefishFoodTracker.png`);
+
+  // Load goby images
+  gobyImg1 = loadImage(`assets/images/goby1.png`);
+  gobyImg2 = loadImage(`assets/images/goby2.png`);
+  // Load goby food tracker image
+  gobyFoodTrackerImg = loadImage(`assets/images/gobyFoodTracker.png`);
+
 
   // Load rules image
   rulesImg = loadImage(`assets/images/rules.png`);
@@ -143,6 +160,11 @@ function setup() {
 
   // Create a new firefish
   firefish = new Firefish(firefishImg1, firefishImg2, firefishFoodTrackerImg);
+  fishes.push(firefish);
+
+  // Create a new goby
+  goby = new Goby(gobyImg1, gobyImg2, gobyFoodTrackerImg);
+  fishes.push(goby);
 
   // Create a new title
   title = new Title();
@@ -243,10 +265,11 @@ function setBackground() {
 //
 // Intro state: Display title, start button, finger, and fish
 function intro() {
-  // Display the title, start button, and start text
+  // Display the title
   title.display(titleFont);
 
-  // If finger is in button, call hover method (increases button size and changes color)
+  // Display the start button and start text
+  // If finger is in button, make button's size oscillate
   if (mouseIsInButton(startButtonCircle)) {
     startButtonCircle.hover();
     startButtonText.hover();
@@ -254,8 +277,6 @@ function intro() {
     startButtonCircle.setNormalSize();
     startButtonText.setNormalSize();
   }
-
-
 
   // Move the start button with the "start" text inside it
   startButtonCircle.move();
@@ -266,15 +287,17 @@ function intro() {
   startButtonCircle.display();
   startButtonText.display();
 
-  // Display firefish casually swimming
-  firefish.casualSwimming(fishtank);
-  displayAnimatedFish(firefish);
+  // Display fishes casually swimming
+  for (let i=0; i<fishes.length; i++) {
+    let fish = fishes[i];
+    fish.casualSwimming(fishtank);
+    displayAnimatedFish(fish);
+    // Constrain fish's movement to the inside of the tank
+    stayInTank(fish);
+  }
 
-  // Display user circle and move with mouse
+  // Display user circle and move with finger
   moveAndDisplayFinger();
-
-  // Constraining firefish's movement to the inside of the tank
-  stayInTank(firefish);
 }
 
 // Display a fish and switch its images
@@ -289,7 +312,7 @@ function moveAndDisplayFinger() {
   finger.display();
 }
 
-// Constraining object/animal's position to the inside of the tank
+// Constrain object/animal's position to the inside of the tank
 function stayInTank(subject) {
   subject.x = constrain(subject.x, fishtank.border, width - fishtank.border);
   subject.y = constrain(subject.y, fishtank.border, height - fishtank.border);
@@ -297,21 +320,25 @@ function stayInTank(subject) {
 
 // instructions() ----------------------------------------------------------------------
 //
-// Instructions state: display rules on the canvas (with fish, MoreFood button, and food tracker in backgroun), players start the animation by clicking "Ready!" button
+// Instructions state: display rules on the canvas (with fish, MoreFood button, and food tracker in background). Player starts the animation by clicking "Ready!" button
 function instructions() {
-  // Behind the rules, display More Food Button, food tracker, and firefish casually swimming
+  // Display More Food Button
   moreFoodButton.display();
-
+  // Display the food tracker
   foodTracker.display(firefish.foodTracker);
 
-  firefish.casualSwimming(fishtank);
-  displayAnimatedFish(firefish);
+  // Display animated fishes casually swimming
+  for (let i = 0; i<fishes.length; i++) {
+    let fish = fishes[i];
+    fish.casualSwimming(fishtank);
+    displayAnimatedFish(fish);
+  }
 
-  // Display rules and rounded-rectangle behind it
+  // Display rules and rounded rectangle behind it
   rulesRect.display();
   rules.display();
 
-  // If finger is in button, call hover method (increases button size and changes color)
+  // If finger is in button, animate ready button's size by making it increase and decrease
   if (mouseIsInButton(readyButtonCircle)) {
     readyButtonCircle.hover();
     readyButtonText.hover();
@@ -320,12 +347,12 @@ function instructions() {
     readyButtonText.setNormalSize();
   }
 
-  // Move the start button with the "start" text inside it
+  // Move the ready button with the "ready" text inside it
   readyButtonCircle.move();
-  readyButtonText.move(readyButtonCircle); // "start" text has same position as start button
+  readyButtonText.move(readyButtonCircle); // button text has same position as button shape
   stayInTank(readyButtonCircle); // ensure that button does not leave the tank
 
-  // Display the start button with "start" text inside it
+  // Display the ready button with "ready" text inside it
   readyButtonCircle.display();
   readyButtonText.display();
 
@@ -377,22 +404,42 @@ function animation() {
   moreFoodButton.reactivate(fishFoods, numFishFoods);
 
   // Release fish food if the More Food Button is clicked and it is active
-  releaseFishFood();
+  // releaseFishFood(firefish);
 
   // Display food tracker and update food tracker bar every time fish eats scrumptious food
-  foodTracker.updateBar(firefish, totalFood);
-  foodTracker.display(firefish.foodTracker);
+  // foodTracker.updateBar(firefish, totalFood);
+  // foodTracker.display(firefish.foodTracker);
 
-  // Firefish follows finger if the fish senses the finger, or else it swims casually around the tank.
+  for (let i=0; i<fishes.length; i++) {
+    let fish = fishes[i];
+    // Release fish food if the More Food Button is clicked and it is active
+    releaseFishFood(fish);
 
-  if (firefish.sensesFinger(finger)) {
-    firefish.followsFinger(finger);
-  } else {
-    firefish.casualSwimming(fishtank);
+    // Display food tracker and update food tracker bar every time fish eats scrumptious food
+    foodTracker.updateBar(fish, totalFood);
+    foodTracker.display(fish.foodTracker);
+
+    // Firefish follows finger if the fish senses the finger, or else it swims casually around the tank.
+    if (fish.sensesFinger(finger)) {
+      fish.followsFinger(finger);
+    } else {
+      fish.casualSwimming(fishtank);
+    }
+
+    // Display animated firefish
+    displayAnimatedFish(fish);
   }
 
+  // Firefish follows finger if the fish senses the finger, or else it swims casually around the tank.
+  //
+  // if (firefish.sensesFinger(finger)) {
+  //   firefish.followsFinger(finger);
+  // } else {
+  //   firefish.casualSwimming(fishtank);
+  // }
+
   // Display animated firefish
-  displayAnimatedFish(firefish);
+  // displayAnimatedFish(firefish);
 
   // Display and move finger
   moveAndDisplayFinger();
@@ -400,9 +447,10 @@ function animation() {
   // Cue ending if firefish has eaten the total number of food
   fishIsFull(firefish);
 }
+// STOPPED HERE
 
 // Display and move pieces of food
-function releaseFishFood() {
+function releaseFishFood(fishName) {
   if (moreFoodButton.showFood) {
     for (let i = fishFoods.length - 1; i >= 0; i--) {
       fishFoods[i].move();
@@ -410,12 +458,12 @@ function releaseFishFood() {
       fishFoods[i].show();
 
       // If fish eats food, add numFoodEaten counter
-      if (fishFoods[i].foodEaten(firefish)) {
-        firefish.numFoodEaten++;
+      if (fishFoods[i].foodEaten(fishName)) {
+        fishName.numFoodEaten++;
       }
 
       // Everytime a food goes off screen, remove food item from fishFoods array
-      if (fishFoods[i].foodEaten(firefish) || fishFoods[i].offScreen()) {
+      if (fishFoods[i].foodEaten(fishName) || fishFoods[i].offScreen()) {
         fishFoods.splice(i, 1);
       }
     }
@@ -431,18 +479,20 @@ function fishIsFull(fishName) {
 
 // ending() -----------------------------------------------------------------------
 //
-// Ending state: Display end poem. Night filter slowly appears and gives the tank an ominous feeling
+// Ending state: Display end poem. Night filter slowly appears and gives the tank an ominous feeling. Fishes poop.
 function ending() {
+  // Make fishes poop and display fishes casually swimming
+  for (let i=0; i<fishes.length; i++) {
+    let fish = fishes[i];
+    pooping(fish);
 
-  // Make firefish poop
-  pooping(firefish);
-
-  // Display firefish casually swimming
-  firefish.casualSwimming(fishtank);
-  displayAnimatedFish(firefish);
+    fish.casualSwimming(fishtank);
+    displayAnimatedFish(fish);
+  }
 
   // Displays filter that plunges tank into darkness
   nightFilter.display();
+
   // Display end poem
   poem.display();
 
@@ -450,7 +500,7 @@ function ending() {
   moveAndDisplayFinger();
 }
 
-// display, move, and release poopline behind fish
+// Display, move, and release poopline behind fish
 function pooping(fishName) {
   // Determine the location of fish's cloaca (where poop comes out)
   fishName.determineCloacaLocation();

@@ -1,4 +1,4 @@
-class Firefish extends Fish {
+class Goby extends Fish {
   // constructor(firefishImg1, firefishImg2, firefishFoodTrackerImg) {
   constructor(fishImg1, fishImg2, fishFoodTrackerImg) {
     super(fishImg1, fishImg2, fishFoodTrackerImg)
@@ -7,10 +7,10 @@ class Firefish extends Fish {
     // this.currentImage = firefishImg1; // Set firefish's current image to first image
     // this.framesElapsed = 0;
     // this.framesBtwEachImage = 50;
-    this.x = 500;
-    this.y = 200;
-    this.length = 160;
-    this.width = 66;
+    this.x = random(0,width);
+    this.y = random(0,height);
+    this.length = 130;
+    this.width = 39;
     // this.vx = 0;
     // this.vy = 0;
     this.speed = {
@@ -19,7 +19,7 @@ class Firefish extends Fish {
     };
     this.buffer = 10;
     this.tx = 0;
-    this.ty = 10;
+    this.ty = 5;
     this.txChange = 0.025;
     this.tyChange = 0.025;
     this.fieldOfVision = 350;
@@ -33,7 +33,7 @@ class Firefish extends Fish {
       img: fishFoodTrackerImg,
       // length: 236,
       // height: 74,
-      x: 50,
+      x: 300,
       y: 50,
     };
     // cloaca means orifice from which fish releases the poop
