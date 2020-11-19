@@ -36,6 +36,11 @@ class FoodTracker {
   // Update food tracker every time food is eaten by fish
   updateBar(fish, totalFood) {
     this.length = map(fish.numFoodEaten, 0, totalFood, 0, this.totalLength);
+
+    // ensure that bar does not exceed its total length
+    if (fish.numFoodEaten >= totalFood) {
+      this.length = this.totalLength;
+    }
   }
 
 }

@@ -5,8 +5,6 @@ class Firefish extends Fish {
     this.length = 160;
     this.width = 66;
     // movement information
-    this.x = 500;
-    this.y = 200;
     this.speed = {
       casualSwimming: 5,
       followingFinger: 1.5,

@@ -3,11 +3,13 @@ Project 2: Hungry Fishies
 Sharon Ku
 
 -Intro state & Instructions state:
-The title "Hungry Fishies" is displayed with a firefish swimming around the tank. Once the user clicks the "Start" button, the instructions are shown (instructions state). When the user clicks "Ready!", the animation state starts.
+The title "Hungry Fishies" is displayed with two fish (firefish and neon goby) swimming around the tank. Once the user clicks the "Start" button, the instructions are shown (instructions state). When the user clicks "Ready!", the animation state starts.
 -Animation state:
-When the finger/user circle is close enough to the fish for it to notice it (within the fish's field of vision), the fish follows it. The user adds food to the tank by clicking the "More Food" button and tries to get the fish to eat the food by guiding it with the finger. The user can change the current direction by using the left and right arrow keys. When the fish is full, the simulation ends (cue ending state).
+When the finger/user circle is close enough to the fish for it to notice it (within the fish's field of vision), the fish follows it. The user adds food to the tank by clicking the "More Food" button and tries to get the fish to eat the food by guiding it with the finger. The user can change the current direction by using the left and right arrow keys. When all fish are full, the simulation ends (cue ending state).
 -Ending state:
-A poem is featured as the tank plunges into darkness and the fish releases a little surprise from its behind.
+A poem is featured as the tank plunges into darkness and the fish release a little surprise from their behind.
+
+Btw I realized that the plural of fish is fish and not fishes. It's too late now.
 
 Background music from Mixkit.co: Smooth Like Jazz by Ajhay Stelino
 **************************************************/
@@ -23,7 +25,7 @@ let backgroundMusic = undefined;
 // Variables related to fishFood
 let fishFoods = []; // fishFoods array that contains food objects
 let numFishFoods = 5; // number of fish food in the tank at once
-let totalFood = 2; // total amount of food that fish needs to consume //originally: 15
+let totalFood = 15; // total amount of food that fish needs to consume
 
 // Font that will be used for body text
 let bodyTextFont = undefined;
@@ -171,15 +173,15 @@ function setup() {
 
 
   // Setting x and y positions for start button
-  let startButtonX = width * 1 / 5;
-  let startButtonY = height * 4 / 5;
+  let startButtonX = width * 0.2;
+  let startButtonY = height * 0.8;
   // Create a new start button + text inside start button
   startButtonCircle = new StartButtonCircle(startButtonX, startButtonY);
   startButtonText = new StartButtonText(startButtonX, startButtonY, bodyTextFont);
 
   // Setting x and y positions for ready button
-  let readyButtonX = 1150;
-  let readyButtonY = 640;
+  let readyButtonX = width*0.9;
+  let readyButtonY = height*0.8;
   // Create a new ready button + text inside ready button
   readyButtonCircle = new ReadyButtonCircle(readyButtonX, readyButtonY);
   readyButtonText = new ReadyButtonText(readyButtonX, readyButtonY, bodyTextFont);
@@ -235,9 +237,6 @@ function draw() {
   } else if (state === `ending`) {
     ending();
   }
-
-  // console.log(`firefish ${firefish.numFoodEaten}`);
-  console.log(`goby ${goby.numFoodEaten}`);
 }
 
 // Try playing music if mouse is pressed
@@ -283,8 +282,6 @@ function intro() {
     let fish = fishes[i];
     fish.casualSwimming(fishtank);
     displayAnimatedFish(fish);
-    // Constrain fish's movement to the inside of the tank
-    stayInTank(fish);
   }
 
   // Display user circle and move with finger
@@ -404,6 +401,16 @@ function animation() {
   // Reactivate More Food Button when there is no more food on the canvas
   moreFoodButton.reactivate(fishFoods, numFishFoods);
 
+  // Display food trackers and update food tracker bar every time fish eats scrumptious food
+  for (let i=0; i<foodTrackers.length; i++) {
+    for (let i=0; i<fishes.length; i++) {
+      let fish = fishes[i];
+      let foodTracker = foodTrackers[i];
+      foodTracker.updateBar(fish, totalFood);
+      foodTracker.display();
+    }
+  }
+
   for (let i=0; i<fishes.length; i++) {
     let fish = fishes[i];
     // Release fish food if the More Food Button is clicked and it is active
@@ -420,17 +427,6 @@ function animation() {
     displayAnimatedFish(fish);
   }
 
-  // Display food trackers and update food tracker bar every time fish eats scrumptious food
-  for (let i=0; i<foodTrackers.length; i++) {
-    for (let i=0; i<fishes.length; i++) {
-      let fish = fishes[i];
-      let foodTracker = foodTrackers[i];
-      foodTracker.updateBar(fish, totalFood);
-      foodTracker.display();
-    }
-  }
-
-
   // Display and move finger
   moveAndDisplayFinger();
 
@@ -438,7 +434,7 @@ function animation() {
   fishAreFull();
 }
 
-// Display and move pieces of food
+// Releases pieces of food
 function releaseFishFood(fishName) {
   if (moreFoodButton.showFood) {
     for (let i = fishFoods.length - 1; i >= 0; i--) {
@@ -446,7 +442,7 @@ function releaseFishFood(fishName) {
       fishFoods[i].changeCurrent(); // let user change current with arrow keys
       fishFoods[i].show();
 
-      // If fish eats food, add numFoodEaten counter
+      // If fish eats food, add to numFoodEaten counter
       if (fishFoods[i].foodEaten(fishName)) {
         fishName.numFoodEaten++;
         if (fishName.numFoodEaten === totalFood) {
@@ -454,7 +450,7 @@ function releaseFishFood(fishName) {
         }
       }
 
-      // Everytime a food goes off screen, remove food item from fishFoods array
+      // If food item has not been consumed and goes off screen, remove food item from fishFoods array
       if (fishFoods[i].foodEaten(fishName) || fishFoods[i].offScreen()) {
         fishFoods.splice(i, 1);
       }

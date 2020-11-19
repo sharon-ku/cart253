@@ -8,7 +8,7 @@ class FishFood {
     this.speed = random(0, this.speedMax);
     this.ax = 0;
     this.ay = 0;
-    this.accelerationMax = 3;
+    this.accelerationMax = 2.5;
     this.accelerationX = random(-this.accelerationMax, this.accelerationMax);
     this.accelerationY = 0.5;
     this.size = 15;

@@ -8,7 +8,7 @@ class Poop {
     this.ax = 0;
     this.ay = 0;
     this.acceleration = 3;
-    this.size = 5;
+    this.size = 3;
     // poop brown color
     this.fill = {
       r: 102,

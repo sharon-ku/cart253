@@ -16,8 +16,8 @@ class Fish {
     };
 
     // movement information
-    this.x = undefined;
-    this.y = undefined;
+    this.x = random(0, width);
+    this.y = random(0, height);
     this.vx = 0;
     this.vy = 0;
     this.speed = {
@@ -83,8 +83,17 @@ class Fish {
     }
   }
 
+  // Ensure that fish stays in tank
+  stayInTank() {
+    this.x = constrain(this.x, fishtank.border, width - fishtank.border);
+    this.y = constrain(this.y, fishtank.border, height - fishtank.border);
+  }
+
   // Fish swims randomly using Perlin noise
   casualSwimming(fishtank) {
+    // Make sure fish stays inside the tank
+    this.stayInTank();
+
     this.tx += this.txChange;
     this.ty += this.tyChange;
 
@@ -100,10 +109,6 @@ class Fish {
 
     this.x += this.vx;
     this.y += this.vy;
-
-    // make sure fish stays inside the tank
-    this.x = constrain(this.x, fishtank.border, width - fishtank.border);
-    this.y = constrain(this.y, fishtank.border, height - fishtank.border);
   }
 
   // Returns true if finger is within the fish's field of vision
@@ -117,6 +122,9 @@ class Fish {
 
   // The fish follows the finger
   followsFinger(finger) {
+    // Make sure fish stays inside the tank
+    this.stayInTank();
+
     // Calculating distance from fish to finger
     let distX = this.x - finger.x;
     let distY = this.y - finger.y;
