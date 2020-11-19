@@ -15,7 +15,7 @@ Background music from Mixkit.co: Smooth Like Jazz by Ajhay Stelino
 "use strict"; // because strict is good
 
 // State of program
-let state = `intro`; // other states: instructions, animation, ending
+let state = `animation`; // other states: instructions, animation, ending
 
 // Background music
 let backgroundMusic = undefined;
@@ -37,7 +37,6 @@ let startButtonCircle;
 let startButtonText;
 
 // Food tracker
-// let foodTracker;
 let foodTrackers = [];
 
 // Fishes
@@ -197,9 +196,6 @@ function setup() {
   // Create a new More Food button
   moreFoodButton = new MoreFoodButton(moreFoodButtonImg);
 
-  // Create a new food tracker
-  // foodTracker = new FoodTracker();
-
   // Create a new food tracker for firefish and goby and push them into foodTrackers array
   let foodTrackerForFirefish = new FoodTrackerForFirefish(firefishFoodTrackerImg);
   foodTrackers.push(foodTrackerForFirefish);
@@ -239,6 +235,9 @@ function draw() {
   } else if (state === `ending`) {
     ending();
   }
+
+  // console.log(`firefish ${firefish.numFoodEaten}`);
+  console.log(`goby ${goby.numFoodEaten}`);
 }
 
 // Try playing music if mouse is pressed
@@ -332,7 +331,6 @@ function instructions() {
   // Display More Food Button
   moreFoodButton.display();
   // Display the food tracker
-  // foodTracker.display();
   for (let i=0; i<foodTrackers.length; i++) {
     let foodTracker = foodTrackers[i];
     foodTracker.display();
@@ -420,22 +418,20 @@ function animation() {
     releaseFishFood(fish);
 
     // Display food tracker and update food tracker bar every time fish eats scrumptious food
-    // foodTracker.updateBar(fish, totalFood);
-    // foodTracker.display();
     for (let i=0; i<foodTrackers.length; i++) {
       let foodTracker = foodTrackers[i];
       foodTracker.updateBar(fish, totalFood);
       foodTracker.display();
     }
 
-    // Firefish follows finger if the fish senses the finger, or else it swims casually around the tank.
+    // Fish follows finger if the fish senses the finger, or else it swims casually around the tank.
     if (fish.sensesFinger(finger)) {
       fish.followsFinger(finger);
     } else {
       fish.casualSwimming(fishtank);
     }
 
-    // Display animated firefish
+    // Display animated fish
     displayAnimatedFish(fish);
   }
 
@@ -446,7 +442,6 @@ function animation() {
   // Cue ending if firefish has eaten the total number of food
   fishIsFull(firefish);
 }
-// STOPPED HERE
 
 // Display and move pieces of food
 function releaseFishFood(fishName) {

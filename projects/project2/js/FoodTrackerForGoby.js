@@ -1,5 +1,4 @@
 class FoodTrackerForGoby extends FoodTracker {
-  // constructor() {
   constructor(foodTrackerImg) {
     super(foodTrackerImg);
 
@@ -7,7 +6,7 @@ class FoodTrackerForGoby extends FoodTracker {
 
     this.containerImage = {
       img: foodTrackerImg,
-      x: 700, //300
+      x: 300,
       y: 50,
     };
   }

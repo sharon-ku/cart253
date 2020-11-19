@@ -1,5 +1,4 @@
 class FoodTrackerForFirefish extends FoodTracker {
-  // constructor() {
   constructor(foodTrackerImg) {
     super(foodTrackerImg);
 
