@@ -417,13 +417,6 @@ function animation() {
     // Release fish food if the More Food Button is clicked and it is active
     releaseFishFood(fish);
 
-    // Display food tracker and update food tracker bar every time fish eats scrumptious food
-    for (let i=0; i<foodTrackers.length; i++) {
-      let foodTracker = foodTrackers[i];
-      foodTracker.updateBar(fish, totalFood);
-      foodTracker.display();
-    }
-
     // Fish follows finger if the fish senses the finger, or else it swims casually around the tank.
     if (fish.sensesFinger(finger)) {
       fish.followsFinger(finger);
@@ -433,6 +426,16 @@ function animation() {
 
     // Display animated fish
     displayAnimatedFish(fish);
+  }
+
+  // Display food trackers and update food tracker bar every time fish eats scrumptious food
+  for (let i=0; i<foodTrackers.length; i++) {
+    for (let i=0; i<fishes.length; i++) {
+      let fish = fishes[i];
+      let foodTracker = foodTrackers[i];
+      foodTracker.updateBar(fish, totalFood);
+      foodTracker.display();
+    }
   }
 
 
@@ -465,7 +468,7 @@ function releaseFishFood(fishName) {
 }
 
 // HIDE FOR NOW ************
-// Cue ending if firefish has eaten the total number of food
+// Cue ending if fish has eaten the total number of food
 function fishIsFull(fishName) {
   if (fishName.numFoodEaten === totalFood) {
     state = `ending`;
