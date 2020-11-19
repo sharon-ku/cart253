@@ -159,11 +159,11 @@ function setup() {
   finger = new Finger();
 
   // Create a new firefish
-  firefish = new Firefish(firefishImg1, firefishImg2, firefishFoodTrackerImg);
+  firefish = new Firefish(firefishImg1, firefishImg2);
   fishes.push(firefish);
 
   // Create a new goby
-  goby = new Goby(gobyImg1, gobyImg2, gobyFoodTrackerImg);
+  goby = new Goby(gobyImg1, gobyImg2);
   fishes.push(goby);
 
   // Create a new title
@@ -435,7 +435,7 @@ function animation() {
   moveAndDisplayFinger();
 
   // Cue ending if firefish has eaten the total number of food
-  fishIsFull(firefish);
+  fishAreFull();
 }
 
 // Display and move pieces of food
@@ -449,6 +449,9 @@ function releaseFishFood(fishName) {
       // If fish eats food, add numFoodEaten counter
       if (fishFoods[i].foodEaten(fishName)) {
         fishName.numFoodEaten++;
+        if (fishName.numFoodEaten === totalFood) {
+          fishName.isFull = true;
+        }
       }
 
       // Everytime a food goes off screen, remove food item from fishFoods array
@@ -459,11 +462,17 @@ function releaseFishFood(fishName) {
   }
 }
 
-// Cue ending if fish has eaten the total number of food
-function fishIsFull(fishName) {
-  if (fishName.numFoodEaten === totalFood) {
-    state = `ending`;
+// Cue ending if all fishies have eaten the total number of food
+function fishAreFull() {
+  for (let i = 0; i < fishes.length; i++) {
+    let fish = fishes[i];
+    // if there is a fish that isn't full, stop the for-loop
+    if (!fish.isFull) {
+      return;
+    }
   }
+  // if all fish are full, cue ending state
+  state = `ending`;
 }
 
 // ending() -----------------------------------------------------------------------

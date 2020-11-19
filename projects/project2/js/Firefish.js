@@ -1,30 +1,25 @@
 class Firefish extends Fish {
-  
-  constructor(fishImg1, fishImg2, fishFoodTrackerImg) {
-    super(fishImg1, fishImg2, fishFoodTrackerImg)
-    this.x = 500;
-    this.y = 200;
+  constructor(fishImg1, fishImg2) {
+    super(fishImg1, fishImg2)
+    // size information
     this.length = 160;
     this.width = 66;
+    // movement information
+    this.x = 500;
+    this.y = 200;
     this.speed = {
       casualSwimming: 5,
       followingFinger: 1.5,
     };
-    this.buffer = 10;
+    this.buffer = 10; // stop moving fish when it is within a certain buffer of the finger
+    // variables used for perlin noise
     this.tx = 0;
     this.ty = 10;
     this.txChange = 0.025;
     this.tyChange = 0.025;
+    // radius around fish where it can spot finger
     this.fieldOfVision = 350;
-    // this.numFoodEaten = 0;
-    // this.foodTracker = {
-    //   // img: firefishFoodTrackerImg,
-    //   img: fishFoodTrackerImg,
-    //   // length: 236,
-    //   // height: 74,
-    //   x: 50,
-    //   y: 50,
-    // };
+    // vertical distance between fish's center and fish's butt
     this.vertDistBtwFishAndCloaca = 10;
   }
 

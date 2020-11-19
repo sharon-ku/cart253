@@ -1,39 +1,47 @@
 class Fish {
   constructor(fishImg1, fishImg2) {
+    // image information
     this.img1 = fishImg1;
     this.img2 = fishImg2;
     this.currentImage = fishImg1; // Set fish's current image to first image
     this.framesElapsed = 0;
     this.framesBtwEachImage = 50;
-    this.x = undefined;
-    this.y = undefined;
+
+    // size information
     this.length = undefined;
     this.width = undefined;
+    this.scale = {
+      x: 1,
+      y: 1,
+    };
+
+    // movement information
+    this.x = undefined;
+    this.y = undefined;
     this.vx = 0;
     this.vy = 0;
     this.speed = {
       casualSwimming: undefined,
       followingFinger: undefined,
     };
-    this.buffer = undefined;
+    this.buffer = undefined; // stop moving fish when it is within a certain buffer of the finger
+
+    // variables used for perlin noise
     this.tx = undefined;
     this.ty = undefined;
     this.txChange = undefined;
     this.tyChange = undefined;
+
+    // radius around fish where it can spot finger
     this.fieldOfVision = undefined;
-    this.scale = {
-      x: 1,
-      y: 1,
-    };
+
+    // tracks how many pieces of food fish has eaten
     this.numFoodEaten = 0;
-    // this.foodTracker = {
-    //   img: fishFoodTrackerImg,
-    //   length: 236,
-    //   height: 74,
-    //   x: undefined,
-    //   y: undefined,
-    // };
-    // cloaca means orifice from which fish releases the poop
+
+    // tracks if fish is full
+    this.isFull = false;
+
+    // position of cloaca (aka orifice from which fish releases the poop)
     this.cloacaX = 0;
     this.cloacaY = 0;
     this.vertDistBtwFishAndCloaca = undefined;
@@ -93,6 +101,7 @@ class Fish {
     this.x += this.vx;
     this.y += this.vy;
 
+    // make sure fish stays inside the tank
     this.x = constrain(this.x, fishtank.border, width - fishtank.border);
     this.y = constrain(this.y, fishtank.border, height - fishtank.border);
   }
