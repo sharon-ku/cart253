@@ -15,7 +15,7 @@ Background music from Mixkit.co: Smooth Like Jazz by Ajhay Stelino
 "use strict"; // because strict is good
 
 // State of program
-let state = `animation`; // other states: instructions, animation, ending
+let state = `intro`; // other states: instructions, animation, ending
 
 // Background music
 let backgroundMusic = undefined;
@@ -274,24 +274,9 @@ function intro() {
   // Display the title
   title.display(titleFont);
 
-  // Display the start button and start text
-  // If finger is in button, make button's size oscillate
-  if (mouseIsInButton(startButtonCircle)) {
-    startButtonCircle.hover();
-    startButtonText.hover();
-  } else { // set the button to its normal size
-    startButtonCircle.setNormalSize();
-    startButtonText.setNormalSize();
-  }
-
-  // Move the start button with the "start" text inside it
-  startButtonCircle.move();
-  startButtonText.move(startButtonCircle); // "start" text has same position as start button
-  stayInTank(startButtonCircle); // ensure that button does not leave the tank
-
-  // Display the start button with "start" text inside it
-  startButtonCircle.display();
-  startButtonText.display();
+  // Create a "start" button that is displayed, has a hover behavior (size changes when hovering over it), and that moves randomly
+  // Button is made up of a shape and a text inside it
+  generateButton(startButtonCircle, startButtonText);
 
   // Display fishes casually swimming
   for (let i=0; i<fishes.length; i++) {
@@ -304,6 +289,27 @@ function intro() {
 
   // Display user circle and move with finger
   moveAndDisplayFinger();
+}
+
+// Create a button that is displayed, has a hover behavior (size changes when hovering over it), and that moves randomly
+function generateButton(buttonShape, buttonText) {
+  // If finger is in button, make button's size increase and decrease
+  if (mouseIsInButton(buttonShape)) {
+    buttonShape.hover();
+    buttonText.hover();
+  } else { // set the button to its normal size
+    buttonShape.setNormalSize();
+    buttonText.setNormalSize();
+  }
+
+  // Move the button
+  buttonShape.move();
+  buttonText.move(buttonShape); // text has same position as button shape
+  stayInTank(buttonShape); // ensure that button does not leave the tank
+
+  // Display the button shape with text inside it
+  buttonShape.display();
+  buttonText.display();
 }
 
 // Display a fish and switch its images
@@ -347,23 +353,9 @@ function instructions() {
   rulesRect.display();
   rules.display();
 
-  // If finger is in button, animate ready button's size by making it increase and decrease
-  if (mouseIsInButton(readyButtonCircle)) {
-    readyButtonCircle.hover();
-    readyButtonText.hover();
-  } else { // set the button to its normal size
-    readyButtonCircle.setNormalSize();
-    readyButtonText.setNormalSize();
-  }
-
-  // Move the ready button with the "ready" text inside it
-  readyButtonCircle.move();
-  readyButtonText.move(readyButtonCircle); // button text has same position as button shape
-  stayInTank(readyButtonCircle); // ensure that button does not leave the tank
-
-  // Display the ready button with "ready" text inside it
-  readyButtonCircle.display();
-  readyButtonText.display();
+  // Create a "ready" button that is displayed, has a hover behavior (size changes when hovering over it), and that moves randomly
+  // Button is made up of a shape and a text inside it
+  generateButton(readyButtonCircle, readyButtonText);
 
   // Display and move finger
   moveAndDisplayFinger();
@@ -467,14 +459,12 @@ function releaseFishFood(fishName) {
   }
 }
 
-// HIDE FOR NOW ************
 // Cue ending if fish has eaten the total number of food
 function fishIsFull(fishName) {
   if (fishName.numFoodEaten === totalFood) {
     state = `ending`;
   }
 }
-//*********************
 
 // ending() -----------------------------------------------------------------------
 //

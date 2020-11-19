@@ -2,8 +2,8 @@ class ButtonShape extends Button {
   constructor(x,y) {
     super(x,y);
 
-    this.vx = 0;
-    this.vy = 0;
+    this.vx = 0.5;
+    this.vy = 0.5;
     this.speed = 2;
     this.change = 0;
   }
