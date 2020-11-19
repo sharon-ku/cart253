@@ -1,5 +1,5 @@
 class Fish {
-  constructor(fishImg1, fishImg2, fishFoodTrackerImg) {
+  constructor(fishImg1, fishImg2) {
     this.img1 = fishImg1;
     this.img2 = fishImg2;
     this.currentImage = fishImg1; // Set fish's current image to first image
@@ -26,13 +26,13 @@ class Fish {
       y: 1,
     };
     this.numFoodEaten = 0;
-    this.foodTracker = {
-      img: fishFoodTrackerImg,
-      length: 236,
-      height: 74,
-      x: undefined,
-      y: undefined,
-    };
+    // this.foodTracker = {
+    //   img: fishFoodTrackerImg,
+    //   length: 236,
+    //   height: 74,
+    //   x: undefined,
+    //   y: undefined,
+    // };
     // cloaca means orifice from which fish releases the poop
     this.cloacaX = 0;
     this.cloacaY = 0;

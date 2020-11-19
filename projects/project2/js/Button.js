@@ -3,10 +3,6 @@ class Button {
     // movement information
     this.x = x;
     this.y = y;
-    // this.vx = 0;
-    // this.vy = 0;
-    // this.speed = 2;
-    // this.change = random();
     // size information
     this.size = undefined;
     this.sizeBigger = undefined;
@@ -30,13 +26,7 @@ class Button {
 
   // move the button
   move() {
-    // this.change = random();
-    // if (this.change < 0.01) {
-    //   this.vx = random(-this.speed, this.speed);
-    //   this.vy = random(-this.speed, this.speed);
-    // }
-    // this.x += this.vx;
-    // this.y += this.vy;
+    
   }
 
   // button changes sizes when mouse hovers over it
