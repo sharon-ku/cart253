@@ -1,15 +1,27 @@
 /**************************************************
 Project 2: Hungry Fishies
 Sharon Ku
+***
 
--Intro state & Instructions state:
-The title "Hungry Fishies" is displayed with two fish (firefish and neon goby) swimming around the tank. Once the user clicks the "Start" button, the instructions are shown (instructions state). When the user clicks "Ready!", the animation state starts.
--Animation state:
-When the finger/user circle is close enough to the fish for it to notice it (within the fish's field of vision), the fish follows it. The user adds food to the tank by clicking the "More Food" button and tries to get the fish to eat the food by guiding it with the finger. The user can change the current direction by using the left and right arrow keys. When all fish are full, the simulation ends (cue ending state).
--Ending state:
-A poem is featured as the tank plunges into darkness and the fish release a little surprise from their behind.
+INTRO state & INSTRUCTIONS state:
+- The title "Hungry Fishies" is displayed with two fish (firefish and neon goby) swimming around the tank.
+- Click the "Start" button to see the instructions (instructions state).
+- Click "Ready!" to start the animation state.
 
+ANIMATION state:
+- Bring the finger/user circle close enough to the fish for it to notice it, then the fish will follow it.
+- Click the "More Food" button to add food to the tank.
+- Try to get the fish to eat the food by guiding it with the finger.
+- Change the current direction by using the left and right arrow keys.
+- When all fish are full, the simulation ends (cue ending state).
+
+ENDING state:
+- A poem is featured as the tank plunges into darkness.
+- The fish release a little surprise from their behind.
+
+***
 Btw I realized that the plural of fish is fish and not fishes. It's too late now.
+***
 
 Background music from Mixkit.co: Smooth Like Jazz by Ajhay Stelino
 **************************************************/
@@ -25,39 +37,37 @@ let backgroundMusic = undefined;
 // Variables related to fishFood
 let fishFoods = []; // fishFoods array that contains food objects
 let numFishFoods = 5; // number of fish food in the tank at once
-let totalFood = 15; // total amount of food that fish needs to consume
+let totalFood = 15; // total amount of food that each fish needs to consume
 
-// Font that will be used for body text
-let bodyTextFont = undefined;
+// Fonts used for title and body text
+let titleFont;
+let bodyTextFont;
 
 // Title text
 let title;
-let titleFont;
 
 // Start button circle and text inside it
 let startButtonCircle;
 let startButtonText;
 
-// Food tracker
+// Food tracker array
 let foodTrackers = [];
 
-// Fishes
+// Fishes array
 let fishes = [];
 
-// Firefish
+// My fishes
 let firefish;
-// Stores firefish images
+let goby;
+
+// Variables used to store fish images
 let firefishImg1;
 let firefishImg2;
-// Stores image for firefish food tracker
-let firefishFoodTrackerImg;
-
-// Goby
-let goby;
-// Stores goby images
 let gobyImg1;
 let gobyImg2;
-// Stores image for goby food tracker
+
+// Variables used to store food tracker images
+let firefishFoodTrackerImg;
 let gobyFoodTrackerImg;
 
 // User circle
@@ -93,16 +103,16 @@ let fishtank = {
 
 // Rules
 let rules;
-// stores rules image into this variable
+// Variable to store rules image
 let rulesImg;
-// rounded rectangle behind the rules image
+// Rounded rectangle displayed behind the rules image
 let rulesRect;
 
 // Ready button circle and text inside it
 let readyButtonCircle;
 let readyButtonText;
 
-// Variables pertaining to end poem
+// End poem
 let yLocationOfFirstLine = 210;
 let poem;
 
@@ -117,17 +127,20 @@ let totalNumPoops = 50;
 // setup() -----------------------------------------------------------------------
 //
 // Preload all images, music, and fonts
+// --------------------------------------------------------------------------------
+
 function preload() {
-  // Load firefish images
+  // Load all fish images
+  // firefish
   firefishImg1 = loadImage(`assets/images/firefish1.png`);
   firefishImg2 = loadImage(`assets/images/firefish2.png`);
-  // Load firefish food tracker image
-  firefishFoodTrackerImg = loadImage(`assets/images/firefishFoodTracker.png`);
-
-  // Load goby images
+  // goby
   gobyImg1 = loadImage(`assets/images/goby1.png`);
   gobyImg2 = loadImage(`assets/images/goby2.png`);
-  // Load goby food tracker image
+
+
+  // Load all food tracker images
+  firefishFoodTrackerImg = loadImage(`assets/images/firefishFoodTracker.png`);
   gobyFoodTrackerImg = loadImage(`assets/images/gobyFoodTracker.png`);
 
 
@@ -151,7 +164,9 @@ function preload() {
 
 // setup() -----------------------------------------------------------------------
 //
-// Set up canvas, hide cursor, create arrays for fishFoods and poemLines
+// Set up canvas, hide cursor, hide all strokes, create all objects from classes
+// --------------------------------------------------------------------------------
+
 function setup() {
   createCanvas(1300, 800);
   noCursor();
@@ -180,15 +195,15 @@ function setup() {
   startButtonText = new StartButtonText(startButtonX, startButtonY, bodyTextFont);
 
   // Setting x and y positions for ready button
-  let readyButtonX = width*0.9;
-  let readyButtonY = height*0.8;
+  let readyButtonX = width * 0.9;
+  let readyButtonY = height * 0.8;
   // Create a new ready button + text inside ready button
   readyButtonCircle = new ReadyButtonCircle(readyButtonX, readyButtonY);
   readyButtonText = new ReadyButtonText(readyButtonX, readyButtonY, bodyTextFont);
 
-  // Create a new rules image and place a rectangle behind the image
-  rulesRect = new RulesRect();
+  // Create a new rules image and a new rectangle that goes behind the image
   rules = new Rules(rulesImg);
+  rulesRect = new RulesRect();
 
   // Create array for fishFoods
   for (let i = 0; i < numFishFoods; i++) {
@@ -208,11 +223,11 @@ function setup() {
   nightFilter = new NightFilter();
 
   // Create a new end poem
-  let poemLineX = width/2;
+  let poemLineX = width / 2;
   let poemLineY = yLocationOfFirstLine;
   poem = new Poem(bodyTextFont, poemLineX, poemLineY);
 
-  // Create array for poop (for end state)
+  // Create array for poop
   for (let i = 0; i < totalNumPoops; i++) {
     poops[i] = new Poop();
   }
@@ -223,6 +238,8 @@ function setup() {
 // draw() -----------------------------------------------------------------------
 //
 // Set up background color, background rocks and sand, and states
+// --------------------------------------------------------------------------------
+
 function draw() {
   // Set up background color, rocks, and sand
   setBackground();
@@ -237,6 +254,16 @@ function draw() {
   } else if (state === `ending`) {
     ending();
   }
+}
+
+// Set up background color, rocks, and sand
+function setBackground() {
+  background(bg.fill.r, bg.fill.g, bg.fill.b);
+  push();
+  imageMode(CENTER);
+  image(bg.sand.img, width / 2, height - bg.sand.height / 2, bg.sand.length, bg.sand.height);
+  image(bg.rocks.img, width / 2, height * 2 / 3, bg.rocks.length, bg.rocks.height);
+  pop();
 }
 
 // Try playing music if mouse is pressed
@@ -256,29 +283,21 @@ function tryMusic() {
   }
 }
 
-// Set up background color, rocks, and sand
-function setBackground() {
-  background(bg.fill.r, bg.fill.g, bg.fill.b);
-  push();
-  imageMode(CENTER);
-  image(bg.sand.img, width / 2, height - bg.sand.height / 2, bg.sand.length, bg.sand.height);
-  image(bg.rocks.img, width / 2, height * 2 / 3, bg.rocks.length, bg.rocks.height);
-  pop();
-}
-
 // intro() -----------------------------------------------------------------------
 //
-// Intro state: Display title, start button, finger, and fish
+// INTRO STATE: Display title, start button, finger, and casually swimming fish
+// --------------------------------------------------------------------------------
+
 function intro() {
   // Display the title
   title.display(titleFont);
 
-  // Create a "start" button that is displayed, has a hover behavior (size changes when hovering over it), and that moves randomly
+  // Create a "start" button
   // Button is made up of a shape and a text inside it
   generateButton(startButtonCircle, startButtonText);
 
   // Display fishes casually swimming
-  for (let i=0; i<fishes.length; i++) {
+  for (let i = 0; i < fishes.length; i++) {
     let fish = fishes[i];
     fish.casualSwimming(fishtank);
     displayAnimatedFish(fish);
@@ -329,18 +348,22 @@ function stayInTank(subject) {
 
 // instructions() ----------------------------------------------------------------------
 //
-// Instructions state: display rules on the canvas (with fish, MoreFood button, and food tracker in background). Player starts the animation by clicking "Ready!" button
+// INSTRUCTIONS STATE:
+// Display rules on the canvas with fish, MoreFood button, and food tracker in background.
+// Player starts the animation by clicking "Ready!" button.
+// --------------------------------------------------------------------------------
+
 function instructions() {
   // Display More Food Button
   moreFoodButton.display();
   // Display the food tracker
-  for (let i=0; i<foodTrackers.length; i++) {
+  for (let i = 0; i < foodTrackers.length; i++) {
     let foodTracker = foodTrackers[i];
     foodTracker.display();
   }
 
   // Display animated fishes casually swimming
-  for (let i = 0; i<fishes.length; i++) {
+  for (let i = 0; i < fishes.length; i++) {
     let fish = fishes[i];
     fish.casualSwimming(fishtank);
     displayAnimatedFish(fish);
@@ -377,10 +400,11 @@ function mouseClicked() {
 
 // Checks if finger's position is inside a button
 function mouseIsInButton(buttonName) {
-  if (mouseX < buttonName.x + (buttonName.size / 2) && mouseX > buttonName.x - (buttonName.size / 2)) {
-    if (mouseY < buttonName.y + (buttonName.size / 2) && mouseY > buttonName.y - (buttonName.size / 2)) {
-      return true;
-    }
+  if (mouseX < buttonName.x + (buttonName.size / 2) &&
+    mouseX > buttonName.x - (buttonName.size / 2) &&
+    mouseY < buttonName.y + (buttonName.size / 2) &&
+    mouseY > buttonName.y - (buttonName.size / 2)) {
+    return true;
   } else {
     return false;
   }
@@ -388,7 +412,13 @@ function mouseIsInButton(buttonName) {
 
 // animation() -----------------------------------------------------------------------
 //
-// Animation state: Finger, firefish, food tracker, and MoreFoodButton are displayed. Finger moves with mouse. Firefish moves randomly (Perlin noise) until it spots the finger and follows it. If the fish is close enough to food, it will eat it and the tracker updates.
+// ANIMATION STATE:
+// Finger, firefish, food tracker, and MoreFoodButton are displayed.
+// Finger moves with mouse.
+// Fish move randomly (Perlin noise) until they spot the finger then follow it.
+// If the fish is close enough to food, it will eat it and the tracker updates.
+// --------------------------------------------------------------------------------
+
 function animation() {
   // Display More Food Button
   moreFoodButton.display();
@@ -402,8 +432,8 @@ function animation() {
   moreFoodButton.reactivate(fishFoods, numFishFoods);
 
   // Display food trackers and update food tracker bar every time fish eats scrumptious food
-  for (let i=0; i<foodTrackers.length; i++) {
-    for (let i=0; i<fishes.length; i++) {
+  for (let i = 0; i < foodTrackers.length; i++) {
+    for (let i = 0; i < fishes.length; i++) {
       let fish = fishes[i];
       let foodTracker = foodTrackers[i];
       foodTracker.updateBar(fish, totalFood);
@@ -411,7 +441,7 @@ function animation() {
     }
   }
 
-  for (let i=0; i<fishes.length; i++) {
+  for (let i = 0; i < fishes.length; i++) {
     let fish = fishes[i];
     // Release fish food if the More Food Button is clicked and it is active
     releaseFishFood(fish);
@@ -473,10 +503,15 @@ function fishAreFull() {
 
 // ending() -----------------------------------------------------------------------
 //
-// Ending state: Display end poem. Night filter slowly appears and gives the tank an ominous feeling. Fishes poop.
+// ENDING STATE:
+// Display end poem.
+// Fishes poop.
+// Night filter slowly appears and gives the tank an ominous feeling.
+// --------------------------------------------------------------------------------
+
 function ending() {
   // Make fishes poop and display fishes casually swimming
-  for (let i=0; i<fishes.length; i++) {
+  for (let i = 0; i < fishes.length; i++) {
     let fish = fishes[i];
     pooping(fish);
 
@@ -484,7 +519,7 @@ function ending() {
     displayAnimatedFish(fish);
   }
 
-  // Displays filter that plunges tank into darkness
+  // Display filter that plunges tank into darkness
   nightFilter.display();
 
   // Display end poem
