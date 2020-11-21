@@ -1,7 +1,7 @@
 /**************************************************
 Project 2: Hungry Fishies
 Sharon Ku
-***
+
 
 INTRO state & INSTRUCTIONS state:
 - The title "Hungry Fishies" is displayed with two fish (firefish and neon goby) swimming around the tank.
@@ -96,8 +96,8 @@ let bg = {
   },
 };
 
-// Fishtank
-let fishtank = {
+// Fish tank
+let fishTank = {
   border: 100,
 };
 
@@ -207,7 +207,7 @@ function setup() {
 
   // Create array for fishFoods
   for (let i = 0; i < numFishFoods; i++) {
-    fishFoods[i] = new FishFood(fishtank.border);
+    fishFoods[i] = new FishFood(fishTank.border);
   }
 
   // Create a new More Food button
@@ -299,7 +299,7 @@ function intro() {
   // Display fishes casually swimming
   for (let i = 0; i < fishes.length; i++) {
     let fish = fishes[i];
-    fish.casualSwimming(fishtank);
+    fish.casualSwimming(fishTank);
     displayAnimatedFish(fish);
   }
 
@@ -342,8 +342,8 @@ function moveAndDisplayFinger() {
 
 // Constrain object/animal's position to the inside of the tank
 function stayInTank(subject) {
-  subject.x = constrain(subject.x, fishtank.border, width - fishtank.border);
-  subject.y = constrain(subject.y, fishtank.border, height - fishtank.border);
+  subject.x = constrain(subject.x, fishTank.border, width - fishTank.border);
+  subject.y = constrain(subject.y, fishTank.border, height - fishTank.border);
 }
 
 // instructions() ----------------------------------------------------------------------
@@ -365,7 +365,7 @@ function instructions() {
   // Display animated fishes casually swimming
   for (let i = 0; i < fishes.length; i++) {
     let fish = fishes[i];
-    fish.casualSwimming(fishtank);
+    fish.casualSwimming(fishTank);
     displayAnimatedFish(fish);
   }
 
@@ -450,7 +450,7 @@ function animation() {
     if (fish.sensesFinger(finger)) {
       fish.followsFinger(finger);
     } else {
-      fish.casualSwimming(fishtank);
+      fish.casualSwimming(fishTank);
     }
 
     // Display animated fish
@@ -515,7 +515,7 @@ function ending() {
     let fish = fishes[i];
     pooping(fish);
 
-    fish.casualSwimming(fishtank);
+    fish.casualSwimming(fishTank);
     displayAnimatedFish(fish);
   }
 

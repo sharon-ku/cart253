@@ -85,12 +85,12 @@ class Fish {
 
   // Ensure that fish stays in tank
   stayInTank() {
-    this.x = constrain(this.x, fishtank.border, width - fishtank.border);
-    this.y = constrain(this.y, fishtank.border, height - fishtank.border);
+    this.x = constrain(this.x, fishTank.border, width - fishTank.border);
+    this.y = constrain(this.y, fishTank.border, height - fishTank.border);
   }
 
   // Fish swims randomly using Perlin noise
-  casualSwimming(fishtank) {
+  casualSwimming(fishTank) {
     // Make sure fish stays inside the tank
     this.stayInTank();
 

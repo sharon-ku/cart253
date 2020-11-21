@@ -78,7 +78,7 @@ class MoreFoodButton {
 
       // Create new fishFoods in array
       for (let i = 0; i < numFishFoods; i++) {
-        fishFoods[i] = new FishFood(fishtank.border);
+        fishFoods[i] = new FishFood(fishTank.border);
       }
     }
   }
