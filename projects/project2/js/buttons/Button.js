@@ -26,7 +26,7 @@ class Button {
 
   // move the button
   move() {
-    
+
   }
 
   // button changes sizes when mouse hovers over it

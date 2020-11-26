@@ -37,7 +37,7 @@ let backgroundMusic = undefined;
 // Variables related to fishFood
 let fishFoods = []; // fishFoods array that contains food objects
 let numFishFoods = 5; // number of fish food in the tank at once
-let totalFood = 15; // total amount of food that each fish needs to consume
+let totalFood = 2; // total amount of food that each fish needs to consume
 
 // Fonts used for title and body text
 let titleFont;
@@ -515,7 +515,7 @@ function ending() {
   // Make fishes poop and display fishes casually swimming
   for (let i = 0; i < fishes.length; i++) {
     let fish = fishes[i];
-    pooping(fish);
+    fish.pooping(poops, totalNumPoops);
 
     fish.casualSwimming(fishTank);
     displayAnimatedFish(fish);
@@ -529,37 +529,4 @@ function ending() {
 
   // Display and move finger based on user's mouse position
   moveAndDisplayFinger();
-}
-
-// Display, move, and release poopline behind fish
-function pooping(fishName) {
-  // Determine the location of fish's cloaca (where poop comes out)
-  fishName.determineCloacaLocation();
-  // Display and move poop
-  displayAndMovePoop(fishName);
-  // Release a line of poop
-  releasePoopLine(fishName);
-  // Remove poop when there are too many to handle
-  removePoop();
-}
-
-// Display and move poop; the poop comes out of the fish's cloaca
-function displayAndMovePoop(fishName) {
-  for (let i = poops.length - 1; i >= 0; i--) {
-    poops[i].show(fishName.cloacaX, fishName.cloacaY);
-    poops[i].move();
-  }
-}
-
-// Release a line of poop by adding more poop pebbles to the poops array
-function releasePoopLine(fishName) {
-  let addPoop = new Poop(fishName.cloacaX, fishName.cloacaY);
-  poops.push(addPoop);
-}
-
-// To ensure that poop does not get too long, remove first poop from array after a certain amount of poop pebbles have been released
-function removePoop() {
-  if (poops.length > totalNumPoops) {
-    poops.shift();
-  }
 }

@@ -167,4 +167,39 @@ class Fish {
     this.cloacaY = this.y + this.vertDistBtwFishAndCloaca;
   }
 
+
+  // Display and move poop; the poop comes out of the fish's cloaca
+  displayAndMovePoop(poops) {
+    for (let i = poops.length - 1; i >= 0; i--) {
+      poops[i].show(this.cloacaX, this.cloacaY);
+      poops[i].move();
+    }
+  }
+
+  // Release a line of poop by adding more poop pebbles to the poops array
+  releasePoopLine(poops) {
+    let addPoop = new Poop(this.cloacaX, this.cloacaY);
+    poops.push(addPoop);
+  }
+
+  // To ensure that poop does not get too long, remove first poop from array after a certain amount of poop pebbles have been released
+  removePoop(poops, totalNumPoops) {
+    if (poops.length > totalNumPoops) {
+      poops.shift();
+    }
+  }
+
+  // Display, move, and release poopline behind fish
+  pooping(poops, totalNumPoops) {
+    // Determine the location of fish's cloaca (where poop comes out)
+    this.determineCloacaLocation();
+    // Display and move poop
+    this.displayAndMovePoop(poops);
+    // Release a line of poop
+    this.releasePoopLine(poops);
+    // Remove poop when there are too many to handle
+    this.removePoop(poops, totalNumPoops);
+  }
+
+
 }
