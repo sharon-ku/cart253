@@ -4,7 +4,7 @@ Sharon Ku
 
 
 INTRO state & INSTRUCTIONS state:
-- The title "Hungry Fishies" is displayed with two fish (firefish and neon goby) swimming around the tank.
+- The title "Hungry Fishies" is displayed with three fish (firefish, neon goby, clownfish) swimming around the tank.
 - Click the "Start" button to see the instructions (instructions state).
 - Click "Ready!" to start the animation state.
 
@@ -59,16 +59,20 @@ let fishes = [];
 // My fishes
 let firefish;
 let goby;
+let nene;
 
 // Variables used to store fish images
 let firefishImg1;
 let firefishImg2;
 let gobyImg1;
 let gobyImg2;
+let neneImg1;
+let neneImg2;
 
 // Variables used to store food tracker images
 let firefishFoodTrackerImg;
 let gobyFoodTrackerImg;
+let neneFoodTrackerImg;
 
 // User circle
 let finger;
@@ -137,12 +141,15 @@ function preload() {
   // goby
   gobyImg1 = loadImage(`assets/images/goby1.png`);
   gobyImg2 = loadImage(`assets/images/goby2.png`);
+  // nene
+  neneImg1 = loadImage(`assets/images/nene1.png`);
+  neneImg2 = loadImage(`assets/images/nene2.png`);
 
 
   // Load all food tracker images
   firefishFoodTrackerImg = loadImage(`assets/images/firefishFoodTracker.png`);
   gobyFoodTrackerImg = loadImage(`assets/images/gobyFoodTracker.png`);
-
+  neneFoodTrackerImg = loadImage(`assets/images/neneFoodTracker.png`);
 
   // Load rules image
   rulesImg = loadImage(`assets/images/rules.png`);
@@ -183,6 +190,10 @@ function setup() {
   goby = new Goby(gobyImg1, gobyImg2);
   fishes.push(goby);
 
+  // Create a new nene
+  nene = new Nene(neneImg1, neneImg2);
+  fishes.push(nene);
+
   // Create a new title
   title = new Title();
 
@@ -205,21 +216,23 @@ function setup() {
   rules = new Rules(rulesImg);
   rulesRect = new RulesRect();
 
-  console.log(fishFoods);
   // Create array for fishFoods
   for (let i = 0; i < numFishFoods; i++) {
-    fishFoods[i] = new FishFood(fishTank.border);
+    let fishFood = fishFoods[i];
+    fishFood = new FishFood(fishTank.border);
   }
 
 
   // Create a new More Food button
   moreFoodButton = new MoreFoodButton(moreFoodButtonImg);
 
-  // Create a new food tracker for firefish and goby and push them into foodTrackers array
+  // Create a new food tracker for firefish, goby and 2 clownfish, and push them into foodTrackers array
   let foodTrackerForFirefish = new FoodTrackerForFirefish(firefishFoodTrackerImg);
   foodTrackers.push(foodTrackerForFirefish);
   let foodTrackerForGoby = new FoodTrackerForGoby(gobyFoodTrackerImg);
   foodTrackers.push(foodTrackerForGoby);
+  let foodTrackerForNene = new FoodTrackerForNene(neneFoodTrackerImg);
+  foodTrackers.push(foodTrackerForNene);
 
   // Create a new night filter
   nightFilter = new NightFilter();
@@ -470,12 +483,13 @@ function animation() {
 function releaseFishFood(fishName) {
   if (moreFoodButton.showFood) {
     for (let i = fishFoods.length - 1; i >= 0; i--) {
-      fishFoods[i].move();
-      fishFoods[i].changeCurrent(); // let user change current with arrow keys
-      fishFoods[i].show();
+      let fishFood = fishFoods[i];
+      fishFood.move();
+      fishFood.changeCurrent(); // let user change current with arrow keys
+      fishFood.show();
 
       // If fish eats food, add to numFoodEaten counter
-      if (fishFoods[i].foodEaten(fishName)) {
+      if (fishFood.foodEaten(fishName)) {
         fishName.numFoodEaten++;
         if (fishName.numFoodEaten === totalFood) {
           fishName.isFull = true;
@@ -483,7 +497,7 @@ function releaseFishFood(fishName) {
       }
 
       // If food item has not been consumed and goes off screen, remove food item from fishFoods array
-      if (fishFoods[i].foodEaten(fishName) || fishFoods[i].offScreen()) {
+      if (fishFood.foodEaten(fishName) || fishFood.offScreen()) {
         fishFoods.splice(i, 1);
       }
     }
