@@ -205,10 +205,12 @@ function setup() {
   rules = new Rules(rulesImg);
   rulesRect = new RulesRect();
 
+  console.log(fishFoods);
   // Create array for fishFoods
   for (let i = 0; i < numFishFoods; i++) {
     fishFoods[i] = new FishFood(fishTank.border);
   }
+
 
   // Create a new More Food button
   moreFoodButton = new MoreFoodButton(moreFoodButtonImg);
