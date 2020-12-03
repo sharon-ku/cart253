@@ -3,8 +3,8 @@ class FoodTracker {
     this.x = undefined;
     this.y = undefined; // originally, 80
     this.length = 0;
-    this.totalLength = 156;
-    this.height = 13;
+    this.totalLength = 156*4/5;
+    this.height = 13*4/5;
     this.radius = 15; //radius of edge of rounded rectangle
     this.fill = { // lime green
       r: 219,
@@ -14,10 +14,11 @@ class FoodTracker {
     // this image shows which tracker corresponds to which fish
     this.containerImage = {
       img: foodTrackerImg,
+      // for some reason, length and height are not affecting children
       length: 236,
       height: 74,
       x: undefined,
-      // y: 50,
+      y: undefined,
     };
   }
 
