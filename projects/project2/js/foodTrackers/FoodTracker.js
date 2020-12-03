@@ -11,14 +11,13 @@ class FoodTracker {
       g: 220,
       b: 100,
     };
-    // this image shows which tracker corresponds to which fish
+    // this image shows the tracker corresponding to the fish
     this.containerImage = {
       img: foodTrackerImg,
-      // for some reason, length and height are not affecting children
-      length: 236,
-      height: 74,
-      x: undefined,
-      y: undefined,
+      xOffset: -54,
+      yOffset: -24,
+      length: 236*4/5,
+      height: 74*4/5,
     };
   }
 
@@ -26,7 +25,7 @@ class FoodTracker {
   display() {
     push();
     // display food tracker image
-    image(this.containerImage.img, this.containerImage.x, this.containerImage.y, this.containerImage.length, this.containerImage.height);
+    image(this.containerImage.img, this.x+this.containerImage.xOffset, this.y+this.containerImage.yOffset, this.containerImage.length, this.containerImage.height);
 
     // display bar that updates when fish eats food
     fill(this.fill.r, this.fill.g, this.fill.b);

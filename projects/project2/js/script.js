@@ -29,7 +29,7 @@ Background music from Mixkit.co: Smooth Like Jazz by Ajhay Stelino
 "use strict"; // because strict is good
 
 // State of program
-let state = `intro`; // other states: instructions, game, ending
+let state = `game`; // other states: instructions, game, ending
 
 // Background music
 let backgroundMusic = undefined;
@@ -64,18 +64,13 @@ let nene;
 // Stores the names of all my fishies
 let allFishNames = [`firefish`, `goby`, `nene`];
 
-// Variables used to store fish images
-let firefishImg1;
-let firefishImg2;
-let gobyImg1;
-let gobyImg2;
-let neneImg1;
-let neneImg2;
+// Stores all fish names as properties, with img1,img2,and foodTrackerImg as subproperties
+let fishImages = {
 
-// Variables used to store food tracker images
-let firefishFoodTrackerImg;
-let gobyFoodTrackerImg;
-let neneFoodTrackerImg;
+};
+
+// Anemone
+let anemone;
 
 // User circle
 let finger;
@@ -137,28 +132,19 @@ let totalNumPoops = 50;
 // --------------------------------------------------------------------------------
 
 function preload() {
-  // Load all fish images
-  // for (let i = 0; i < allFishNames.length; i++) {
-  //   let fish = allFishNames[i];
-  //   `fish`+Img1 = loadImage(`assets/images/${fish1}.png`);
-  //   `fish`+Img2 = loadImage(`assets/images/${fish2}.png`);
-  // }
-  
-  // firefish
-  firefishImg1 = loadImage(`assets/images/firefish1.png`);
-  firefishImg2 = loadImage(`assets/images/firefish2.png`);
-  // goby
-  gobyImg1 = loadImage(`assets/images/goby1.png`);
-  gobyImg2 = loadImage(`assets/images/goby2.png`);
-  // nene
-  neneImg1 = loadImage(`assets/images/nene1.png`);
-  neneImg2 = loadImage(`assets/images/nene2.png`);
+  // Load all fish images and food tracker images
+  for (let i = 0; i < allFishNames.length; i++) {
+    let fish = allFishNames[i];
 
+    // Allow fishImages.fish to have its own subproperties (which will be img1, img2, and foodTrackerImg)
+    fishImages[`${fish}`] = {};
 
-  // Load all food tracker images
-  firefishFoodTrackerImg = loadImage(`assets/images/firefishFoodTracker.png`);
-  gobyFoodTrackerImg = loadImage(`assets/images/gobyFoodTracker.png`);
-  neneFoodTrackerImg = loadImage(`assets/images/neneFoodTracker.png`);
+    // load image 1 and 2 for each fish
+    fishImages[`${fish}`].img1 = loadImage(`assets/images/${fish}1.png`);
+    fishImages[`${fish}`].img2 = loadImage(`assets/images/${fish}2.png`);
+    // load food tracker image for each fish
+    fishImages[`${fish}`].foodTrackerImg = loadImage(`assets/images/${fish}FoodTracker.png`);
+  }
 
   // Load rules image
   rulesImg = loadImage(`assets/images/rules.png`);
@@ -192,16 +178,19 @@ function setup() {
   finger = new Finger();
 
   // Create a new firefish
-  firefish = new Firefish(firefishImg1, firefishImg2);
+  firefish = new Firefish(fishImages.firefish.img1, fishImages.firefish.img2);
   fishes.push(firefish);
 
   // Create a new goby
-  goby = new Goby(gobyImg1, gobyImg2);
+  goby = new Goby(fishImages.goby.img1, fishImages.goby.img2);
   fishes.push(goby);
 
   // Create a new nene
-  nene = new Nene(neneImg1, neneImg2);
+  nene = new Nene(fishImages.nene.img1, fishImages.nene.img2);
   fishes.push(nene);
+
+  // Create a new anemone
+  anemone = new Anemone(350,380);
 
   // Create a new title
   title = new Title();
@@ -236,11 +225,11 @@ function setup() {
   moreFoodButton = new MoreFoodButton(moreFoodButtonImg);
 
   // Create a new food tracker for firefish, goby and 2 clownfish, and push them into foodTrackers array
-  let foodTrackerForFirefish = new FoodTrackerForFirefish(firefishFoodTrackerImg);
+  let foodTrackerForFirefish = new FoodTrackerForFirefish(fishImages.firefish.foodTrackerImg);
   foodTrackers.push(foodTrackerForFirefish);
-  let foodTrackerForGoby = new FoodTrackerForGoby(gobyFoodTrackerImg);
+  let foodTrackerForGoby = new FoodTrackerForGoby(fishImages.goby.foodTrackerImg);
   foodTrackers.push(foodTrackerForGoby);
-  let foodTrackerForNene = new FoodTrackerForNene(neneFoodTrackerImg);
+  let foodTrackerForNene = new FoodTrackerForNene(fishImages.nene.foodTrackerImg);
   foodTrackers.push(foodTrackerForNene);
 
   // Create a new night filter
@@ -278,6 +267,8 @@ function draw() {
   } else if (state === `ending`) {
     ending();
   }
+
+  // drawSprites();
 }
 
 // Set up background color, rocks, and sand
