@@ -191,7 +191,7 @@ function setup() {
   fishes.push(nene);
 
   // Create a new anemone
-  anemone = new Anemone(350,380);
+  anemone = new Anemone(360,345);
 
   // Create a new title
   title = new Title();
@@ -269,7 +269,7 @@ function draw() {
     ending();
   }
 
-  drawSprites();
+
 }
 
 // Set up background color, rocks, and sand
@@ -305,6 +305,9 @@ function tryMusic() {
 // --------------------------------------------------------------------------------
 
 function intro() {
+  // Draw all sprites
+  drawSprites();
+
   // Display the title
   title.display(titleFont);
 
@@ -370,6 +373,9 @@ function stayInTank(subject) {
 // --------------------------------------------------------------------------------
 
 function instructions() {
+  // Draw all sprites
+  drawSprites();
+
   // Display More Food Button
   moreFoodButton.display();
   // Display the food tracker
@@ -436,6 +442,9 @@ function mouseIsInButton(buttonName) {
 // --------------------------------------------------------------------------------
 
 function game() {
+  // Draw all sprites
+  drawSprites();
+
   // Display More Food Button
   moreFoodButton.display();
   // Change More Food Button's opacity if it is active or inactive
@@ -460,7 +469,9 @@ function game() {
   for (let i = 0; i < fishes.length; i++) {
     let fish = fishes[i];
     // Release fish food if the More Food Button is clicked and it is active
-    releaseFishFood(fish);
+    if (moreFoodButton.showFood) {
+      releaseFishFood(fish);
+    }
 
     // Fish follows finger if the fish senses the finger, or else it swims casually around the tank.
     if (fish.sensesFinger(finger)) {
@@ -482,7 +493,7 @@ function game() {
 
 // Releases pieces of food
 function releaseFishFood(fishName) {
-  if (moreFoodButton.showFood) {
+
     for (let i = fishFoods.length - 1; i >= 0; i--) {
       let fishFood = fishFoods[i];
       fishFood.move();
@@ -503,7 +514,7 @@ function releaseFishFood(fishName) {
       }
     }
   }
-}
+
 
 // Cue ending if all fishies have eaten the total number of food
 function fishAreFull() {
@@ -527,6 +538,9 @@ function fishAreFull() {
 // --------------------------------------------------------------------------------
 
 function ending() {
+  // Draw all sprites
+  drawSprites();
+
   // Make fishes poop and display fishes casually swimming
   for (let i = 0; i < fishes.length; i++) {
     let fish = fishes[i];

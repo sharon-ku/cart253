@@ -11,9 +11,9 @@ class Nene extends Fish {
     };
     this.buffer = 10; // stop moving fish when it is within a certain buffer of the finger
     // variables used for perlin noise
-    this.tx = 0;
-    this.ty = 10;
-    this.txChange = 0.025;
+    this.tx = 5;
+    this.ty = 30;
+    this.txChange = 0.010;
     this.tyChange = 0.025;
     // radius around fish where it can spot finger
     this.fieldOfVision = 350;

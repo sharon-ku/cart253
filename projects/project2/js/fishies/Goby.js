@@ -11,10 +11,10 @@ class Goby extends Fish {
     };
     this.buffer = 30; // stop moving fish when it is within a certain buffer of the finger
     // variables used for perlin noise
-    this.tx = 0;
-    this.ty = 10;
-    this.txChange = 0.025;
-    this.tyChange = 0.025;
+    this.tx = 50;
+    this.ty = 100;
+    this.txChange = 0.01;
+    this.tyChange = 0.05;
     // radius around fish where it can spot finger
     this.fieldOfVision = 350;
     // vertical distance between fish's center and fish's butt

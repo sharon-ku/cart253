@@ -64,9 +64,12 @@ class FishFood {
     }
   }
 
-  // returns true if food is close enough to fish's body to be eaten
+  // returns true if food overlaps with fish's body
   foodEaten(fishName) {
-    if ((this.x < fishName.x + fishName.length / 2) && (this.x > fishName.x - fishName.length / 2) && (this.y < fishName.y + fishName.width / 2) && (this.y > fishName.y - fishName.width / 2)) {
+    if ((this.x < fishName.x + fishName.length / 2) &&
+    (this.x > fishName.x - fishName.length / 2) &&
+    (this.y < fishName.y + fishName.width / 2) &&
+    (this.y > fishName.y - fishName.width / 2)) {
       return true;
     } else {
       return false;
