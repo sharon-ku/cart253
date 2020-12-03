@@ -14,12 +14,12 @@ class MoreFoodButton {
 
     // Position information
     this.distFromEdge = 100;
-    this.x = width-this.distFromEdge;
-    this.y = height-this.distFromEdge;
+    this.x = width - this.distFromEdge;
+    this.y = height - this.distFromEdge;
 
     // Properties relating to food
     this.timeForFood = true; // when no more food in tank, it is time for food
-    this.showFood = false;  // when user clicks More Food button, show food
+    this.showFood = false; // when user clicks More Food button, show food
   }
 
   // Display More Food Button
@@ -36,20 +36,19 @@ class MoreFoodButton {
   changeOpacity() {
     if (this.timeForFood) {
       this.tint.alpha = 255; // fully opaque
-    }
-    else {
+    } else {
       this.tint.alpha = 90; // more transparent
     }
   }
 
   // Checks if finger is hovering on More Food Button
   fingerIsOnMoreFoodButton(finger) {
-    if (finger.x < this.x+(this.size.current/2) && finger.x > this.x-(this.size.current/2)) {
-      if (finger.y < this.y+(this.size.current/2) && finger.y > this.y-(this.size.current/2)) {
-        return true;
-      }
-    }
-    else{
+    if (finger.x < this.x + (this.size.current / 2) &&
+      finger.x > this.x - (this.size.current / 2) &&
+      finger.y < this.y + (this.size.current / 2) &&
+      finger.y > this.y - (this.size.current / 2)) {
+      return true;
+    } else {
       return false;
     }
   }
@@ -58,15 +57,16 @@ class MoreFoodButton {
   hover(finger) {
     if (this.fingerIsOnMoreFoodButton(finger)) {
       this.size.current = this.size.bigger;
-    }
-    else {
+    } else {
       this.size.current = this.size.smaller;
     }
   }
 
   // If finger clicks on More Food Button while it's active, release food
   clicked(finger) {
-    if (mouseIsPressed && this.fingerIsOnMoreFoodButton(finger) && this.tint.alpha === 255) {
+    if (mouseIsPressed &&
+      this.fingerIsOnMoreFoodButton(finger) &&
+      this.tint.alpha === 255) {
       this.showFood = true; // release food
       this.timeForFood = false; // since food has been released, it's no longer time for food
     }

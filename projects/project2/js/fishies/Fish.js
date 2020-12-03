@@ -45,6 +45,9 @@ class Fish {
     this.cloacaX = 0;
     this.cloacaY = 0;
     this.vertDistBtwFishAndCloaca = undefined;
+
+    // stores whether it is time to feed anemone or not
+    this.timeToFeedAnemone = false;
   }
 
   // Fish faces direction it is swimming

@@ -19,7 +19,19 @@ class Nene extends Fish {
     this.fieldOfVision = 350;
     // vertical distance between fish's center and fish's butt
     this.vertDistBtwFishAndCloaca = 10;
+    
+    // // stores whether it is time to feed anemone or not
+    // this.timeToFeedAnemone = false;
   }
 
-
+  // Decide if it is time for the clownfish to feed the anemone
+  decideIfTimeToFeedAnemone() {
+    // It is time to feed anemone 50% of the time
+    if (random() < 0.05) {
+      this.timeToFeedAnemone = true;
+    }
+    else {
+      this.timeToFeedAnemone = false;
+    }
+  }
 }
