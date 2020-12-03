@@ -1,5 +1,6 @@
 class MoreFoodButton {
   constructor(moreFoodButtonImg) {
+    // Appearance information
     this.img = moreFoodButtonImg;
     this.size = {
       current: 120,
@@ -10,9 +11,13 @@ class MoreFoodButton {
       gray: 255,
       alpha: 255,
     };
-    this.x = 100;
-    this.y = 100;
+
+    // Position information
     this.distFromEdge = 100;
+    this.x = width-this.distFromEdge;
+    this.y = height-this.distFromEdge;
+
+    // Properties relating to food
     this.timeForFood = true; // when no more food in tank, it is time for food
     this.showFood = false;  // when user clicks More Food button, show food
   }
@@ -21,9 +26,6 @@ class MoreFoodButton {
   display() {
     push();
     imageMode(CENTER);
-    // Position of button
-    this.x = width - this.distFromEdge;
-    this.y = this.distFromEdge;
     // Display button
     tint(this.tint.gray, this.tint.alpha);
     image(this.img, this.x, this.y, this.size.current, this.size.current);
