@@ -6,9 +6,9 @@ Sharon Ku
 INTRO state & INSTRUCTIONS state:
 - The title "Hungry Fishies" is displayed with three fish (firefish, neon goby, clownfish) swimming around the tank.
 - Click the "Start" button to see the instructions (instructions state).
-- Click "Ready!" to start the animation state.
+- Click "Ready!" to start the game state.
 
-ANIMATION state:
+GAME state:
 - Bring the finger/user circle close enough to the fish for it to notice it, then the fish will follow it.
 - Click the "More Food" button to add food to the tank.
 - Try to get the fish to eat the food by guiding it with the finger.
@@ -29,7 +29,7 @@ Background music from Mixkit.co: Smooth Like Jazz by Ajhay Stelino
 "use strict"; // because strict is good
 
 // State of program
-let state = `animation`; // other states: instructions, animation, ending
+let state = `intro`; // other states: instructions, game, ending
 
 // Background music
 let backgroundMusic = undefined;
@@ -259,13 +259,13 @@ function draw() {
   // Set up background color, rocks, and sand
   setBackground();
 
-  // Setting up states: intro, instructions, animation, ending
+  // Setting up states: intro, instructions, game, ending
   if (state === `intro`) {
     intro();
   } else if (state === `instructions`) {
     instructions();
-  } else if (state === `animation`) {
-    animation();
+  } else if (state === `game`) {
+    game();
   } else if (state === `ending`) {
     ending();
   }
@@ -365,7 +365,7 @@ function stayInTank(subject) {
 //
 // INSTRUCTIONS STATE:
 // Display rules on the canvas with fish, MoreFood button, and food tracker in background.
-// Player starts the animation by clicking "Ready!" button.
+// Player starts the game by clicking "Ready!" button.
 // --------------------------------------------------------------------------------
 
 function instructions() {
@@ -405,10 +405,10 @@ function mouseClicked() {
     }
   }
 
-  // If finger clicks on Ready button, cue `animation` state
+  // If finger clicks on Ready button, cue `game` state
   if (state === `instructions`) {
     if (mouseIsInButton(readyButtonCircle)) {
-      state = `animation`;
+      state = `game`;
     }
   }
 }
@@ -425,16 +425,16 @@ function mouseIsInButton(buttonName) {
   }
 }
 
-// animation() -----------------------------------------------------------------------
+// game() -----------------------------------------------------------------------
 //
-// ANIMATION STATE:
+// game STATE:
 // Finger, firefish, food tracker, and MoreFoodButton are displayed.
 // Finger moves with mouse.
 // Fish move randomly (Perlin noise) until they spot the finger then follow it.
 // If the fish is close enough to food, it will eat it and the tracker updates.
 // --------------------------------------------------------------------------------
 
-function animation() {
+function game() {
   // Display More Food Button
   moreFoodButton.display();
   // Change More Food Button's opacity if it is active or inactive
