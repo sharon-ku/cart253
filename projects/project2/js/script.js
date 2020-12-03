@@ -29,7 +29,7 @@ Background music from Mixkit.co: Smooth Like Jazz by Ajhay Stelino
 "use strict"; // because strict is good
 
 // State of program
-let state = `game`; // other states: instructions, game, ending
+let state = `intro`; // other states: instructions, game, ending
 
 // Background music
 let backgroundMusic = undefined;
@@ -56,7 +56,7 @@ let foodTrackers = [];
 // Fishes array
 let fishes = [];
 
-// My fishes
+// My fishies
 let firefish;
 let goby;
 let nene;
@@ -170,7 +170,8 @@ function preload() {
 // --------------------------------------------------------------------------------
 
 function setup() {
-  createCanvas(1300, 800);
+  // createCanvas(1300, 800);
+  createCanvas(1280, 720);
   noCursor();
   noStroke();
 
@@ -224,7 +225,7 @@ function setup() {
   // Create a new More Food button
   moreFoodButton = new MoreFoodButton(moreFoodButtonImg);
 
-  // Create a new food tracker for firefish, goby and 2 clownfish, and push them into foodTrackers array
+  // Create a new food tracker for each fish and push the food trackers into foodTrackers array
   let foodTrackerForFirefish = new FoodTrackerForFirefish(fishImages.firefish.foodTrackerImg);
   foodTrackers.push(foodTrackerForFirefish);
   let foodTrackerForGoby = new FoodTrackerForGoby(fishImages.goby.foodTrackerImg);
@@ -268,7 +269,7 @@ function draw() {
     ending();
   }
 
-  // drawSprites();
+  drawSprites();
 }
 
 // Set up background color, rocks, and sand
@@ -428,7 +429,7 @@ function mouseIsInButton(buttonName) {
 // game() -----------------------------------------------------------------------
 //
 // game STATE:
-// Finger, firefish, food tracker, and MoreFoodButton are displayed.
+// Finger, fish, food tracker, and MoreFoodButton are displayed.
 // Finger moves with mouse.
 // Fish move randomly (Perlin noise) until they spot the finger then follow it.
 // If the fish is close enough to food, it will eat it and the tracker updates.
@@ -475,7 +476,7 @@ function game() {
   // Display and move finger
   moveAndDisplayFinger();
 
-  // Cue ending if firefish has eaten the total number of food
+  // Cue ending if all fish have eaten the total number of food
   fishAreFull();
 }
 
