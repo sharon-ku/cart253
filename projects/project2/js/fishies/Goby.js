@@ -2,8 +2,8 @@ class Goby extends Fish {
   constructor(fishImg1, fishImg2) {
     super(fishImg1, fishImg2)
     // size information
-    this.length = 130;
-    this.width = 39;
+    this.length = 108.3; //original size of image: 130
+    this.width = 32.5; //original size of image: 39
     // movement information
     this.speed = {
       casualSwimming: 6,
