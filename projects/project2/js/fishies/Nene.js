@@ -3,7 +3,7 @@ class Nene extends Fish {
     super(fishImg1, fishImg2)
     // size information
     this.length = 107;
-    this.width = 63;
+    this.width = 57;
     // movement information
     this.speed = {
       casualSwimming: 5,
