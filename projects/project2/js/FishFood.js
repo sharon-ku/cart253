@@ -65,14 +65,14 @@ class FishFood {
   }
 
   // returns true if food overlaps with fish's body
-  foodEaten(fishName) {
-    if ((this.x < fishName.x + fishName.length / 2) &&
-    (this.x > fishName.x - fishName.length / 2) &&
-    (this.y < fishName.y + fishName.width / 2) &&
-    (this.y > fishName.y - fishName.width / 2)) {
-      return true;
-    } else {
-      return false;
-    }
-  }
+  // foodEaten(fishName) {
+  //   if ((this.x < fishName.x + fishName.length / 2) &&
+  //   (this.x > fishName.x - fishName.length / 2) &&
+  //   (this.y < fishName.y + fishName.width / 2) &&
+  //   (this.y > fishName.y - fishName.width / 2)) {
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // }
 }

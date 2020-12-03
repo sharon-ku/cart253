@@ -500,8 +500,16 @@ function releaseFishFood(fishName) {
       fishFood.changeCurrent(); // let user change current with arrow keys
       fishFood.show();
 
-      // If fish eats food, add to numFoodEaten counter
-      if (fishFood.foodEaten(fishName)) {
+      // // If fish eats food, add to numFoodEaten counter
+      // if (fishFood.foodEaten(fishName)) {
+      //   fishName.numFoodEaten++;
+      //   if (fishName.numFoodEaten === totalFood) {
+      //     fishName.isFull = true;
+      //   }
+      // }
+
+      // If food overlaps with fish's body, add to numFoodEaten counter
+      if (fishName.overlapsWithFood(fishFood)) {
         fishName.numFoodEaten++;
         if (fishName.numFoodEaten === totalFood) {
           fishName.isFull = true;
@@ -509,7 +517,7 @@ function releaseFishFood(fishName) {
       }
 
       // If food item has not been consumed and goes off screen, remove food item from fishFoods array
-      if (fishFood.foodEaten(fishName) || fishFood.offScreen()) {
+      if (fishName.overlapsWithFood(fishFood) || fishFood.offScreen()) {
         fishFoods.splice(i, 1);
       }
     }

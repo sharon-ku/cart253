@@ -154,6 +154,18 @@ class Fish {
     }
   }
 
+  // Returns true if food overlaps with fish's body
+  overlapsWithFood(fishFood) {
+    if ((fishFood.x < this.x + this.length / 2) &&
+    (fishFood.x > this.x - this.length / 2) &&
+    (fishFood.y < this.y + this.width / 2) &&
+    (fishFood.y > this.y - this.width / 2)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   // Calculating position of fish's cloaca
   determineCloacaLocation() {
     // Calculating x position of cloaca
