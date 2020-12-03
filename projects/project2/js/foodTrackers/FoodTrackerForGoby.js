@@ -1,13 +1,14 @@
 class FoodTrackerForGoby extends FoodTracker {
   constructor(foodTrackerImg) {
     super(foodTrackerImg);
-    this.x = 367;
+    this.x = width-230;
+    this.y = 220;
 
     // this image shows which tracker corresponds to which fish
     this.containerImage = {
       img: foodTrackerImg,
-      x: 300,
-      y: 50,
+      x: this.x-67,
+      y: this.y-30,
     };
   }
 }

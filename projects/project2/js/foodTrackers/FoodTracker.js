@@ -1,7 +1,7 @@
 class FoodTracker {
   constructor(foodTrackerImg) {
     this.x = undefined;
-    this.y = 80;
+    this.y = undefined; // originally, 80
     this.length = 0;
     this.totalLength = 156;
     this.height = 13;
@@ -17,7 +17,7 @@ class FoodTracker {
       length: 236,
       height: 74,
       x: undefined,
-      y: undefined,
+      // y: 50,
     };
   }
 
