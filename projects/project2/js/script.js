@@ -61,6 +61,9 @@ let firefish;
 let goby;
 let nene;
 
+// Stores the names of all my fishies
+let allFishNames = [`firefish`, `goby`, `nene`];
+
 // Variables used to store fish images
 let firefishImg1;
 let firefishImg2;
@@ -135,6 +138,12 @@ let totalNumPoops = 50;
 
 function preload() {
   // Load all fish images
+  // for (let i = 0; i < allFishNames.length; i++) {
+  //   let fish = allFishNames[i];
+  //   `fish`+Img1 = loadImage(`assets/images/${fish1}.png`);
+  //   `fish`+Img2 = loadImage(`assets/images/${fish2}.png`);
+  // }
+  
   // firefish
   firefishImg1 = loadImage(`assets/images/firefish1.png`);
   firefishImg2 = loadImage(`assets/images/firefish2.png`);
