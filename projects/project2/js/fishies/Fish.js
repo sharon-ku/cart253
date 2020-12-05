@@ -23,6 +23,7 @@ class Fish {
     this.speed = {
       casualSwimming: undefined,
       followingFinger: undefined,
+      swimmingToAnemone: undefined,
     };
     this.buffer = undefined; // stop moving fish when it is within a certain buffer of the finger
 
@@ -175,13 +176,36 @@ class Fish {
     }
   }
 
+  // Decide if it is time for the clownfish to feed the anemone
+  decideIfTimeToFeedAnemone() {
+  }
+
   // If food overlaps with fish's body, add to numFoodEaten counter or feed food to anemone
-  interactsWithFood(fishFood) {
+  interactsWithFood(fishFood, anemone) {
     if (this.overlapsWithFood(fishFood)) {
-      this.numFoodEaten++;
-      if (this.numFoodEaten === totalFood) {
-        this.isFull = true;
+
+      // if it's time to feed the anemone, then make fish bring food to anemone
+      if (this.timeToFeedAnemone) {
+        this.feedAnemone(fishFood, anemone);
       }
+
+      // if not time to feed anemone, then consume food
+      else {
+        this.numFoodEaten++;
+        // check if fish is full
+        if (this.numFoodEaten === totalFood) {
+          this.isFull = true;
+        }
+
+        // if fish is a clownfish, then decide if the next food it receives will be fed to the anemone
+        if (this.isAClownfish) {
+          this.decideIfTimeToFeedAnemone();
+          console.log(this.timeToFeedAnemone);
+          console.log(this.numFoodEaten);
+        }
+      }
+
+
     }
   }
 

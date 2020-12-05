@@ -4,7 +4,7 @@ class FishFood {
     this.y = 0;
     this.vx = 0;
     this.vy = 0;
-    this.speedMax = 1.5;
+    this.speedMax = 1;
     this.speed = random(0, this.speedMax);
     this.ax = 0;
     this.ay = 0;

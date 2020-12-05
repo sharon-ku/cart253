@@ -31,7 +31,7 @@ Background music from Mixkit.co: Smooth Like Jazz by Ajhay Stelino
 "use strict"; // because strict is good
 
 // State of program
-let state = `intro`; // other states: instructions, game, ending
+let state = `game`; // other states: instructions, game, ending
 
 // Background music
 let backgroundMusic = undefined;
@@ -39,7 +39,7 @@ let backgroundMusic = undefined;
 // Variables related to fishFood
 let fishFoods = []; // fishFoods array that contains food objects
 let numFishFoods = 5; // number of fish food in the tank at once
-let totalFood = 2; // total amount of food that each fish needs to consume
+let totalFood = 15; // total amount of food that each fish needs to consume
 
 // Fonts used for title and body text
 let titleFont;
@@ -475,14 +475,8 @@ function game() {
       releaseFishFood(fish);
     }
 
-    // // Fish follows finger if the fish senses the finger, or else it swims casually around the tank.
-    // if (fish.sensesFinger(finger)) {
-    //   fish.followsFinger(finger);
-    // } else {
-    //   fish.casualSwimming(fishTank);
-    // }
-
-    // Fish follows finger if the fish senses the finger, or else it swims casually around the tank.
+    // If the fish has no food stored inside its mouth,
+    // then fish either follows finger if the fish senses the finger, or it swims casually around the tank.
     if (!fish.foodInMouth) {
       if (fish.sensesFinger(finger)) {
         fish.followsFinger(finger);
@@ -490,6 +484,7 @@ function game() {
         fish.casualSwimming(fishTank);
       }
     }
+
 
     // Display animated fish
     displayAnimatedFish(fish);
@@ -513,11 +508,12 @@ function releaseFishFood(fishName) {
 
 
       // Fish interacts with food by either eating it or feeding it to the anemone
-      fishName.interactsWithFood(fishFood);
+      fishName.interactsWithFood(fishFood, anemone);
 
       // If food item has not been consumed and goes off screen, remove food item from fishFoods array
-      if (fishName.overlapsWithFood(fishFood) || fishFood.offScreen()) {
+      if ((fishName.overlapsWithFood(fishFood) && !fishName.timeToFeedAnemone) || fishFood.offScreen()) {
         fishFoods.splice(i, 1);
+        console.log(fishFoods.length);
       }
     }
   }

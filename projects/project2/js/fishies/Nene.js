@@ -25,7 +25,10 @@ class Nene extends Fish {
     this.timeToFeedAnemone = false;
 
     // minimum distance needed between fish and anemone for fish to release food securely to anemone
-    this.distBufferToAnemone = 30;
+    this.distBufferToAnemone = {
+      x: 100,
+      y: 30,
+    }
 
     // returns true if fish is keeping food inside its mouth
     this.foodInMouth = false;
@@ -36,8 +39,9 @@ class Nene extends Fish {
 
   // Decide if it is time for the clownfish to feed the anemone
   decideIfTimeToFeedAnemone() {
+    super.decideIfTimeToFeedAnemone();
     // It is time to feed anemone 50% of the time
-    if (random() < 0.05) {
+    if (random() < 0.5) {
       this.timeToFeedAnemone = true;
     }
     else {
@@ -47,9 +51,9 @@ class Nene extends Fish {
 
   // Fish follows a series of actions to feed the anemone
   // It's a tough yet rewarding procedure!
-  feedAnemone(anemone, fishFood) {
+  feedAnemone(fishFood, anemone) {
     //  step 1: store food in mouth
-    let distBtwFishAndAnemone = dist(this.x, this.y, anemone.x, anemone.y);
+    let distBtwFishAndAnemone = dist(this.x, this.y, anemone.sprite.position.x, anemone.sprite.position.y);
     // set fish foods' position to fish's position
     fishFood.x = this.x;
     fishFood.y = this.y;
@@ -57,38 +61,51 @@ class Nene extends Fish {
 
     // step 2: once food is in fish's mouth, swim to the anemone
     // if it's already close to the anemone, then proceed to step 3
-    if (distBtwFishAndAnemone > this.distBufferToAnemone) {
-      if (this.x < anemone.x - this.distBufferToAnemone) {
-        this.vx = this.speed.SwimmingToAnemone; // swim right
-        this.scale = 1; // face right
+    if (distBtwFishAndAnemone > this.distBufferToAnemone.x) {
+      if (this.x < anemone.sprite.position.x - this.distBufferToAnemone.x) {
+        this.vx = this.speed.swimmingToAnemone; // swim right
+        // this.scale.x = 1; // face right
       }
-      else if (this.x > anemone.x + this.distBufferToAnemone) {
-        this.vx = -this.speed.SwimmingToAnemone; // swim left
-        this.scale = -1; // face left
+      else if (this.x > anemone.sprite.position.x + this.distBufferToAnemone.x) {
+        this.vx = -this.speed.swimmingToAnemone; // swim left
+        // this.scale.x = -1; // face left
       }
       else {
         this.vx = 0; // keep x position
-        this.scale = 1; // face right
+        // this.scale.x = 1; // face right
       }
 
-      if (this.y < anemone.y - this.distBufferToAnemone) {
-        this.vy = this.speed.SwimmingToAnemone; // swim down
+      if (this.y < anemone.sprite.position.y - this.distBufferToAnemone.y) {
+        this.vy = this.speed.swimmingToAnemone; // swim down
       }
-      else if (this.y > anemone.y + this.distBufferToAnemone) {
-        this.vx = -this.speed.SwimmingToAnemone; // swim left
+      else if (this.y > anemone.sprite.position.y + this.distBufferToAnemone.y) {
+        this.vx = -this.speed.swimmingToAnemone; // swim left
       }
       else {
         this.vy = 0; // keep y position
       }
-    }
 
+      this.x += this.vx;
+      this.y += this.vy;
+
+      // set direction that fish faces
+      if (this.x < anemone.sprite.position.x) {
+        this.scale.x = 1; // face right
+      }
+      else if (this.x > anemone.sprite.position.x) {
+        this.scale.x = -1; // face left
+      }
+    }
+    else {
+      this.decideIfTimeToFeedAnemone();
+    }
     // step3: let fish food float to the anemone
     // fishFood.floatsToAnemone(anemone);
 
 
 
 
-
+    // this.decideIfTimeToFeedAnemone();
   }
 
 
