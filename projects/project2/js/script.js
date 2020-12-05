@@ -31,7 +31,7 @@ Background music from Mixkit.co: Smooth Like Jazz by Ajhay Stelino
 "use strict"; // because strict is good
 
 // State of program
-let state = `game`; // other states: instructions, game, ending
+let state = `instructions`; // other states: instructions, game, ending
 
 // Background music
 let backgroundMusic = undefined;
@@ -39,7 +39,7 @@ let backgroundMusic = undefined;
 // Variables related to fishFood
 let fishFoods = []; // fishFoods array that contains food objects
 let numFishFoods = 5; // number of fish food in the tank at once
-let totalFood = 15; // total amount of food that each fish needs to consume
+let totalFood = 10; // total amount of food that each fish needs to consume
 
 // Fonts used for title and body text
 let titleFont;
@@ -70,6 +70,13 @@ let allFishNames = [`firefish`, `goby`, `nene`];
 let fishImages = {
 
 };
+
+// Stores demo fish
+let demoFish;
+
+// Stores images for demo fish (used for Instructions state)
+let demoFishImg1;
+let demoFishImg2;
 
 // Anemone
 let anemone;
@@ -128,6 +135,7 @@ let poops = [];
 // Total number of poop that the fish can release in a single swimming
 let totalNumPoops = 50;
 
+
 // setup() -----------------------------------------------------------------------
 //
 // Preload all images, music, and fonts
@@ -147,6 +155,9 @@ function preload() {
     // load food tracker image for each fish
     fishImages[`${fish}`].foodTrackerImg = loadImage(`assets/images/${fish}FoodTracker.png`);
   }
+
+  demoFishImg1 = loadImage(`assets/images/demoFish1.png`);
+  demoFishImg2 = loadImage(`assets/images/demoFish2.png`);
 
   // Load rules image
   rulesImg = loadImage(`assets/images/rules.png`);
@@ -205,6 +216,9 @@ function setup() {
   // Create a new start button + text inside start button
   startButtonCircle = new StartButtonCircle(startButtonX, startButtonY);
   startButtonText = new StartButtonText(startButtonX, startButtonY, bodyTextFont);
+
+  // Create a new demo fish
+  demoFish = new DemoFish(demoFishImg1, demoFishImg2);
 
   // Setting x and y positions for ready button
   let readyButtonX = width * 0.9;
@@ -381,21 +395,48 @@ function instructions() {
   // Display More Food Button
   moreFoodButton.display();
   // Display the food tracker
-  for (let i = 0; i < foodTrackers.length; i++) {
-    let foodTracker = foodTrackers[i];
-    foodTracker.display();
-  }
+  // for (let i = 0; i < foodTrackers.length; i++) {
+  //   let foodTracker = foodTrackers[i];
+  //   foodTracker.display();
+  // }
 
   // Display animated fishes casually swimming
-  for (let i = 0; i < fishes.length; i++) {
-    let fish = fishes[i];
-    fish.casualSwimming(fishTank);
-    displayAnimatedFish(fish);
-  }
+  // for (let i = 0; i < fishes.length; i++) {
+  //   let fish = fishes[i];
+  //   fish.casualSwimming(fishTank);
+  //   displayAnimatedFish(fish);
+  // }
 
   // Display rules and rounded rectangle behind it
   rulesRect.display();
-  rules.display();
+  // rules.display();
+
+
+
+
+  // Display text for first rule
+  push();
+  // textAlign(CENTER);
+  textAlign(LEFT);
+  fill(255);
+  textFont(bodyTextFont, 40);
+  let step1 = `Bring your finger near the fish
+to get its attention.`
+  text(step1, 100, 100);
+  pop();
+
+  // Display and move demoFish
+  demoFish.move();
+  demoFish.display();
+
+  // Display guideCircle
+  push();
+  noFill();
+  strokeWeight(10);
+  stroke(255);
+  ellipse(900, 500, 100);
+  pop();
+
 
   // Create a "ready" button that is displayed, has a hover behavior (size changes when hovering over it), and that moves randomly
   // Button is made up of a shape and a text inside it
