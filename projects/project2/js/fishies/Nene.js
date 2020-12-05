@@ -8,7 +8,7 @@ class Nene extends Fish {
     this.speed = {
       casualSwimming: 5,
       followingFinger: 1.5,
-      swimmingToAnemone: 3,
+      swimmingToAnemone: 1.5,
     };
     this.buffer = 10; // stop moving fish when it is within a certain buffer of the finger
     // variables used for perlin noise
@@ -26,8 +26,8 @@ class Nene extends Fish {
 
     // minimum distance needed between fish and anemone for fish to release food securely to anemone
     this.distBufferToAnemone = {
-      x: 100,
-      y: 30,
+      x: 50, // minimum horizontal distance
+      y: 30, // minimum vertical distance
     }
 
     // returns true if fish is keeping food inside its mouth
@@ -35,6 +35,9 @@ class Nene extends Fish {
 
     // returns true if this is a clownfish
     this.isAClownfish = true;
+
+    // returns true if fish is close enough to release food to anemone
+    this.timeToReleaseFoodToAnemone = false;
   }
 
   // Decide if it is time for the clownfish to feed the anemone
@@ -51,35 +54,48 @@ class Nene extends Fish {
 
   // Fish follows a series of actions to feed the anemone
   // It's a tough yet rewarding procedure!
-  feedAnemone(fishFood, anemone) {
+  feedAnemone(fishFood, anemone, fishName) {
+
     //  step 1: store food in mouth
     let distBtwFishAndAnemone = dist(this.x, this.y, anemone.sprite.position.x, anemone.sprite.position.y);
-    // set fish foods' position to fish's position
-    fishFood.x = this.x;
+    // console.log(distBtwFishAndAnemone);
+
+
+    // set fish foods' position to fish's mouth position
+    // and set direction that fish faces when swimming
     fishFood.y = this.y;
+
+    if (this.x < anemone.sprite.position.x) {
+      this.scale.x = 1; // face right
+      fishFood.x = this.x + this.length/2; // food on right side of body
+    }
+    else if (this.x > anemone.sprite.position.x) {
+      this.scale.x = -1; // face left
+      fishFood.x = this.x - this.length/2; // food on left side of body
+    }
+    // food is now stored in fish's mouth
     this.foodInMouth = true;
 
-    // step 2: once food is in fish's mouth, swim to the anemone
-    // if it's already close to the anemone, then proceed to step 3
-    if (distBtwFishAndAnemone > this.distBufferToAnemone.x) {
+    // step 2: once food is in fish's mouth, swim to the anemone until it is within range of releasing food
+    // calculate distance where fish can safely release food
+    let distBufferToAnemone = dist(0,0,this.distBufferToAnemone.x, this.distBufferToAnemone.y);
+
+    if (distBtwFishAndAnemone > distBufferToAnemone) {
       if (this.x < anemone.sprite.position.x - this.distBufferToAnemone.x) {
         this.vx = this.speed.swimmingToAnemone; // swim right
-        // this.scale.x = 1; // face right
       }
       else if (this.x > anemone.sprite.position.x + this.distBufferToAnemone.x) {
         this.vx = -this.speed.swimmingToAnemone; // swim left
-        // this.scale.x = -1; // face left
       }
       else {
         this.vx = 0; // keep x position
-        // this.scale.x = 1; // face right
       }
 
       if (this.y < anemone.sprite.position.y - this.distBufferToAnemone.y) {
         this.vy = this.speed.swimmingToAnemone; // swim down
       }
       else if (this.y > anemone.sprite.position.y + this.distBufferToAnemone.y) {
-        this.vx = -this.speed.swimmingToAnemone; // swim left
+        this.vx = -this.speed.swimmingToAnemone; // swim up
       }
       else {
         this.vy = 0; // keep y position
@@ -88,19 +104,15 @@ class Nene extends Fish {
       this.x += this.vx;
       this.y += this.vy;
 
-      // set direction that fish faces
-      if (this.x < anemone.sprite.position.x) {
-        this.scale.x = 1; // face right
-      }
-      else if (this.x > anemone.sprite.position.x) {
-        this.scale.x = -1; // face left
-      }
+
     }
-    else {
-      this.decideIfTimeToFeedAnemone();
+    // if fish is already close enough to the anemone, then release food to anemone
+    else if (distBtwFishAndAnemone < distBufferToAnemone + 10) {
+      // step3: let fish food float to the anemone
+      this.timeToReleaseFoodToAnemone = true;
+      // fishFood.floatsToAnemone(anemone, fish);
     }
-    // step3: let fish food float to the anemone
-    // fishFood.floatsToAnemone(anemone);
+
 
 
 

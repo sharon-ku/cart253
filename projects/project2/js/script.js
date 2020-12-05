@@ -502,13 +502,36 @@ function releaseFishFood(fishName) {
 
     for (let i = fishFoods.length - 1; i >= 0; i--) {
       let fishFood = fishFoods[i];
-      fishFood.move();
-      fishFood.changeCurrent(); // let user change current with arrow keys
+      // fishFood.move();
+      // fishFood.changeCurrent(); // let user change current with arrow keys
       fishFood.show();
 
 
       // Fish interacts with food by either eating it or feeding it to the anemone
-      fishName.interactsWithFood(fishFood, anemone);
+      fishName.interactsWithFood(fishFood, anemone, fishName);
+
+      // When anemone's position equals food's position, remove food and no longer time to feed anemone for this return
+      // also decide if next turn is time to feed anemone
+      if (fishName.isAClownfish && fishName.foodInMouth && fishFoods.length <= 1) {
+        // if (fishName.timeToReleaseFoodToAnemone) {
+        //   fishFood.floatsToAnemone(anemone);
+        // }
+        if (fishFood.x < (anemone.sprite.position.x+50) &&
+            fishFood.x > (anemone.sprite.position.x-50) &&
+            fishFood.y < (anemone.sprite.position.y+50) &&
+            fishFood.y > (anemone.sprite.position.y-50)) {
+          fishName.timeToFeedAnemone = false;
+          fishName.foodInMouth = false;
+          fishName.decideIfTimeToFeedAnemone();
+          fishFoods.splice(i, 1);
+          console.log(fishFoods.length);
+        }
+      }
+
+      else {
+        fishFood.move();
+        fishFood.changeCurrent(); // let user change current with arrow keys
+      }
 
       // If food item has not been consumed and goes off screen, remove food item from fishFoods array
       if ((fishName.overlapsWithFood(fishFood) && !fishName.timeToFeedAnemone) || fishFood.offScreen()) {

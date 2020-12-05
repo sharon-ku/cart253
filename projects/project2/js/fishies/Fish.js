@@ -181,12 +181,16 @@ class Fish {
   }
 
   // If food overlaps with fish's body, add to numFoodEaten counter or feed food to anemone
-  interactsWithFood(fishFood, anemone) {
+  interactsWithFood(fishFood, anemone, fishName) {
+    // Make sure fish stays inside the tank
+    this.stayInTank();
+
     if (this.overlapsWithFood(fishFood)) {
 
       // if it's time to feed the anemone, then make fish bring food to anemone
       if (this.timeToFeedAnemone) {
-        this.feedAnemone(fishFood, anemone);
+        this.feedAnemone(fishFood, anemone, fishName);
+        return;
       }
 
       // if not time to feed anemone, then consume food
