@@ -169,6 +169,16 @@ class Fish {
     }
   }
 
+  // If food overlaps with fish's body, add to numFoodEaten counter or feed food to anemone
+  interactsWithFood(fishFood) {
+    if (this.overlapsWithFood(fishFood)) {
+      this.numFoodEaten++;
+      if (this.numFoodEaten === totalFood) {
+        this.isFull = true;
+      }
+    }
+  }
+
   // Calculating position of fish's cloaca
   determineCloacaLocation() {
     // Calculating x position of cloaca

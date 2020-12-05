@@ -500,13 +500,15 @@ function releaseFishFood(fishName) {
       fishFood.changeCurrent(); // let user change current with arrow keys
       fishFood.show();
 
-      // If food overlaps with fish's body, add to numFoodEaten counter
-      if (fishName.overlapsWithFood(fishFood)) {
-        fishName.numFoodEaten++;
-        if (fishName.numFoodEaten === totalFood) {
-          fishName.isFull = true;
-        }
-      }
+
+      // Fish interacts with food by either eating it or feeding it to the anemone
+      // if (fishName.overlapsWithFood(fishFood)) {
+      //   fishName.numFoodEaten++;
+      //   if (fishName.numFoodEaten === totalFood) {
+      //     fishName.isFull = true;
+      //   }
+      // }
+      fishName.interactsWithFood(fishFood);
 
       // If food item has not been consumed and goes off screen, remove food item from fishFoods array
       if (fishName.overlapsWithFood(fishFood) || fishFood.offScreen()) {
