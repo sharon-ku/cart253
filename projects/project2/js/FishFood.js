@@ -11,10 +11,10 @@ class FishFood {
     this.accelerationMax = 2;
     this.accelerationX = random(-this.accelerationMax, this.accelerationMax);
     this.accelerationY = 0.5;
-    this.size = 15;
-    this.fillR = 255; // beige
-    this.fillG = 221;
-    this.fillB = 185;
+    this.size = random(10,20);
+    this.fillR = 255;
+    this.fillG = random(165, 221);
+    this.fillB = random(82, 185);
     this.fillAlpha = 255;
   }
 

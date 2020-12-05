@@ -525,6 +525,7 @@ function releaseFishFood(fishName) {
           fishName.decideIfTimeToFeedAnemone();
           fishFoods.splice(i, 1);
           console.log(fishFoods.length);
+          return;
         }
       }
 
