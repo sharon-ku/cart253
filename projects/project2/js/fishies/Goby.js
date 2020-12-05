@@ -19,6 +19,12 @@ class Goby extends Fish {
     this.fieldOfVision = 350;
     // vertical distance between fish's center and fish's butt
     this.vertDistBtwFishAndCloaca = 3;
+
+    // returns true if this is a clownfish
+    this.isAClownfish = false;
+
+    // returns true if fish is keeping food inside its mouth
+    this.foodInMouth = false;
   }
 
 }

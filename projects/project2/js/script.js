@@ -4,13 +4,14 @@ Sharon Ku
 
 
 INTRO state & INSTRUCTIONS state:
-- The title "Hungry Fishies" is displayed with three fish (firefish, neon goby, clownfish) swimming around the tank.
+- The title "Hungry Fishies" is displayed
+- Three fish (firefish, neon goby, clownfish) are swimming around the tank.
 - Click the "Start" button to see the instructions (instructions state).
 - Click "Ready!" to start the game state.
 
 GAME state:
-- Bring the finger/user circle close enough to the fish for it to notice it, then the fish will follow it.
 - Click the "More Food" button to add food to the tank.
+- Bring the finger/user circle close enough to the fish for it to notice it.
 - Try to get the fish to eat the food by guiding it with the finger.
 - Change the current direction by using the left and right arrow keys.
 - When all fish are full, the simulation ends (cue ending state).
@@ -20,7 +21,8 @@ ENDING state:
 - The fish release a little surprise from their behind.
 
 ***
-Btw I realized that the plural of fish is fish and not fishes. It's too late now.
+Btw I realized that the plural of fish is fish and not fishes.
+It's too late now.
 ***
 
 Background music from Mixkit.co: Smooth Like Jazz by Ajhay Stelino
@@ -473,11 +475,20 @@ function game() {
       releaseFishFood(fish);
     }
 
+    // // Fish follows finger if the fish senses the finger, or else it swims casually around the tank.
+    // if (fish.sensesFinger(finger)) {
+    //   fish.followsFinger(finger);
+    // } else {
+    //   fish.casualSwimming(fishTank);
+    // }
+
     // Fish follows finger if the fish senses the finger, or else it swims casually around the tank.
-    if (fish.sensesFinger(finger)) {
-      fish.followsFinger(finger);
-    } else {
-      fish.casualSwimming(fishTank);
+    if (!fish.foodInMouth) {
+      if (fish.sensesFinger(finger)) {
+        fish.followsFinger(finger);
+      } else {
+        fish.casualSwimming(fishTank);
+      }
     }
 
     // Display animated fish
@@ -502,12 +513,6 @@ function releaseFishFood(fishName) {
 
 
       // Fish interacts with food by either eating it or feeding it to the anemone
-      // if (fishName.overlapsWithFood(fishFood)) {
-      //   fishName.numFoodEaten++;
-      //   if (fishName.numFoodEaten === totalFood) {
-      //     fishName.isFull = true;
-      //   }
-      // }
       fishName.interactsWithFood(fishFood);
 
       // If food item has not been consumed and goes off screen, remove food item from fishFoods array

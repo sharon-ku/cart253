@@ -48,6 +48,12 @@ class Fish {
 
     // stores whether it is time to feed anemone or not
     this.timeToFeedAnemone = false;
+
+    // returns true if fish is keeping food inside its mouth
+    this.foodInMouth = undefined;
+
+    // returns true if this is a clownfish
+    this.isAClownfish = undefined;
   }
 
   // Fish faces direction it is swimming
