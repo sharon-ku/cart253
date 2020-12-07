@@ -83,6 +83,10 @@ let demoFishImg1;
 let demoFishImg2;
 let demoFoodTrackerImg;
 
+// Creatures (non-fish) array
+let creatures = [];
+let numSnails = 2;
+
 // Anemone
 let anemone;
 
@@ -235,7 +239,15 @@ function setup() {
   fishes.push(nene);
 
   // Create a new anemone
-  anemone = new Anemone(360,345);
+  anemone = new Anemone();
+
+  // Create the right number of snails to put into creatures array
+  for (let i=0; i<numSnails; i++) {
+    let snailX = random(0, width);
+    let snailY = random(height * 2 / 3, height - 100);
+    let snail = new Snail(snailX,snailY);
+    creatures.push(snail);
+  }
 
   // Create a new title
   title = new Title();
@@ -554,6 +566,12 @@ function mouseIsInButton(buttonName) {
 function game() {
   // Draw all sprites
   drawSprites();
+
+  // Move non-fish creatures
+  for (let i = 0; i < creatures.length; i++) {
+    let creature = creatures[i];
+    creature.move();
+  }
 
   // Display More Food Button
   moreFoodButton.display();
