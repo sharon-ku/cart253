@@ -31,10 +31,10 @@ Background music from Mixkit.co: Smooth Like Jazz by Ajhay Stelino
 "use strict"; // because strict is good
 
 // State of program
-let state = `instructions`; // other states: instructions, game, ending
+let state = `game`; // other states: instructions, game, ending
 
-// Substates of instructions:
-let instructionsState = `instructions1`; //other possible states: instructions2, instructions3, instructions4, instructions5
+// Substates of instructions: (instructions0 goes up to instructions 4)
+let instructionsState = `instructions0`;
 
 // Background music
 let backgroundMusic = undefined;
@@ -450,8 +450,11 @@ function instructions() {
   // Display instructions step
   displayInstructionsStep();
 
-  // Setting up 5 substates for instructions state
-  if (instructionsState === `instructions1`) {
+  // Setting up 5 substates for instructions state - start counting from 0
+  if (instructionsState === `instructions0`) {
+    instructions0();
+  }
+  else if (instructionsState === `instructions1`) {
     instructions1();
   }
   else if (instructionsState === `instructions2`) {
@@ -462,9 +465,6 @@ function instructions() {
   }
   else if (instructionsState === `instructions4`) {
     instructions4();
-  }
-  else if (instructionsState === `instructions5`) {
-    instructions5();
   }
 
 
