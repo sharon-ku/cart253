@@ -1,15 +1,35 @@
 class DemoFish {
-  constructor(demoFishImg1, demoFishImg2) {
+  constructor(fishImg1, fishImg2) {
+    // image information
+    this.img1 = fishImg1;
+    this.img2 = fishImg2;
+    this.currentImage = fishImg1; // Set fish's current image to first image
+    this.framesElapsed = 0;
+    this.framesBtwEachImage = 50;
+
+    // size information
+    this.length = 480;
+    this.width = 197;
+    this.scale = {
+      x: 1,
+      y: 1,
+    };
+
+    // movement information
     this.x = -100;
     this.y = height-250;
     this.xDestination = width/2-150;
-    this.img1 = demoFishImg1;
-    this.img2 = demoFishImg2;
-    this.length = 480;
-    this.height = 197;
     this.vx = 0;
     this.vy = 0;
-    this.speed = 3;
+    this.speed = {
+      casualSwimming: 3,
+      followingFinger: 1.5,
+    };
+    this.buffer = 50; // stop moving fish when it is within a certain buffer of the finger
+
+    // radius around fish where it can spot finger
+    this.fieldOfVision = 350;
+
     // circle that expands around demoFish
     this.ring = {
       // stroke information
@@ -33,13 +53,32 @@ class DemoFish {
         increaseRate: 8,
       },
     };
+
+    // set to true if it's time for fish to sense finger
+    this.timeToSenseFinger = false;
   }
 
-  // Display demo fish
+  // Fish switches between image 1 and image 2
+  switchImages() {
+    this.framesElapsed++;
+    if (this.framesElapsed === this.framesBtwEachImage) {
+      if (this.currentImage === this.img1) {
+        this.currentImage = this.img2;
+      } else {
+        this.currentImage = this.img1;
+      }
+      this.framesElapsed = 0;
+    }
+  }
+
+  // Display demoFish
   display() {
+    this.switchImages();
     push();
+    translate(this.x, this.y);
     imageMode(CENTER);
-    image(this.img1, this.x, this.y);
+    scale(this.scale.x, this.scale.y);
+    image(this.currentImage, 0, 0, this.length, this.width);
     pop();
   }
 
@@ -72,21 +111,72 @@ class DemoFish {
     this.ring.alpha.current = map(this.ring.size.current, this.ring.size.min, this.ring.size.max, this.ring.alpha.max, this.ring.alpha.min);
   }
 
+  // Returns true if finger is within the fish's field of vision
+  sensesFinger(finger) {
+    if (dist(this.x, this.y, finger.x, finger.y) < this.fieldOfVision) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
+  // The fish follows the finger
+  followsFinger(finger) {
+
+    // Calculating distance from fish to finger
+    let distX = this.x - finger.x;
+    let distY = this.y - finger.y;
+
+    // Fish's velocity changes depending on where the finger is with respect to its body
+    if (distX < -this.buffer) {
+      this.vx = this.speed.followingFinger;
+    } else if (distX > this.buffer) {
+      this.vx = -this.speed.followingFinger;
+    } else {
+      this.vx = 0; // Stop moving if the fish is within buffer of the finger
+    }
+    if (distY < 0) {
+      this.vy = this.speed.followingFinger;
+    } else if (distY > 0) {
+      this.vy = -this.speed.followingFinger;
+    }
+
+    this.x += this.vx;
+    this.y += this.vy;
+
+    // Setting the fish's direction (facing left or facing right)
+    if (this.vx > 0) {
+      this.scale.x = 1; // face right
+    } else if (this.vx < 0 || this.vx === 0) {
+      this.scale.x = -1; // face left
+    }
+  }
+
+  // If fish senses a finger near it, then it follows it
+  onTheLookoutForFinger(finger) {
+    if (this.timeToSenseFinger) {
+      if (this.sensesFinger(finger)) {
+        this.followsFinger(finger);
+      }
+    }
+  }
 
   // Move demo fish
   move() {
-    if (this.x < this.xDestination) {
-      this.vx = this.speed;
-    }
-    else {
-      this.vx = 0;
-    }
+    if (!this.timeToSenseFinger) {
+      // Update fish's x and y positions
+      this.x += this.vx;
+      this.y += this.vy;
 
-    // Move demo fish
-    demoFish.x += demoFish.vx;
-    demoFish.y += demoFish.vy;
+      if (this.x < this.xDestination) {
+        this.vx = this.speed.casualSwimming;
+      }
+      // when fish reaches its destination, it senses for the finger
+      else {
+        this.vx = 0;
+        this.timeToSenseFinger = true;
+      }
+    }
   }
 
-  // Floating demo fish
 }

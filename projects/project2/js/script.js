@@ -31,7 +31,7 @@ Background music from Mixkit.co: Smooth Like Jazz by Ajhay Stelino
 "use strict"; // because strict is good
 
 // State of program
-let state = `game`; // other states: instructions, game, ending
+let state = `instructions`; // other states: instructions, game, ending
 
 // Background music
 let backgroundMusic = undefined;
@@ -388,6 +388,8 @@ function stayInTank(subject) {
 // --------------------------------------------------------------------------------
 
 function instructions() {
+  let instructionsState = `instructions1`;
+
   // Draw all sprites
   drawSprites();
 
@@ -426,6 +428,7 @@ to get its attention.`
 
   // Display and move demoFish
   demoFish.move();
+  demoFish.onTheLookoutForFinger(finger);
 
   demoFish.displayRing();
   demoFish.display();
