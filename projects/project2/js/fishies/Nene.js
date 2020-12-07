@@ -7,8 +7,8 @@ class Nene extends Fish {
     // movement information
     this.speed = {
       casualSwimming: 5,
-      followingFinger: 1.5,
-      swimmingToAnemone: 1.5,
+      followingFinger: 1.5, //1.5
+      swimmingToAnemone: 1.5, //1.5
     };
     this.buffer = 10; // stop moving fish when it is within a certain buffer of the finger
     // variables used for perlin noise
@@ -22,7 +22,7 @@ class Nene extends Fish {
     this.vertDistBtwFishAndCloaca = 10;
 
     // stores whether it is time to feed anemone or not
-    this.timeToFeedAnemone = false;
+    this.timeToFeedAnemone = true;
 
     // minimum distance needed between fish and anemone for fish to release food securely to anemone
     this.distBufferToAnemone = {
@@ -73,8 +73,10 @@ class Nene extends Fish {
       this.scale.x = -1; // face left
       fishFood.x = this.x - this.length/2; // food on left side of body
     }
-    // food is now stored in fish's mouth
-    this.foodInMouth = true;
+    console.log(fishFood.x, fishFood.y);
+    // // food is now stored in fish's mouth
+    // this.foodInMouth = true;
+
 
     // step 2: once food is in fish's mouth, swim to the anemone until it is within range of releasing food
     // calculate distance where fish can safely release food
@@ -107,11 +109,10 @@ class Nene extends Fish {
 
     }
     // if fish is already close enough to the anemone, then release food to anemone
-    else if (distBtwFishAndAnemone < distBufferToAnemone + 10) {
-      // step3: let fish food float to the anemone
-      this.timeToReleaseFoodToAnemone = true;
-      // fishFood.floatsToAnemone(anemone, fish);
-    }
+    // else if (distBtwFishAndAnemone < distBufferToAnemone + 10) {
+    //   // step3: let fish food float to the anemone
+    //   this.timeToReleaseFoodToAnemone = true;
+    // }
 
 
 

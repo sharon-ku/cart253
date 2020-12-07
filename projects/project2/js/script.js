@@ -31,7 +31,7 @@ Background music from Mixkit.co: Smooth Like Jazz by Ajhay Stelino
 "use strict"; // because strict is good
 
 // State of program
-let state = `instructions`; // other states: instructions, game, ending
+let state = `game`; // other states: instructions, game, ending
 
 // Background music
 let backgroundMusic = undefined;
@@ -134,7 +134,6 @@ let nightFilter;
 let poops = [];
 // Total number of poop that the fish can release in a single swimming
 let totalNumPoops = 50;
-
 
 // setup() -----------------------------------------------------------------------
 //
@@ -433,16 +432,6 @@ to get its attention.`
   demoFish.increaseRingSize();
   demoFish.changeRingAlpha();
 
-  // // Display guideCircle
-  // push();
-  // noFill();
-  // strokeWeight(10);
-  // stroke(255);
-  // ellipse(900, 500, 100);
-  // pop();
-
-
-
 
   // Create a "ready" button that is displayed, has a hover behavior (size changes when hovering over it), and that moves randomly
   // Button is made up of a shape and a text inside it
@@ -532,7 +521,6 @@ function game() {
       }
     }
 
-
     // Display animated fish
     displayAnimatedFish(fish);
   }
@@ -557,34 +545,40 @@ function releaseFishFood(fishName) {
       // Fish interacts with food by either eating it or feeding it to the anemone
       fishName.interactsWithFood(fishFood, anemone, fishName);
 
-      // When anemone's position equals food's position, remove food and no longer time to feed anemone for this return
+      // When anemone's position equals food's position, remove food and set timeToFeedAnemone to false for this turn
       // also decide if next turn is time to feed anemone
       if (fishName.isAClownfish && fishName.foodInMouth && fishFoods.length <= 1) {
-        // if (fishName.timeToReleaseFoodToAnemone) {
-        //   fishFood.floatsToAnemone(anemone);
-        // }
+        // If food is close to anemone
         if (fishFood.x < (anemone.sprite.position.x+50) &&
             fishFood.x > (anemone.sprite.position.x-50) &&
             fishFood.y < (anemone.sprite.position.y+50) &&
             fishFood.y > (anemone.sprite.position.y-50)) {
-          fishName.timeToFeedAnemone = false;
-          fishName.foodInMouth = false;
-          fishName.decideIfTimeToFeedAnemone();
-          fishFoods.splice(i, 1);
-          console.log(fishFoods.length);
-          return;
+              // set timeToFeedAnemone to false for this turn
+              fishName.timeToFeedAnemone = false;
+              // food no longer in fishs' mouth
+              fishName.foodInMouth = false;
+              // remove food from fishFoods array
+              fishFoods.splice(i, 1);
+              // decide if on next turn, fish needs to feed anemone
+              fishName.decideIfTimeToFeedAnemone();
+
+              console.log(`fishFoods.length = ` +fishFoods.length);
+              // return;
         }
       }
-
+      // else let fish food move and change current with arrow keys
       else {
         fishFood.move();
         fishFood.changeCurrent(); // let user change current with arrow keys
       }
 
+
+
+
       // If food item has not been consumed and goes off screen, remove food item from fishFoods array
       if ((fishName.overlapsWithFood(fishFood) && !fishName.timeToFeedAnemone) || fishFood.offScreen()) {
         fishFoods.splice(i, 1);
-        console.log(fishFoods.length);
+        console.log(`fishFoods.length = ` +fishFoods.length);
       }
     }
   }
