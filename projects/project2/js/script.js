@@ -31,7 +31,10 @@ Background music from Mixkit.co: Smooth Like Jazz by Ajhay Stelino
 "use strict"; // because strict is good
 
 // State of program
-let state = `game`; // other states: instructions, game, ending
+let state = `instructions`; // other states: instructions, game, ending
+
+// Substates of instructions:
+let instructionsState = `instructions1`; //other possible states: instructions2, instructions3, instructions4, instructions5
 
 // Background music
 let backgroundMusic = undefined;
@@ -71,12 +74,14 @@ let fishImages = {
 
 };
 
-// Stores demo fish
+// Stores demo fish and food tracker
 let demoFish;
+let demoFoodTracker;
 
-// Stores images for demo fish (used for Instructions state)
+// Stores images for demo fish and food tracker (used for Instructions state)
 let demoFishImg1;
 let demoFishImg2;
+let demoFoodTrackerImg;
 
 // Anemone
 let anemone;
@@ -119,6 +124,29 @@ let rulesImg;
 // Rounded rectangle displayed behind the rules image
 let rulesRect;
 
+// Instructions' current step number and text
+let step = {
+  currentNumber: 0,
+  // appearance information
+  textFill: 255,
+  textSize: 40,
+  textAlign: `LEFT`,
+  // position information
+  x: 100,
+  y: 100,
+};
+let instructionsText = [
+  `Bring your finger near the fish
+to get its attention.`,
+  `Guide fish to scrumptious food.`,
+  `Click the More Food button
+to release 5 pieces of food.`,
+  `Hold left and right arrow keys to
+change water flow direction.`,
+  `When all your fishies are full,
+mission accomplished!`
+];
+
 // Ready button circle and text inside it
 let readyButtonCircle;
 let readyButtonText;
@@ -155,8 +183,12 @@ function preload() {
     fishImages[`${fish}`].foodTrackerImg = loadImage(`assets/images/${fish}FoodTracker.png`);
   }
 
+  // Load demoFish images
   demoFishImg1 = loadImage(`assets/images/demoFish1.png`);
   demoFishImg2 = loadImage(`assets/images/demoFish2.png`);
+
+  // Load demoFoodTracker image
+  demoFoodTrackerImg = loadImage(`assets/images/demoFoodTracker.png`);
 
   // Load rules image
   rulesImg = loadImage(`assets/images/rules.png`);
@@ -218,6 +250,9 @@ function setup() {
 
   // Create a new demo fish
   demoFish = new DemoFish(demoFishImg1, demoFishImg2);
+
+  // Create a new demo food tracker
+  demoFoodTracker = new DemoFoodTracker(demoFoodTrackerImg);
 
   // Setting x and y positions for ready button
   let readyButtonX = width * 0.9;
@@ -388,10 +423,10 @@ function stayInTank(subject) {
 // --------------------------------------------------------------------------------
 
 function instructions() {
-  let instructionsState = `instructions1`;
+
 
   // Draw all sprites
-  drawSprites();
+  // drawSprites();
 
   // Display More Food Button
   moreFoodButton.display();
@@ -412,20 +447,45 @@ function instructions() {
   rulesRect.display();
   // rules.display();
 
+  // Display instructions step
+  displayInstructionsStep();
+
+  // Setting up 5 substates for instructions state
+  if (instructionsState === `instructions1`) {
+    instructions1();
+  }
+  else if (instructionsState === `instructions2`) {
+    instructions2();
+  }
+  else if (instructionsState === `instructions3`) {
+    instructions3();
+  }
+  else if (instructionsState === `instructions4`) {
+    instructions4();
+  }
+  else if (instructionsState === `instructions5`) {
+    instructions5();
+  }
 
 
 
-  // Display text for first rule
+  // Display and move finger
+  moveAndDisplayFinger();
+}
+
+// Display the written instructions on top left corner of canvas
+function displayInstructionsStep() {
   push();
-  // textAlign(CENTER);
-  textAlign(LEFT);
-  fill(255);
-  textFont(bodyTextFont, 40);
-  let step1 = `Bring your finger near the fish
-to get its attention.`
-  text(step1, 100, 100);
-  pop();
+  textAlign(step.textAlign);
+  fill(step.textFill);
+  textFont(bodyTextFont, step.textSize);
 
+  text(instructionsText[step.currentNumber], step.x, step.y);
+  pop();
+}
+
+// demoFish appears from left side of screen, ring expands around fish, and then fish moves with finger when finger is close to it
+function instructions1() {
   // Display and move demoFish
   demoFish.move();
   demoFish.onTheLookoutForFinger(finger);
@@ -436,12 +496,21 @@ to get its attention.`
   demoFish.changeRingAlpha();
 
 
+}
+
+
+
+function instructions5() {
+  // set Instructions text to step number 4
+  step.currentNumber = 4;
+
+  // Show a food tracker that constantly fills up
+  demoFoodTracker.increaseBar();
+  demoFoodTracker.display();
+
   // Create a "ready" button that is displayed, has a hover behavior (size changes when hovering over it), and that moves randomly
   // Button is made up of a shape and a text inside it
   generateButton(readyButtonCircle, readyButtonText);
-
-  // Display and move finger
-  moveAndDisplayFinger();
 }
 
 // Changes states when mouse clicks on Start or Ready button
