@@ -31,7 +31,7 @@ Background music from Mixkit.co: Smooth Like Jazz by Ajhay Stelino
 "use strict"; // because strict is good
 
 // State of program
-let state = `instructions`; // other states: instructions, game, ending
+let state = `game`; // other states: instructions, game, ending
 
 // Background music
 let backgroundMusic = undefined;
