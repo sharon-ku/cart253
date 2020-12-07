@@ -185,7 +185,7 @@ class Fish {
     // Make sure fish stays inside the tank
     this.stayInTank();
 
-   //  /* ---- this code kind of works but has issues--- */
+   //  /* ---- this code kind of works but has issues (do not use this code)--- */
    //  if (this.overlapsWithFood(fishFood)) {
    //
    //   // if it's time to feed the anemone, then make fish bring food to anemone
