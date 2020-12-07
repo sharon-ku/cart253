@@ -427,15 +427,21 @@ to get its attention.`
 
   // Display and move demoFish
   demoFish.move();
-  demoFish.display();
 
-  // Display guideCircle
-  push();
-  noFill();
-  strokeWeight(10);
-  stroke(255);
-  ellipse(900, 500, 100);
-  pop();
+  demoFish.displayRing();
+  demoFish.display();
+  demoFish.increaseRingSize();
+  demoFish.changeRingAlpha();
+
+  // // Display guideCircle
+  // push();
+  // noFill();
+  // strokeWeight(10);
+  // stroke(255);
+  // ellipse(900, 500, 100);
+  // pop();
+
+
 
 
   // Create a "ready" button that is displayed, has a hover behavior (size changes when hovering over it), and that moves randomly
