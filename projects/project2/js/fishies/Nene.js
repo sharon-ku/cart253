@@ -108,17 +108,6 @@ class Nene extends Fish {
 
 
     }
-    // if fish is already close enough to the anemone, then release food to anemone
-    // else if (distBtwFishAndAnemone < distBufferToAnemone + 10) {
-    //   // step3: let fish food float to the anemone
-    //   this.timeToReleaseFoodToAnemone = true;
-    // }
-
-
-
-
-
-    // this.decideIfTimeToFeedAnemone();
   }
 
 
