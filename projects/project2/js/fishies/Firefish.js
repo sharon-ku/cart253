@@ -1,6 +1,6 @@
 class Firefish extends Fish {
   constructor(fishImg1, fishImg2) {
-    super(fishImg1, fishImg2)
+    super(fishImg1, fishImg2);
     // size information
     this.length = 160;
     this.width = 66;
@@ -20,7 +20,7 @@ class Firefish extends Fish {
 
     // radius around fish where it can spot finger
     this.fieldOfVision = 350;
-    
+
     // vertical distance between fish's center and fish's butt
     this.vertDistBtwFishAndCloaca = 10;
 

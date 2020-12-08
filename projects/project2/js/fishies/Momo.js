@@ -1,23 +1,23 @@
-class Nene extends Clownfish {
+class Momo extends Clownfish {
   constructor(fishImg1, fishImg2) {
     super(fishImg1, fishImg2);
     // size information
-    this.length = 107;
-    this.width = 57;
+    this.length = 97;
+    this.width = 50;
 
     // movement information
     this.speed = {
-      casualSwimming: 5,
+      casualSwimming: 4,
       followingFinger: 1.5,
-      swimmingToAnemone: 1,
+      swimmingToAnemone: 0.5,
     };
     this.buffer = 10; // stop moving fish when it is within a certain buffer of the finger
 
     // variables used for perlin noise
-    this.tx = 5;
-    this.ty = 30;
-    this.txChange = 0.010;
-    this.tyChange = 0.025;
+    this.tx = 50;
+    this.ty = 20;
+    this.txChange = 0.006;
+    this.tyChange = 0.050;
 
     // radius around fish where it can spot finger
     this.fieldOfVision = 350;

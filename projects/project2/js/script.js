@@ -31,7 +31,7 @@ Background music from Mixkit.co: Smooth Like Jazz by Ajhay Stelino
 "use strict"; // because strict is good
 
 // State of program
-let state = `game`; // other states: instructions, game, ending
+let state = `game`; // all possible states: intro, instructions, game, ending
 
 // Substates of instructions: (instructions0 goes up to instructions 4)
 let instructionsState = `instructions0`;
@@ -42,7 +42,7 @@ let backgroundMusic = undefined;
 // Variables related to fishFood
 let fishFoods = []; // fishFoods array that contains food objects
 let numFishFoods = 5; // number of fish food in the tank at once
-let totalFood = 10; // total amount of food that each fish needs to consume
+let totalFood = 5; // total amount of food that each fish needs to consume
 
 // This is a special food that is drawn when a clownfish needs to carry food to the anemone
 let foodToCarryToAnemone;
@@ -68,9 +68,10 @@ let fishes = [];
 let firefish;
 let goby;
 let nene;
+let momo;
 
 // Stores the names of all my fishies
-let allFishNames = [`firefish`, `goby`, `nene`];
+let allFishNames = [`firefish`, `goby`, `nene`, `momo`];
 
 // Stores all fish names as properties, with img1,img2,and foodTrackerImg as subproperties
 let fishImages = {
@@ -229,17 +230,24 @@ function setup() {
   // Create a new finger
   finger = new Finger();
 
-  // Create a new firefish
+  // ---
+  // Create 4 fishes and push to fishes array:
+  // 1- Create a new firefish
   firefish = new Firefish(fishImages.firefish.img1, fishImages.firefish.img2);
   fishes.push(firefish);
 
-  // Create a new goby
+  // 2- Create a new goby
   goby = new Goby(fishImages.goby.img1, fishImages.goby.img2);
   fishes.push(goby);
 
-  // Create a new nene
+  // 3- Create a new nene
   nene = new Nene(fishImages.nene.img1, fishImages.nene.img2);
   fishes.push(nene);
+
+  // 4- Create a new momo
+  momo = new Momo(fishImages.momo.img1, fishImages.momo.img2);
+  fishes.push(momo);
+  // ---
 
   // Create a new anemone
   anemone = new Anemone();
@@ -299,6 +307,8 @@ function setup() {
   foodTrackers.push(foodTrackerForGoby);
   let foodTrackerForNene = new FoodTrackerForNene(fishImages.nene.foodTrackerImg);
   foodTrackers.push(foodTrackerForNene);
+  let foodTrackerForMomo = new FoodTrackerForMomo(fishImages.momo.foodTrackerImg);
+  foodTrackers.push(foodTrackerForMomo);
 
   // Create a new night filter
   nightFilter = new NightFilter();
