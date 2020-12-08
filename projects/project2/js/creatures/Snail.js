@@ -15,7 +15,6 @@ class Snail extends Creature {
   move() {
     super.move();
     this.sprite.position.x += 0.5;
-    console.log(this.sprite.position.x);
   }
 
 

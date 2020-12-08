@@ -38,6 +38,13 @@ class Nene extends Fish {
 
     // returns true if fish is close enough to release food to anemone
     this.timeToReleaseFoodToAnemone = false;
+
+    // // food information (fish draws this food when it goes to feed the anemone)
+    // this.food = {
+    //   fillR: 255,
+    //   fillG: 200,
+    //   fillB: 100,
+    // }
   }
 
   // Decide if it is time for the clownfish to feed the anemone
@@ -63,22 +70,23 @@ class Nene extends Fish {
 
     // set fish foods' position to fish's mouth position
     // and set direction that fish faces when swimming
-    fishFood.y = this.y;
-
-    if (this.x < anemone.sprite.position.x) {
-      this.scale.x = 1; // face right
-      fishFood.x = this.x + this.length/2; // food on right side of body
-    }
-    else if (this.x > anemone.sprite.position.x) {
-      this.scale.x = -1; // face left
-      fishFood.x = this.x - this.length/2; // food on left side of body
-    }
-    console.log(fishFood.x, fishFood.y);
-    // // food is now stored in fish's mouth
-    // this.foodInMouth = true;
-
+    // fishFood.y = this.y;
+    //
+    // if (this.x < anemone.sprite.position.x) {
+    //   this.scale.x = 1; // face right
+    //   fishFood.x = this.x + this.length/2; // food on right side of body
+    // }
+    // else if (this.x > anemone.sprite.position.x) {
+    //   this.scale.x = -1; // face left
+    //   fishFood.x = this.x - this.length/2; // food on left side of body
+    // }
+    // console.log(fishFood.x, fishFood.y);
 
     // step 2: once food is in fish's mouth, swim to the anemone until it is within range of releasing food
+    // Make sure fish stays inside the tank
+    this.stayInTank();
+
+
     // calculate distance where fish can safely release food
     let distBufferToAnemone = dist(0,0,this.distBufferToAnemone.x, this.distBufferToAnemone.y);
 
@@ -108,6 +116,43 @@ class Nene extends Fish {
 
 
     }
+  }
+
+  // If food overlaps with fish's body, add to numFoodEaten counter or feed food to anemone
+  // Override interactsWithFood method from Fish.js
+  interactsWithFood(fishFood, anemone, fishName) {
+    // If it's time to feed anemone:
+    if (this.timeToFeedAnemone) {
+      if (!this.foodInMouth) {
+        if (this.overlapsWithFood(fishFood)) {
+          this.foodInMouth = true;
+          return true;
+        }
+      }
+      else if (this.foodInMouth) {
+        // this.feedAnemone(fishFood, anemone, fishName);
+      }
+    }
+    // If it's not time to feed anemone:
+    else if (!this.timeToFeedAnemone) {
+      // update numFoodEaten counter
+      if (this.overlapsWithFood(fishFood)) {
+        this.numFoodEaten++;
+        // check if fish is full
+        if (this.numFoodEaten === totalFood) {
+          this.isFull = true;
+        }
+
+        // decide if the next food it receives will be fed to the anemone
+        this.decideIfTimeToFeedAnemone();
+        console.log(`timeToFeedAnemone= `+ this.timeToFeedAnemone);
+        console.log(`numFoodEaten clownfish = `+ this.numFoodEaten);
+
+        return true;
+      }
+    }
+
+    return false;
   }
 
 
