@@ -50,11 +50,8 @@ class Fish {
     // stores whether it is time to feed anemone or not
     this.timeToFeedAnemone = false;
 
-    // returns true if fish is keeping food inside its mouth
+    // is true if fish is keeping food inside its mouth
     this.foodInMouth = undefined;
-
-    // returns true if this is a clownfish
-    this.isAClownfish = undefined;
   }
 
   // Fish faces direction it is swimming
@@ -167,9 +164,9 @@ class Fish {
   // Returns true if food overlaps with fish's body
   overlapsWithFood(fishFood) {
     if ((fishFood.x < this.x + this.length / 2) &&
-    (fishFood.x > this.x - this.length / 2) &&
-    (fishFood.y < this.y + this.width / 2) &&
-    (fishFood.y > this.y - this.width / 2)) {
+      (fishFood.x > this.x - this.length / 2) &&
+      (fishFood.y < this.y + this.width / 2) &&
+      (fishFood.y > this.y - this.width / 2)) {
       return true;
     } else {
       return false;
@@ -177,57 +174,20 @@ class Fish {
   }
 
   // Decide if it is time for the clownfish to feed the anemone
-  decideIfTimeToFeedAnemone() {
-  }
+  decideIfTimeToFeedAnemone() {}
 
-  // If food overlaps with fish's body, add to numFoodEaten counter or feed food to anemone
+  // If food overlaps with fish's body, add to numFoodEaten counter of fish, check if fish is full, and return true
+  // Note: if fish is clownfish, this method is overriden by its specific interactsWithFood method
   interactsWithFood(fishFood, anemone, fishName) {
-    // // Exclusive behaviour for clownfish!!!
-    // if (this.isAClownfish) {
-    //   // If it's time to feed anemone:
-    //   if (this.timeToFeedAnemone) {
-    //     if (!this.foodInMouth) {
-    //       if (this.overlapsWithFood(fishFood)) {
-    //         this.foodInMouth = true;
-    //         return true;
-    //       }
-    //     }
-    //     else if (this.foodInMouth) {
-    //       // this.feedAnemone(fishFood, anemone, fishName);
-    //     }
-    //   }
-    //   // If it's not time to feed anemone:
-    //   else if (!this.timeToFeedAnemone) {
-    //     // update numFoodEaten counter
-    //     if (this.overlapsWithFood(fishFood)) {
-    //       this.numFoodEaten++;
-    //       // check if fish is full
-    //       if (this.numFoodEaten === totalFood) {
-    //         this.isFull = true;
-    //       }
-    //
-    //       // decide if the next food it receives will be fed to the anemone
-    //       this.decideIfTimeToFeedAnemone();
-    //       console.log(`timeToFeedAnemone= `+ this.timeToFeedAnemone);
-    //       console.log(`numFoodEaten clownfish = `+ this.numFoodEaten);
-    // 
-    //       return true;
-    //     }
-    //   }
-    // }
-    //
-    //
-
-    // If fish is not a clownfish, then simply update numFoodEaten counter when fish touches food
-    if (this.overlapsWithFood(fishFood) && !this.isAClownfish) {
-        this.numFoodEaten++;
-        // check if fish is full
-        if (this.numFoodEaten === totalFood) {
-          this.isFull = true;
-        }
-        return true;
+    // If fish overlaps with food, update numFoodEaten counter
+    if (this.overlapsWithFood(fishFood)) {
+      this.numFoodEaten++;
+      // check if fish is full
+      if (this.numFoodEaten === totalFood) {
+        this.isFull = true;
+      }
+      return true;
     }
-
     return false;
   }
 

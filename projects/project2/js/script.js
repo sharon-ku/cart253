@@ -637,73 +637,37 @@ function game() {
 // Releases pieces of food
 function releaseFishFood(fishName) {
 
-    for (let i = fishFoods.length - 1; i >= 0; i--) {
-      let fishFood = fishFoods[i];
-      fishFood.move();
-      fishFood.changeCurrent(); // let user change current with arrow keys
-      fishFood.show();
+  for (let i = fishFoods.length - 1; i >= 0; i--) {
+    let fishFood = fishFoods[i];
+    fishFood.move();
+    fishFood.changeCurrent(); // let user change current with arrow keys
+    fishFood.display();
 
-
-      // If fish interacts with food by touching it, or if food goes off canvas, then remove food from fishFoods array
-      if (fishName.interactsWithFood(fishFood, anemone, fishName) || fishFood.offScreen()) {
-        fishFoods.splice(i, 1);
-      }
-
-      // If fish has food in mouth and time to feed anemone, display a special food in fish's mouth that will be carried to anemone
-      if (fishName.foodInMouth) {
-        foodToCarryToAnemone.move(fishName);
-        foodToCarryToAnemone.display();
-        if (foodToCarryToAnemone.closeToAnemone(anemone, fishName)) {
-          // set timeToFeedAnemone to false for this turn
-          fishName.timeToFeedAnemone = false;
-          // food no longer in fishs' mouth
-          fishName.foodInMouth = false;
-          // // remove food from fishFoods array
-          // fishFoods.splice(i, 1);
-          // decide if on next turn, fish needs to feed anemone
-          fishName.decideIfTimeToFeedAnemone();
-          console.log(fishName.timeToFeedAnemone);
-        }
-      }
-      // fishName.interactsWithFood(fishFood, anemone, fishName);
-
-      // When anemone's position equals food's position, remove food and set timeToFeedAnemone to false for this turn
-      // also decide if next turn is time to feed anemone
-      // if (fishName.isAClownfish && fishName.foodInMouth && fishFoods.length <= 1) {
-      //   // If food is close to anemone
-      //   if (fishFood.x < (anemone.sprite.position.x+50) &&
-      //       fishFood.x > (anemone.sprite.position.x-50) &&
-      //       fishFood.y < (anemone.sprite.position.y+50) &&
-      //       fishFood.y > (anemone.sprite.position.y-50)) {
-      //         // set timeToFeedAnemone to false for this turn
-      //         fishName.timeToFeedAnemone = false;
-      //         // food no longer in fishs' mouth
-      //         fishName.foodInMouth = false;
-      //         // remove food from fishFoods array
-      //         fishFoods.splice(i, 1);
-      //         // decide if on next turn, fish needs to feed anemone
-      //         fishName.decideIfTimeToFeedAnemone();
-      //
-      //         console.log(`fishFoods.length = ` +fishFoods.length);
-      //         // return;
-      //   }
-      // }
-      // else let fish food move and change current with arrow keys
-      // else {
-      //   fishFood.move();
-      //   fishFood.changeCurrent(); // let user change current with arrow keys
-      // }
-
-
-
-
-      // If food item has not been consumed and goes off screen, remove food item from fishFoods array
-      // if ((fishName.overlapsWithFood(fishFood) && !fishName.timeToFeedAnemone) || fishFood.offScreen()) {
-      //   fishFoods.splice(i, 1);
-      //   console.log(`fishFoods.length = ` +fishFoods.length);
-      // }
+    // If fish interacts with food by touching it, or if food goes off canvas, then remove food from fishFoods array
+    if (fishName.interactsWithFood(fishFood, anemone, fishName) || fishFood.offScreen()) {
+      fishFoods.splice(i, 1);
     }
+
+    // If fish has food in mouth and time to feed anemone, display a special food in fish's mouth that will be carried to anemone
+    if (fishName.foodInMouth) {
+      // display and move food to bring to anemone
+      foodToCarryToAnemone.move(fishName);
+      foodToCarryToAnemone.display();
+
+      // if food is close enough to anemone, reset fish's values related to feeding the anemone
+      if (foodToCarryToAnemone.closeToAnemone(anemone, fishName)) {
+        // set timeToFeedAnemone to false for this turn
+        fishName.timeToFeedAnemone = false;
+        // food no longer in fish's mouth
+        fishName.foodInMouth = false;
+        // decide if on next turn, fish needs to feed anemone
+        fishName.decideIfTimeToFeedAnemone();
+        console.log(fishName.timeToFeedAnemone);
+      }
+    }
+
   }
+}
 
 
 // Cue ending if all fishies have eaten the total number of food

@@ -4,11 +4,11 @@ class FishFood {
     this.y = 0;
     this.vx = 0;
     this.vy = 0;
-    this.speedMax = 0.2; //1
+    this.speedMax = 0.2;
     this.speed = random(0, this.speedMax);
     this.ax = 0;
     this.ay = 0;
-    this.accelerationMax = 0.5; //2
+    this.accelerationMax = 0.5;
     this.accelerationX = random(-this.accelerationMax, this.accelerationMax);
     this.accelerationY = 0.5;
     this.size = random(10,20);
@@ -18,15 +18,15 @@ class FishFood {
     this.fillAlpha = 255;
   }
 
-  // display fish food
-  show() {
+  // Display fish food
+  display() {
     push();
     fill(this.fillR, this.fillG, this.fillB, this.fillAlpha);
     ellipse(this.x, this.y, this.size);
     pop();
   }
 
-  // move fish food
+  // Move fish food
   move() {
     this.ax = this.accelerationX;
     this.ay = this.accelerationY;
@@ -55,7 +55,7 @@ class FishFood {
     }
   }
 
-  // checks if food is off screen
+  // Check if food is off screen
   offScreen() {
     if (this.y > height || this.x < 0 || this.x > width) {
       return true;

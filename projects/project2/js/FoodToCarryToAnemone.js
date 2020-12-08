@@ -1,27 +1,23 @@
+// Acknowledgment!
+// I dedicate this part of the code to Pippin for helping me think through the logic
+// He recommended I make a "special" food separate from the fishFoods array to feed the anemone
+
 class FoodToCarryToAnemone {
   constructor() {
+    // position information
     this.x = 0;
     this.y = 0;
-    this.vx = 0;
-    this.vy = 0;
-    this.speedMax = 0.2; //1
-    this.speed = random(0, this.speedMax);
-    this.ax = 0;
-    this.ay = 0;
-    this.accelerationMax = 0.5; //2
-    this.accelerationX = random(-this.accelerationMax, this.accelerationMax);
-    this.accelerationY = 0.5;
-    // this.size = random(10,20);
+    // appearance information
     this.size = 15;
     this.fillR = 255;
-    // this.fillG = random(165, 221);
-    // this.fillB = random(82, 185);
     this.fillG = 200;
     this.fillB = 200;
     this.fillAlpha = 255;
+    // acceptable distance from anemone to consider that food is overlapping with it
+    this.distBufferToAnemone = 50;
   }
 
-  // display fish food
+  // Display fish food
   display() {
     push();
     fill(this.fillR, this.fillG, this.fillB, this.fillAlpha);
@@ -29,38 +25,31 @@ class FoodToCarryToAnemone {
     pop();
   }
 
-  // if food overlaps with anemone, return true
+  // If food is close enough to be eaten by anemone, return true
   closeToAnemone(anemone, fishName) {
-      if (this.x < (anemone.sprite.position.x+50) &&
-          this.x > (anemone.sprite.position.x-50) &&
-          this.y < (anemone.sprite.position.y+50) &&
-          this.y > (anemone.sprite.position.y-50)) {
-            // // set timeToFeedAnemone to false for this turn
-            // fishName.timeToFeedAnemone = false;
-            // // food no longer in fishs' mouth
-            // fishName.foodInMouth = false;
-            // // // remove food from fishFoods array
-            // // fishFoods.splice(i, 1);
-            // // decide if on next turn, fish needs to feed anemone
-            // fishName.decideIfTimeToFeedAnemone();
-            return true;
-            // console.log(`fishFoods.length = ` +fishFoods.length);
-            // return;
-      }
-      else {
-        return false;
-      }
+    if (this.x < (anemone.sprite.position.x + this.distBufferToAnemone) &&
+      this.x > (anemone.sprite.position.x - this.distBufferToAnemone) &&
+      this.y < (anemone.sprite.position.y + this.distBufferToAnemone) &&
+      this.y > (anemone.sprite.position.y - this.distBufferToAnemone)) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
-  // set fish food to fish's mouth position + move food with fish
+  // Set fish food to fish's mouth position + move food with fish
   move(fishName) {
+    // Set y value to same y value as fish
     this.y = fishName.y;
 
+    // Set x value to fish's mouth's x position
+    // if food to left of anemone, that means fish is swimming right
     if (this.x < anemone.sprite.position.x) {
-      this.x = fishName.x + fishName.length/2; // food on right side of body
+      this.x = fishName.x + fishName.length / 2; // food on right side of body
     }
+    // else if food to right of anemone, that means fish is swimming left
     else if (this.x > anemone.sprite.position.x) {
-      this.x = fishName.x - fishName.length/2; // food on left side of body
+      this.x = fishName.x - fishName.length / 2; // food on left side of body
     }
   }
 
