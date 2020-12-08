@@ -1,20 +1,16 @@
-// Acknowledgment!
-// I dedicate this part of the code to Pippin for helping me work through the logic
-// He recommended I make a "special" food separate from the fishFoods array to feed the anemone
-
-class FoodToCarryToAnemone {
+class NenesFoodToCarryToAnemone extends FoodToCarryToAnemone{
   constructor() {
-    // position information
-    this.x = 0;
-    this.y = 0;
-    // appearance information
-    this.size = 15;
-    this.fillR = 255;
-    this.fillG = 200;
-    this.fillB = 200;
-    this.fillAlpha = 255;
-    // acceptable distance from anemone to consider that food is overlapping with it
-    this.distBufferToAnemone = 50;
+    // // position information
+    // this.x = 0;
+    // this.y = 0;
+    // // appearance information
+    // this.size = 15;
+    // this.fillR = 255;
+    // this.fillG = 200;
+    // this.fillB = 200;
+    // this.fillAlpha = 255;
+    // // acceptable distance from anemone to consider that food is overlapping with it
+    // this.distBufferToAnemone = 50;
   }
 
   // Display fish food

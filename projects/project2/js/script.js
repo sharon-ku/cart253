@@ -31,7 +31,7 @@ Background music from Mixkit.co: Smooth Like Jazz by Ajhay Stelino
 "use strict"; // because strict is good
 
 // State of program
-let state = `game`; // all possible states: intro, instructions, game, ending
+let state = `intro`; // all possible states: intro, instructions, game, ending
 
 // Substates of instructions: (instructions0 goes up to instructions 4)
 let instructionsState = `instructions0`;
@@ -53,6 +53,21 @@ let bodyTextFont;
 
 // Title text
 let title;
+
+// SOUND-RELATED VARIABLES ------------------------------------------------
+// synthesizer
+let synth;
+let synth2;
+// tracks the interval that plays note
+let interval;
+// a little song tune I made up
+let notes = [`C5`, `G4`, `E5`, `C5`, `A5`, `F4`, `F5`, `C5`, `B5`, `G4`, `G5`, `E5`, `F5`, `E5`, `D5`, `B5`];
+
+// track which note we're at
+let currentNote =0;
+// time between each note
+let noteDuration = 500;
+// -----------------------------------------------------------------
 
 // Start button circle and text inside it
 let startButtonCircle;
@@ -222,10 +237,14 @@ function preload() {
 // --------------------------------------------------------------------------------
 
 function setup() {
-  // createCanvas(1300, 800);
   createCanvas(1280, 720);
   noCursor();
   noStroke();
+  userStartAudio();
+
+  // create a new synthesizer
+  synth = new p5.PolySynth;
+  synth2 = new p5.PolySynth;
 
   // Create a new finger
   finger = new Finger();
@@ -359,14 +378,82 @@ function setBackground() {
   pop();
 }
 
+// // Try playing music if mouse is pressed
+// function mousePressed() {
+//   if (state === `intro`) {
+//     if (interval === undefined) {
+//     interval = setInterval(playNextNote, noteDuration);
+//     } else {
+//       clearInterval(interval);
+//       interval = undefined;
+//     }
+//   }
+//   else if (state === `instructions`) {
+//     tryMusic();
+//   }
+// }
+//
+// // play the next note in song tune
+// function playNextNote() {
+//   // fetch the note from the notes array
+//   let note = notes[currentNote];
+//   // play the note
+//   synth.play(note, 0.2, 0, 0.4);
+//   // move to next note in array
+//   currentNote += 1;
+//   // restart array when reach the end
+//   if (currentNote === notes.length) {
+//     currentNote = 0;
+//   }
+// }
+
 // Try playing music if mouse is pressed
 function mousePressed() {
-  tryMusic();
+  if (state === `intro`) {
+    playNextNote();
+    // if (interval === undefined) {
+    //
+    // interval = setInterval(playNextNote, noteDuration);
+    // } else {
+    //   clearInterval(interval);
+    //   interval = undefined;
+    // }
+  }
+  else if (state === `instructions`) {
+    tryMusic();
+  }
 }
+
+// play the next note in song tune
+function playNextNote() {
+  // fetch the note from the notes array
+  let note = notes[currentNote];
+  // play the note
+  // synth.play(notes[1], 0.2, 0, 1);
+  // synth2.play(notes[2], 0.2, 0, 1);
+  // // move to next note in array
+  // currentNote += 1;
+  // // restart array when reach the end
+  // if (currentNote === notes.length) {
+  //   currentNote = 0;
+  // }
+
+  for (let i = 0; i < fishes.length; i++) {
+    let fishName = fishes[i];
+    let note = notes[i];
+
+    if (fishName.overlapsWithFood(finger)) {
+      synth.play(notes[i], 0.2, 0, 1);
+    }
+  }
+}
+
 
 // Try playing music if key is pressed
 function keyPressed() {
-  tryMusic();
+  if (state === `instructions`) {
+    tryMusic();
+  }
 }
 
 // Play music if first interaction and loop it
@@ -387,6 +474,15 @@ function intro() {
 
   // Display the title
   title.display(titleFont);
+
+  // push();
+  // fill(255);
+  // textSize(height/8);
+  // textAlign(CENTER,CENTER);
+  // textFont(titleFont);
+  // text(`HUNGRY`, width/2, height/5);
+  // text(`FISHIES`, width/2, height/3);
+  // pop();
 
   // Create a "start" button
   // Button is made up of a shape and a text inside it
@@ -660,12 +756,16 @@ function releaseFishFood(fishName) {
 
     // If fish has food in mouth and time to feed anemone, display a special food in fish's mouth that will be carried to anemone
     if (fishName.foodInMouth) {
-      // display and move food to bring to anemone
-      foodToCarryToAnemone.move(fishName);
-      foodToCarryToAnemone.display();
+      // // display and move food to bring to anemone
+      // foodToCarryToAnemone.move(fishName);
+      // foodToCarryToAnemone.display();
+
+      fishName.moveSpecialFood();
+      fishName.displaySpecialFood();
 
       // if food is close enough to anemone, reset fish's values related to feeding the anemone
-      if (foodToCarryToAnemone.closeToAnemone(anemone, fishName)) {
+      // if (foodToCarryToAnemone.closeToAnemone(anemone, fishName)) {
+      if (fishName.specialFoodCloseToAnemone(anemone)) {
         // set timeToFeedAnemone to false for this turn
         fishName.timeToFeedAnemone = false;
         // food no longer in fish's mouth

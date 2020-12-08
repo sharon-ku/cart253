@@ -38,5 +38,39 @@ class Momo extends Clownfish {
     this.foodInMouth = false;
   }
 
+  interactsWithFood(fishFood, anemone, fishName) {
+    super.interactsWithFood(fishFood,anemone,fishName);
+    // If it's time to feed anemone:
+    if (this.timeToFeedAnemone) {
+      if (!this.foodInMouth) {
+        if (this.overlapsWithFood(fishFood)) {
+          this.foodInMouth = true;
+          return true;
+        }
+      }
+    }
+    // If it's not time to feed anemone:
+    else if (!this.timeToFeedAnemone) {
+      // update numFoodEaten counter
+      if (this.overlapsWithFood(fishFood)) {
+        this.numFoodEaten++;
+        // check if fish is full
+        if (this.numFoodEaten === totalFood) {
+          this.isFull = true;
+        }
+
+        // decide if the next food it receives will be fed to the anemone
+        this.decideIfTimeToFeedAnemone();
+        console.log(`Momo timeToFeedAnemone= ` + this.timeToFeedAnemone);
+        console.log(`Momo numFoodEaten = ` + this.numFoodEaten);
+
+        return true;
+      }
+    }
+
+    return false;
+
+
+  }
 
 }

@@ -7,9 +7,9 @@ class Clownfish extends Fish {
 
     // movement information
     this.speed = {
-      casualSwimming: 5,
-      followingFinger: 1.5,
-      swimmingToAnemone: 1,
+      casualSwimming: undefined,
+      followingFinger: undefined,
+      swimmingToAnemone: undefined,
     };
     this.buffer = undefined; // stop moving fish when it is within a certain buffer of the finger
 
@@ -20,7 +20,7 @@ class Clownfish extends Fish {
     this.tyChange = undefined;
 
     // radius around fish where it can spot finger
-    this.fieldOfVision = 350;
+    this.fieldOfVision = undefined;
 
     // vertical distance between fish's center and fish's butt
     this.vertDistBtwFishAndCloaca = undefined;
@@ -30,12 +30,28 @@ class Clownfish extends Fish {
 
     // minimum distance needed between fish and anemone for fish to release food securely to anemone
     this.distBufferToAnemone = {
-      x: 50, // minimum horizontal distance
-      y: 30, // minimum vertical distance
-    }
+      x: undefined, // minimum horizontal distance
+      y: undefined, // minimum vertical distance
+    };
 
     // is true if fish is keeping food inside its mouth
-    this.foodInMouth = false;
+    this.foodInMouth = undefined;
+
+    // Information on special food that clownfish draws and carries to anemone when time to feed anemone
+    this.specialFood = {
+      // position information
+      x: 0,
+      y: 0,
+      // appearance information
+      size: 30,
+      fillR: 255,
+      fillG: 200,
+      fillB: 200,
+      fillAlpha: 255,
+      // acceptable distance from anemone to consider that food is overlapping with it
+      distForAnemoneToAccept: 50,
+    };
+
   }
 
   // Decide if it is time for the clownfish to feed the anemone
@@ -61,6 +77,7 @@ class Clownfish extends Fish {
 
     // Calculate distance where fish can safely release food
     let distBufferToAnemone = dist(0, 0, this.distBufferToAnemone.x, this.distBufferToAnemone.y);
+    console.log(distBufferToAnemone);
 
     // If fish is too far away from anemone, make it swim towards anemone
     if (distBtwFishAndAnemone > distBufferToAnemone) {
@@ -101,36 +118,78 @@ class Clownfish extends Fish {
   // If food overlaps with fish's body, add to numFoodEaten counter or feed food to anemone, check if fish is full, and return true
   // Override interactsWithFood method from Fish.js
   interactsWithFood(fishFood, anemone, fishName) {
-    // If it's time to feed anemone:
-    if (this.timeToFeedAnemone) {
-      if (!this.foodInMouth) {
-        if (this.overlapsWithFood(fishFood)) {
-          this.foodInMouth = true;
-          return true;
-        }
-      }
-    }
-    // If it's not time to feed anemone:
-    else if (!this.timeToFeedAnemone) {
-      // update numFoodEaten counter
-      if (this.overlapsWithFood(fishFood)) {
-        this.numFoodEaten++;
-        // check if fish is full
-        if (this.numFoodEaten === totalFood) {
-          this.isFull = true;
-        }
-
-        // decide if the next food it receives will be fed to the anemone
-        this.decideIfTimeToFeedAnemone();
-        console.log(`timeToFeedAnemone= ` + this.timeToFeedAnemone);
-        console.log(`numFoodEaten clownfish = ` + this.numFoodEaten);
-
-        return true;
-      }
-    }
-
-    return false;
+    // // If it's time to feed anemone:
+    // if (this.timeToFeedAnemone) {
+    //   if (!this.foodInMouth) {
+    //     if (this.overlapsWithFood(fishFood)) {
+    //       this.foodInMouth = true;
+    //       return true;
+    //     }
+    //   }
+    // }
+    // // If it's not time to feed anemone:
+    // else if (!this.timeToFeedAnemone) {
+    //   // update numFoodEaten counter
+    //   if (this.overlapsWithFood(fishFood)) {
+    //     this.numFoodEaten++;
+    //     // check if fish is full
+    //     if (this.numFoodEaten === totalFood) {
+    //       this.isFull = true;
+    //     }
+    //
+    //     // decide if the next food it receives will be fed to the anemone
+    //     this.decideIfTimeToFeedAnemone();
+    //     // console.log(`timeToFeedAnemone= ` + this.timeToFeedAnemone);
+    //     // console.log(`numFoodEaten clownfish = ` + this.numFoodEaten);
+    //
+    //     return true;
+    //   }
+    // }
+    //
+    // return false;
   }
+
+  // Display fish food
+  displaySpecialFood() {
+    push();
+    fill(this.specialFood.fillR, this.specialFood.fillG, this.specialFood.fillB, this.specialFood.fillAlpha);
+    ellipse(this.specialFood.x, this.specialFood.y, this.specialFood.size);
+    pop();
+  }
+
+  // If food is close enough to be eaten by anemone, return true
+  specialFoodCloseToAnemone(anemone) {
+    if (this.specialFood.x < (anemone.sprite.position.x + this.specialFood.distForAnemoneToAccept) &&
+      this.specialFood.x > (anemone.sprite.position.x - this.specialFood.distForAnemoneToAccept) &&
+      this.specialFood.y < (anemone.sprite.position.y + this.specialFood.distForAnemoneToAccept) &&
+      this.specialFood.y > (anemone.sprite.position.y - this.specialFood.distForAnemoneToAccept)) {
+      return true;
+      console.log(`yes`);
+    } else {
+      return false;
+      console.log(`NOPE`);
+    }
+  }
+
+  // Set fish food to fish's mouth position + move food with fish
+  moveSpecialFood() {
+    // Set y value to same y value as fish
+    this.specialFood.y = this.y;
+
+    // Set x value to fish's mouth's x position
+    // if food to left of anemone, that means fish is swimming right
+    if (this.specialFood.x < anemone.sprite.position.x) {
+      this.specialFood.x = this.x + this.length / 2; // food on right side of body
+    }
+    // if (this.scale.x > 0) {
+    //   this.specialFood.x = this.x + this.length / 2; // food on right side of body
+    // }
+    // else if food to right of anemone, that means fish is swimming left
+    else {
+      this.specialFood.x = this.x - this.length / 2; // food on left side of body
+    }
+  }
+
 
 
 }
