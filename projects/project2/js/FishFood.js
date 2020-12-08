@@ -64,38 +64,4 @@ class FishFood {
     }
   }
 
-//   // once clownfish releases fish food to anemone when feeding time, food floats to anemone
-//   floatsToAnemone(anemone) {
-//     console.log(this.x, this.y, this.vx, this.vy);
-//     // make fish food move towards anemone
-//     if (this.x < anemone.sprite.position.x) {
-//       this.vx=0.5;
-//     }
-//     else if (this.x > anemone.sprite.position.x) {
-//       this.vx=-0.5;
-//     }
-//     else {
-//       this.vx = 0;
-//     }
-//
-//     if (this.y < anemone.sprite.position.y) {
-//       this.vy=0.5;
-//     }
-//     else if (this.y > anemone.sprite.position.y) {
-//       this.vy=-0.5;
-//     }
-//     else {
-//       this.vy = 0;
-//     }
-//
-//     this.x += this.vx;
-//     this.y += this.vy;
-//
-//     // // when anemone's position equals food's position, remove food and no longer time to feed anemone for this return
-//     // // also decide if next turn is time to feed anemone
-//     // if (this.x === anemone.sprite.position.x && this.y === anemone.sprite.position.y) {
-//     //   fish.timeToFeedAnemone = false;
-//     //   fish.decideIfTimeToFeedAnemone();
-//     // }
-//   }
 }
