@@ -112,7 +112,7 @@ class Clownfish extends Fish {
   // Override interactsWithFood method from Fish.js
   interactsWithFood(fishFood, anemone, fishName) {
     // If food overlaps with fish's body
-    if (this.overlapsWithFood(fishFood)) {
+    if (this.overlapsWith(fishFood)) {
       // If it's time to feed anemone and the fish does not already have a food in its mouth AND the food overlaps with the fish's body
       if (this.timeToFeedAnemone && !this.foodInMouth) {
         // then now the fish has a food in its mouth

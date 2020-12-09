@@ -31,7 +31,7 @@ Background music from Mixkit.co: Smooth Like Jazz by Ajhay Stelino
 "use strict"; // because strict is good
 
 // State of program
-let state = `game`; // all possible states: intro, instructions, game, ending
+let state = `intro`; // all possible states: intro, instructions, game, ending
 
 // Substates of instructions: (instructions0 goes up to instructions 4)
 let instructionsState = `instructions0`;
@@ -439,7 +439,7 @@ function playNextNote() {
     let fishName = fishes[i];
     let note = notes[i];
 
-    if (fishName.overlapsWithFood(finger)) {
+    if (fishName.overlapsWith(finger)) {
       synth.play(notes[i], 0.2, 0, 1);
     }
   }
@@ -605,7 +605,7 @@ function displayInstructionsStep() {
 }
 
 // demoFish appears from left side of screen, ring expands around fish, and then fish moves with finger when finger is close to it
-function instructions1() {
+function instructions0() {
   // Display and move demoFish
   demoFish.move();
   demoFish.onTheLookoutForFinger(finger);

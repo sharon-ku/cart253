@@ -161,12 +161,12 @@ class Fish {
     }
   }
 
-  // Returns true if food overlaps with fish's body
-  overlapsWithFood(fishFood) {
-    if ((fishFood.x < this.x + this.length / 2) &&
-      (fishFood.x > this.x - this.length / 2) &&
-      (fishFood.y < this.y + this.width / 2) &&
-      (fishFood.y > this.y - this.width / 2)) {
+  // Returns true if the subject overlaps with fish's body
+  overlapsWith(subject) {
+    if ((subject.x < this.x + this.length / 2) &&
+      (subject.x > this.x - this.length / 2) &&
+      (subject.y < this.y + this.width / 2) &&
+      (subject.y > this.y - this.width / 2)) {
       return true;
     } else {
       return false;
@@ -180,7 +180,7 @@ class Fish {
   // Note: if fish is clownfish, this method is overriden by its specific interactsWithFood method
   interactsWithFood(fishFood, anemone, fishName) {
     // If fish overlaps with food, update numFoodEaten counter
-    if (this.overlapsWithFood(fishFood)) {
+    if (this.overlapsWith(fishFood)) {
       this.numFoodEaten++;
       // check if fish is full
       if (this.numFoodEaten === totalFood) {
