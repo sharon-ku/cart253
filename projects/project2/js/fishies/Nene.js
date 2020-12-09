@@ -37,7 +37,6 @@ class Nene extends Clownfish {
     // is true if fish is keeping food inside its mouth
     this.foodInMouth = false;
 
-    // put here for now
     // Information on special food that clownfish draws and carries to anemone when time to feed anemone
     this.specialFood = {
       // position information

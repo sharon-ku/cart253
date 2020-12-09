@@ -313,9 +313,6 @@ function setup() {
     fishFood = new FishFood(fishTank.border);
   }
 
-  // Create a new special food that the clownfish will carry to the anemone when it's time to feed it
-  foodToCarryToAnemone = new FoodToCarryToAnemone();
-
   // Create a new More Food button
   moreFoodButton = new MoreFoodButton(moreFoodButtonImg);
 
