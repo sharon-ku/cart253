@@ -1,7 +1,7 @@
 class Anemone {
   constructor() {
-    this.x = 360;
-    this.y = 345;
+    this.x = 500; //360
+    this.y = 510; //345
     this.width = 202;
     this.height = 101;
     this.sprite = createSprite(this.x, this.y, this.width, this.height);

@@ -30,8 +30,8 @@ class Momo extends Clownfish {
 
     // minimum distance needed between fish and anemone for fish to release food securely to anemone
     this.distBufferToAnemone = {
-      x: 70, // minimum horizontal distance //50
-      y: 50, // minimum vertical distance //30
+      x: 20, // minimum horizontal distance //50
+      y: 20, // minimum vertical distance //30
     }
 
     // is true if fish is keeping food inside its mouth
@@ -43,14 +43,15 @@ class Momo extends Clownfish {
       // position information
       x: 0,
       y: 0,
+      yOffset: 0, // y distance offset from fish image's mouth position
       // appearance information
-      size: 30,
+      size: 15,
       fillR: 255,
-      fillG: 200,
-      fillB: 200,
+      fillG: 221,
+      fillB: 185,
       fillAlpha: 255,
       // acceptable distance from anemone to consider that food is overlapping with it
-      distForAnemoneToAccept: 90, //50
+      distForAnemoneToAccept: 70, //50
     };
   }
 
@@ -70,7 +71,7 @@ class Momo extends Clownfish {
     console.log(distBufferToAnemone);
 
     // If fish is too far away from anemone, make it swim towards anemone
-    if (distBtwFishAndAnemone > distBufferToAnemone) {
+    // if (distBtwFishAndAnemone > distBufferToAnemone) {
       // Update x velocity:
       // if fish is to the left of anemone
       if (this.x < anemone.sprite.position.x - this.distBufferToAnemone.x) {
@@ -92,7 +93,7 @@ class Momo extends Clownfish {
       }
       // else if fish is under anemone
       else if (this.y > anemone.sprite.position.y + this.distBufferToAnemone.y) {
-        this.vx = -this.speed.swimmingToAnemone; // swim up
+        this.vy = -this.speed.swimmingToAnemone; // swim up
       }
       // else if fish is neither over nor under anemone
       else {
@@ -103,7 +104,7 @@ class Momo extends Clownfish {
       this.x += this.vx;
       this.y += this.vy;
     }
-  }
+  // }
 
   interactsWithFood(fishFood, anemone, fishName) {
     super.interactsWithFood(fishFood,anemone,fishName);
@@ -173,16 +174,16 @@ class Momo extends Clownfish {
   moveSpecialFood() {
     super.moveSpecialFood();
     // Set y value to same y value as fish
-    this.specialFood.y = this.y;
+    this.specialFood.y = this.y + this.specialFood.yOffset;
 
     // Set x value to fish's mouth's x position
     // if food to left of anemone, that means fish is swimming right
-    if (this.specialFood.x < anemone.sprite.position.x) {
-      this.specialFood.x = this.x + this.length / 2; // food on right side of body
-    }
-    // if (this.scale.x > 0) {
+    // if (this.specialFood.x < anemone.sprite.position.x) {
     //   this.specialFood.x = this.x + this.length / 2; // food on right side of body
     // }
+    if (this.scale.x > 0) {
+      this.specialFood.x = this.x + this.length / 2; // food on right side of body
+    }
     // else if food to right of anemone, that means fish is swimming left
     else {
       this.specialFood.x = this.x - this.length / 2; // food on left side of body

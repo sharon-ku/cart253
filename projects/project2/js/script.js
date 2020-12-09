@@ -41,7 +41,7 @@ let backgroundMusic = undefined;
 
 // Variables related to fishFood
 let fishFoods = []; // fishFoods array that contains food objects
-let numFishFoods = 5; // number of fish food in the tank at once
+let numFishFoods = 10; // number of fish food in the tank at once //5
 let totalFood = 5; // total amount of food that each fish needs to consume
 
 // This is a special food that is drawn when a clownfish needs to carry food to the anemone

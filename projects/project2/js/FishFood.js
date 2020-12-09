@@ -1,7 +1,7 @@
 class FishFood {
   constructor(border) {
     this.x = random(border, width - border);
-    this.y = 0;
+    this.y = random(-200,0);
     this.vx = 0;
     this.vy = 0;
     this.speedMax = 0.2;
@@ -57,7 +57,7 @@ class FishFood {
 
   // Check if food is off screen
   offScreen() {
-    if (this.y < 0 || this.y > height || this.x < 0 || this.x > width) {
+    if (this.y > height || this.x < 0 || this.x > width) {
       return true;
     } else {
       return false;
