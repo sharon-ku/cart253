@@ -684,16 +684,8 @@ function game() {
     creature.move();
   }
 
-  // Display More Food Button
-  moreFoodButton.display();
-  // Change More Food Button's opacity if it is active or inactive
-  moreFoodButton.changeOpacity();
-  // Enlarge More Food Button if user hovers over it
-  moreFoodButton.hover(finger);
-  // If user clicks on More Food Button while it's active, release food
-  moreFoodButton.clicked(finger);
-  // Reactivate More Food Button when there is no more food on the canvas
-  moreFoodButton.reactivate(fishFoods, numFishFoods);
+  // Stores all the methods to make More Food button work
+  useMoreFoodButton();
 
   // Display food trackers and update food tracker bar every time fish eats scrumptious food
   for (let i = 0; i < foodTrackers.length; i++) {
@@ -712,47 +704,11 @@ function game() {
       releaseFishFood(fish);
     }
 
-    // If fish has food in mouth and time to feed anemone, display a special food in fish's mouth that will be carried to anemone
-    if (fish.foodInMouth) {
-      // // display and move food to bring to anemone
-      // foodToCarryToAnemone.move(fishName);
-      // foodToCarryToAnemone.display();
+    // Define what happens if fish has food stored in mouth (meaning it intends to feed anemone)
+    fishHasFoodStoredInMouth(fish);
 
-      fish.moveSpecialFood();
-      fish.displaySpecialFood();
-
-      // if food is close enough to anemone, reset fish's values related to feeding the anemone
-      // if (foodToCarryToAnemone.closeToAnemone(anemone, fishName)) {
-      if (fish.specialFoodCloseToAnemone(anemone)) {
-        // set timeToFeedAnemone to false for this turn
-        fish.timeToFeedAnemone = false;
-        // food no longer in fish's mouth
-        fish.foodInMouth = false;
-        // decide if on next turn, fish needs to feed anemone
-        fish.decideIfTimeToFeedAnemone();
-        console.log(fish.timeToFeedAnemone);
-      }
-    }
-
-
-    // If the fish has no food stored inside its mouth,
-    // then fish either follows finger if the fish senses the finger, or it swims casually around the tank.
-    if (!fish.foodInMouth) {
-      if (fish.sensesFinger(finger)) {
-        fish.followsFinger(finger);
-      } else {
-        fish.casualSwimming(fishTank);
-      }
-    }
-    else if (fish.foodInMouth) {
-      fish.feedAnemone(anemone);
-      // set the fish on a mission to feed the anemone
-      // for (let i = fishFoods.length - 1; i >= 0; i--) {
-      //   let fishFood = fishFoods[i];
-      //   fish.feedAnemone(fishFood, anemone, fish);
-      //
-      // }
-    }
+    // Define the fish's movement: either the fish follows finger, casually swims, or feeds the anemone
+    defineFishMovement(fish);
 
     // Display animated fish
     displayAnimatedFish(fish);
@@ -763,6 +719,20 @@ function game() {
 
   // Cue ending if all fish have eaten the total number of food
   fishAreFull();
+}
+
+// Stores all the methods to make More Food button work
+function useMoreFoodButton() {
+  // Display More Food Button
+  moreFoodButton.display();
+  // Change More Food Button's opacity if it is active or inactive
+  moreFoodButton.changeOpacity();
+  // Enlarge More Food Button if user hovers over it
+  moreFoodButton.hover(finger);
+  // If user clicks on More Food Button while it's active, release food
+  moreFoodButton.clicked(finger);
+  // Reactivate More Food Button when there is no more food on the canvas
+  moreFoodButton.reactivate(fishFoods, numFishFoods);
 }
 
 // Releases pieces of food
@@ -778,32 +748,47 @@ function releaseFishFood(fishName) {
     if (fishName.interactsWithFood(fishFood, anemone, fishName) || fishFood.offScreen()) {
       fishFoods.splice(i, 1);
     }
-
-    // // If fish has food in mouth and time to feed anemone, display a special food in fish's mouth that will be carried to anemone
-    // if (fishName.foodInMouth) {
-    //   // // display and move food to bring to anemone
-    //   // foodToCarryToAnemone.move(fishName);
-    //   // foodToCarryToAnemone.display();
-    //
-    //   fishName.moveSpecialFood();
-    //   fishName.displaySpecialFood();
-    //
-    //   // if food is close enough to anemone, reset fish's values related to feeding the anemone
-    //   // if (foodToCarryToAnemone.closeToAnemone(anemone, fishName)) {
-    //   if (fishName.specialFoodCloseToAnemone(anemone)) {
-    //     // set timeToFeedAnemone to false for this turn
-    //     fishName.timeToFeedAnemone = false;
-    //     // food no longer in fish's mouth
-    //     fishName.foodInMouth = false;
-    //     // decide if on next turn, fish needs to feed anemone
-    //     fishName.decideIfTimeToFeedAnemone();
-    //     console.log(fishName.timeToFeedAnemone);
-    //   }
-    // }
-
   }
 }
 
+// If fish has food stored in mouth (meaning it intends to feed anemone), display a special food in fish's mouth that will be carried to anemone, and once fish is done feeding anemone, reset variables related to feeding fish
+function fishHasFoodStoredInMouth(fish) {
+  if (fish.foodInMouth) {
+    // fish draws a special food where its mouth is, displays it, and moves this special food to bring to anemone
+    fish.moveSpecialFood();
+    fish.displaySpecialFood();
+
+    // if food is close enough to anemone, reset fish's variables related to feeding the anemone
+    if (fish.specialFoodCloseToAnemone(anemone)) {
+      // set timeToFeedAnemone to false for this turn
+      fish.timeToFeedAnemone = false;
+      // food no longer in fish's mouth
+      fish.foodInMouth = false;
+      // decide if on next turn, fish needs to feed anemone
+      fish.decideIfTimeToFeedAnemone();
+      console.log(fish.timeToFeedAnemone);
+    }
+  }
+}
+
+// Define the fish's movement: either the fish follows finger, casually swims, or feeds the anemone
+function defineFishMovement(fish) {
+  // If the fish has no food stored inside its mouth,
+  if (!fish.foodInMouth) {
+    // then fish either follows finger if the fish senses the finger
+    if (fish.sensesFinger(finger)) {
+      fish.followsFinger(finger);
+    }
+    // or else fish swims casually around the tank
+    else {
+      fish.casualSwimming(fishTank);
+    }
+  }
+  // Else if fish has food stored in mouth, bring food to feed anemone
+  else if (fish.foodInMouth) {
+    fish.feedAnemone(anemone);
+  }
+}
 
 // Cue ending if all fishies have eaten the total number of food
 function fishAreFull() {
