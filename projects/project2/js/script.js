@@ -44,8 +44,10 @@ let fishFoods = []; // fishFoods array that contains food objects
 let numFishFoods = 10; // number of fish food in the tank at once //5
 let totalFood = 5; // total amount of food that each fish needs to consume
 
-// This is a special food that is drawn when a clownfish needs to carry food to the anemone
-let foodToCarryToAnemone;
+// Variables related to demoFood
+let demoFoods = []; // fishFoods array that contains food objects
+let numDemoFoods = 5; // number of fish food in the tank at once //5
+// let totalFood = 5; // total amount of food that each fish needs to consume
 
 // Fonts used for title and body text
 let titleFont;
@@ -93,15 +95,6 @@ let fishImages = {
 
 };
 
-// Stores demo fish and food tracker
-let demoFish;
-let demoFoodTracker;
-
-// Stores images for demo fish and food tracker (used for Instructions state)
-let demoFishImg1;
-let demoFishImg2;
-let demoFoodTrackerImg;
-
 // Creatures (non-fish) array
 let creatures = [];
 let numSnails = 2;
@@ -111,10 +104,6 @@ let anemone;
 
 // User circle
 let finger;
-
-// More Food button
-let moreFoodButton;
-let moreFoodButtonImg;
 
 // Background color and elements (rocks and sand)
 let bg = {
@@ -162,17 +151,31 @@ let instructionsText = [
   `Bring your finger near the fish
 to get its attention.`,
   `Guide fish to scrumptious food.`,
-  `Click the More Food button
-to release 5 pieces of food.`,
-  `Hold left and right arrow keys to
-change water flow direction.`,
-  `When all your fishies are full,
+  `*Tip* Hold down the left and right arrow keys to
+change the water flow direction.`,
+  `When all your food trackers are full,
 mission accomplished!`
 ];
+
+// Stores demo fish and food tracker
+let demoFish;
+let demoFoodTracker;
+
+// Stores demo left and right arrow keys
+let demoArrowKeys = [];
+
+// Stores images for demo fish and food tracker (used for Instructions state)
+let demoFishImg1;
+let demoFishImg2;
+let demoFoodTrackerImg;
 
 // Ready button circle and text inside it
 let readyButtonCircle;
 let readyButtonText;
+
+// More Food button
+let moreFoodButton;
+let moreFoodButtonImg;
 
 // End poem
 let yLocationOfFirstLine = 210;
@@ -296,6 +299,11 @@ function setup() {
   // Create a new demo food tracker
   demoFoodTracker = new DemoFoodTracker(demoFoodTrackerImg);
 
+  // Create new demo left and right arrow keys
+  let demoLeftArrowKey = new DemoLeftArrowKey();
+  let demoRightArrowKey = new DemoRightArrowKey();
+  demoArrowKeys.push(demoLeftArrowKey, demoRightArrowKey);
+
   // Setting x and y positions for ready button
   let readyButtonX = width * 0.9;
   let readyButtonY = height * 0.8;
@@ -311,6 +319,12 @@ function setup() {
   for (let i = 0; i < numFishFoods; i++) {
     let fishFood = fishFoods[i];
     fishFood = new FishFood(fishTank.border);
+  }
+
+  // Create array for demoFoods (only used in Instructions state)
+  for (let i = 0; i < numDemoFoods; i++) {
+    let demoFood = demoFoods[i];
+    demoFood = new DemoFood(fishTank.border);
   }
 
   // Create a new More Food button
@@ -549,7 +563,7 @@ function instructions() {
   // drawSprites();
 
   // Display More Food Button
-  moreFoodButton.display();
+  // moreFoodButton.display();
   // Display the food tracker
   // for (let i = 0; i < foodTrackers.length; i++) {
   //   let foodTracker = foodTrackers[i];
@@ -583,11 +597,6 @@ function instructions() {
   else if (instructionsState === `instructions3`) {
     instructions3();
   }
-  else if (instructionsState === `instructions4`) {
-    instructions4();
-  }
-
-
 
   // Display and move finger
   moveAndDisplayFinger();
@@ -614,15 +623,105 @@ function instructions0() {
   demoFish.display();
   demoFish.increaseRingSize();
   demoFish.changeRingAlpha();
-
-
 }
 
+function instructions1() {
+  step.currentNumber = 1;
+
+  if (demoFoods.length === 0) {
+
+    // Create new fishFoods in array
+    for (let i = 0; i < numDemoFoods; i++) {
+      demoFoods[i] = new DemoFood(fishTank.border);
+    }
+  }
 
 
-function instructions5() {
-  // set Instructions text to step number 4
-  step.currentNumber = 4;
+  // Display and move demoFish
+  demoFish.move();
+  demoFish.onTheLookoutForFinger(finger);
+  demoFish.display();
+
+  // Display food, move it, change current, and update number of food fish ate
+  for (let i = 0; i<demoFoods.length; i++) {
+    let demoFood = demoFoods[i];
+    demoFood.move();
+    demoFood.changeCurrent(); // let user change current with arrow keys
+    demoFood.display();
+
+    // Update how many pieces of food fish has eaten
+    demoFish.updateNumFoodEaten(demoFood);
+  }
+  // Release demoFoods from top of tank
+  releaseDemoFood(demoFish);
+
+  if (demoFish.numFoodEaten >= 10) {
+    instructionsState = `instructions2`;
+  }
+}
+
+// Releases pieces of demo food
+function releaseDemoFood(demoFish) {
+
+  for (let i = demoFoods.length - 1; i >= 0; i--) {
+    let demoFood = demoFoods[i];
+    demoFood.move();
+    demoFood.changeCurrent(); // let user change current with arrow keys
+    demoFood.display();
+
+    // If fish interacts with food by touching it, or if food goes off canvas, then remove food from fishFoods array
+    if (demoFish.overlapsWith(demoFood) || demoFood.offScreen()) {
+      demoFoods.splice(i, 1);
+    }
+  }
+}
+
+function instructions2() {
+  // set Instructions text to step number 2
+  step.currentNumber = 2;
+
+  // display left and right arrow keys and change their alpha if key is held down
+  for (let i = 0; i < demoArrowKeys.length; i++) {
+    let demoArrowKey = demoArrowKeys[i];
+    demoArrowKey.changeAlpha();
+    demoArrowKey.display();
+  }
+
+  // if no more food in demoFoods array, refill it
+  if (demoFoods.length === 0) {
+    // Create new fishFoods in array
+    for (let i = 0; i < numDemoFoods; i++) {
+      demoFoods[i] = new DemoFood(fishTank.border);
+    }
+  }
+
+  // Display and move demoFish
+  demoFish.move();
+  demoFish.onTheLookoutForFinger(finger);
+  demoFish.display();
+
+  // Display food, move it, change current, and update number of food fish ate
+  for (let i = 0; i < demoFoods.length; i++) {
+    let demoFood = demoFoods[i];
+    demoFood.move();
+    demoFood.changeCurrent(); // let user change current with arrow keys
+    demoFood.display();
+
+    // Update how many pieces of food fish has eaten
+    demoFish.updateNumFoodEaten(demoFood);
+  }
+
+  // Release demoFoods from top of tank
+  releaseDemoFood(demoFish);
+
+  if (demoFish.numFoodEaten >= 20) {
+    instructionsState = `instructions3`;
+  }
+}
+
+function instructions3() {
+  // Set Instructions text to step number 3
+  step.currentNumber = 3;
 
   // Show a food tracker that constantly fills up
   demoFoodTracker.increaseBar();
@@ -652,6 +751,7 @@ function mouseClicked() {
 
 // Checks if finger's position is inside a button
 function mouseIsInButton(buttonName) {
+
   if (mouseX < buttonName.x + (buttonName.size / 2) &&
     mouseX > buttonName.x - (buttonName.size / 2) &&
     mouseY < buttonName.y + (buttonName.size / 2) &&

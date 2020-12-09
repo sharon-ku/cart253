@@ -9,7 +9,8 @@ class DemoFish {
 
     // size information
     this.length = 480;
-    this.width = 197;
+    this.height = 197;
+    this.heightOffset = 50; // to account for firefish's dorsal (top) fin
     this.scale = {
       x: 1,
       y: 1,
@@ -18,17 +19,17 @@ class DemoFish {
     // movement information
     this.x = -100;
     this.y = height-250;
-    this.xDestination = width/2-150;
+    this.xDestination = height/2-150;
     this.vx = 0;
     this.vy = 0;
     this.speed = {
       casualSwimming: 3,
-      followingFinger: 1.5,
+      followingFinger: 2,
     };
     this.buffer = 50; // stop moving fish when it is within a certain buffer of the finger
 
     // radius around fish where it can spot finger
-    this.fieldOfVision = 350;
+    this.fieldOfVision = 400;
 
     // circle that expands around demoFish
     this.ring = {
@@ -56,6 +57,9 @@ class DemoFish {
 
     // set to true if it's time for fish to sense finger
     this.timeToSenseFinger = false;
+
+    // tracks how many food the fish has eaten
+    this.numFoodEaten = 0;
   }
 
   // Fish switches between image 1 and image 2
@@ -78,7 +82,7 @@ class DemoFish {
     translate(this.x, this.y);
     imageMode(CENTER);
     scale(this.scale.x, this.scale.y);
-    image(this.currentImage, 0, 0, this.length, this.width);
+    image(this.currentImage, 0, 0, this.length, this.height);
     pop();
   }
 
@@ -122,7 +126,6 @@ class DemoFish {
 
   // The fish follows the finger
   followsFinger(finger) {
-
     // Calculating distance from fish to finger
     let distX = this.x - finger.x;
     let distY = this.y - finger.y;
@@ -157,6 +160,12 @@ class DemoFish {
     if (this.timeToSenseFinger) {
       if (this.sensesFinger(finger)) {
         this.followsFinger(finger);
+
+        if (instructionsState === `instructions0`) {
+          if (this.overlapsWith(finger)) {
+            instructionsState = `instructions1`;
+          }
+        }
       }
     }
   }
@@ -176,6 +185,24 @@ class DemoFish {
         this.vx = 0;
         this.timeToSenseFinger = true;
       }
+    }
+  }
+
+  // Returns true if the subject overlaps with fish's body
+  overlapsWith(subject) {
+    if ((subject.x < this.x + this.length / 2) &&
+      (subject.x > this.x - this.length / 2) &&
+      (subject.y < this.y + this.height / 2) &&
+      (subject.y > this.y - this.height / 2 + this.heightOffset)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  updateNumFoodEaten(demoFood) {
+    if (this.overlapsWith(demoFood)) {
+      this.numFoodEaten += 1;
     }
   }
 
