@@ -57,7 +57,7 @@ class FishFood {
 
   // Check if food is off screen
   offScreen() {
-    if (this.y > height || this.x < 0 || this.x > width) {
+    if (this.y < 0 || this.y > height || this.x < 0 || this.x > width) {
       return true;
     } else {
       return false;

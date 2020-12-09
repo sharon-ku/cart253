@@ -31,7 +31,7 @@ Background music from Mixkit.co: Smooth Like Jazz by Ajhay Stelino
 "use strict"; // because strict is good
 
 // State of program
-let state = `intro`; // all possible states: intro, instructions, game, ending
+let state = `game`; // all possible states: intro, instructions, game, ending
 
 // Substates of instructions: (instructions0 goes up to instructions 4)
 let instructionsState = `instructions0`;
@@ -252,12 +252,12 @@ function setup() {
   // ---
   // Create 4 fishes and push to fishes array:
   // 1- Create a new firefish
-  firefish = new Firefish(fishImages.firefish.img1, fishImages.firefish.img2);
-  fishes.push(firefish);
+  // firefish = new Firefish(fishImages.firefish.img1, fishImages.firefish.img2);
+  // fishes.push(firefish);
 
   // 2- Create a new goby
-  goby = new Goby(fishImages.goby.img1, fishImages.goby.img2);
-  fishes.push(goby);
+  // goby = new Goby(fishImages.goby.img1, fishImages.goby.img2);
+  // fishes.push(goby);
 
   // 3- Create a new nene
   nene = new Nene(fishImages.nene.img1, fishImages.nene.img2);
@@ -712,6 +712,29 @@ function game() {
       releaseFishFood(fish);
     }
 
+    // If fish has food in mouth and time to feed anemone, display a special food in fish's mouth that will be carried to anemone
+    if (fish.foodInMouth) {
+      // // display and move food to bring to anemone
+      // foodToCarryToAnemone.move(fishName);
+      // foodToCarryToAnemone.display();
+
+      fish.moveSpecialFood();
+      fish.displaySpecialFood();
+
+      // if food is close enough to anemone, reset fish's values related to feeding the anemone
+      // if (foodToCarryToAnemone.closeToAnemone(anemone, fishName)) {
+      if (fish.specialFoodCloseToAnemone(anemone)) {
+        // set timeToFeedAnemone to false for this turn
+        fish.timeToFeedAnemone = false;
+        // food no longer in fish's mouth
+        fish.foodInMouth = false;
+        // decide if on next turn, fish needs to feed anemone
+        fish.decideIfTimeToFeedAnemone();
+        console.log(fish.timeToFeedAnemone);
+      }
+    }
+
+
     // If the fish has no food stored inside its mouth,
     // then fish either follows finger if the fish senses the finger, or it swims casually around the tank.
     if (!fish.foodInMouth) {
@@ -722,11 +745,13 @@ function game() {
       }
     }
     else if (fish.foodInMouth) {
+      fish.feedAnemone(anemone);
       // set the fish on a mission to feed the anemone
-      for (let i = fishFoods.length - 1; i >= 0; i--) {
-        let fishFood = fishFoods[i];
-        fish.feedAnemone(fishFood, anemone, fish);
-      }
+      // for (let i = fishFoods.length - 1; i >= 0; i--) {
+      //   let fishFood = fishFoods[i];
+      //   fish.feedAnemone(fishFood, anemone, fish);
+      //
+      // }
     }
 
     // Display animated fish
@@ -754,27 +779,27 @@ function releaseFishFood(fishName) {
       fishFoods.splice(i, 1);
     }
 
-    // If fish has food in mouth and time to feed anemone, display a special food in fish's mouth that will be carried to anemone
-    if (fishName.foodInMouth) {
-      // // display and move food to bring to anemone
-      // foodToCarryToAnemone.move(fishName);
-      // foodToCarryToAnemone.display();
-
-      fishName.moveSpecialFood();
-      fishName.displaySpecialFood();
-
-      // if food is close enough to anemone, reset fish's values related to feeding the anemone
-      // if (foodToCarryToAnemone.closeToAnemone(anemone, fishName)) {
-      if (fishName.specialFoodCloseToAnemone(anemone)) {
-        // set timeToFeedAnemone to false for this turn
-        fishName.timeToFeedAnemone = false;
-        // food no longer in fish's mouth
-        fishName.foodInMouth = false;
-        // decide if on next turn, fish needs to feed anemone
-        fishName.decideIfTimeToFeedAnemone();
-        console.log(fishName.timeToFeedAnemone);
-      }
-    }
+    // // If fish has food in mouth and time to feed anemone, display a special food in fish's mouth that will be carried to anemone
+    // if (fishName.foodInMouth) {
+    //   // // display and move food to bring to anemone
+    //   // foodToCarryToAnemone.move(fishName);
+    //   // foodToCarryToAnemone.display();
+    //
+    //   fishName.moveSpecialFood();
+    //   fishName.displaySpecialFood();
+    //
+    //   // if food is close enough to anemone, reset fish's values related to feeding the anemone
+    //   // if (foodToCarryToAnemone.closeToAnemone(anemone, fishName)) {
+    //   if (fishName.specialFoodCloseToAnemone(anemone)) {
+    //     // set timeToFeedAnemone to false for this turn
+    //     fishName.timeToFeedAnemone = false;
+    //     // food no longer in fish's mouth
+    //     fishName.foodInMouth = false;
+    //     // decide if on next turn, fish needs to feed anemone
+    //     fishName.decideIfTimeToFeedAnemone();
+    //     console.log(fishName.timeToFeedAnemone);
+    //   }
+    // }
 
   }
 }
