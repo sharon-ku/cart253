@@ -4,13 +4,13 @@ class FishFood {
     this.y = random(-200,0);
     this.vx = 0;
     this.vy = 0;
-    this.speedMax = 0.2;
+    this.speedMax = 0.1;
     this.speed = random(0, this.speedMax);
     this.ax = 0;
     this.ay = 0;
     this.accelerationMax = 0.5;
     this.accelerationX = random(-this.accelerationMax, this.accelerationMax);
-    this.accelerationY = 0.5;
+    this.accelerationY = 0.3;
     this.size = random(10,20);
     this.fillR = 255;
     this.fillG = random(165, 221);

@@ -252,12 +252,12 @@ function setup() {
   // ---
   // Create 4 fishes and push to fishes array:
   // 1- Create a new firefish
-  // firefish = new Firefish(fishImages.firefish.img1, fishImages.firefish.img2);
-  // fishes.push(firefish);
+  firefish = new Firefish(fishImages.firefish.img1, fishImages.firefish.img2);
+  fishes.push(firefish);
 
   // 2- Create a new goby
-  // goby = new Goby(fishImages.goby.img1, fishImages.goby.img2);
-  // fishes.push(goby);
+  goby = new Goby(fishImages.goby.img1, fishImages.goby.img2);
+  fishes.push(goby);
 
   // 3- Create a new nene
   nene = new Nene(fishImages.nene.img1, fishImages.nene.img2);

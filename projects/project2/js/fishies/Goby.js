@@ -8,7 +8,7 @@ class Goby extends Fish {
     // movement information
     this.speed = {
       casualSwimming: 6,
-      followingFinger: 2,
+      followingFinger: 2.5,
     };
     this.buffer = 30; // stop moving fish when it is within a certain buffer of the finger
 
