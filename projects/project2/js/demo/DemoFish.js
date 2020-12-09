@@ -19,7 +19,7 @@ class DemoFish {
     // movement information
     this.x = -100;
     this.y = height-250;
-    this.xDestination = height/2-150;
+    this.xDestination = 50;
     this.vx = 0;
     this.vy = 0;
     this.speed = {

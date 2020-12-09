@@ -430,9 +430,6 @@ function mousePressed() {
     //   interval = undefined;
     // }
   }
-  else if (state === `instructions`) {
-    tryMusic();
-  }
 }
 
 // play the next note in song tune
@@ -456,21 +453,6 @@ function playNextNote() {
     if (fishName.overlapsWith(finger)) {
       synth.play(notes[i], 0.2, 0, 1);
     }
-  }
-}
-
-
-// Try playing music if key is pressed
-function keyPressed() {
-  if (state === `instructions`) {
-    tryMusic();
-  }
-}
-
-// Play music if first interaction and loop it
-function tryMusic() {
-  if (!backgroundMusic.isPlaying()) {
-    backgroundMusic.loop();
   }
 }
 
@@ -655,7 +637,8 @@ function instructions1() {
   // Release demoFoods from top of tank
   releaseDemoFood(demoFish);
 
-  if (demoFish.numFoodEaten >= 10) {
+  // If fish eats 7 pieces of food, move to next instruction
+  if (demoFish.numFoodEaten >= 7) {
     instructionsState = `instructions2`;
   }
 }
@@ -714,7 +697,7 @@ function instructions2() {
   // Release demoFoods from top of tank
   releaseDemoFood(demoFish);
 
-  if (demoFish.numFoodEaten >= 20) {
+  if (demoFish.numFoodEaten >= 15) {
     instructionsState = `instructions3`;
   }
 }
@@ -734,9 +717,10 @@ function instructions3() {
 
 // Changes states when mouse clicks on Start or Ready button
 function mouseClicked() {
-  // If finger clicks on Start button, cue `instructions` state
+  // If finger clicks on Start button, cue `instructions` state and play background music
   if (state === `intro`) {
     if (mouseIsInButton(startButtonCircle)) {
+      tryMusic();
       state = `instructions`;
     }
   }
@@ -759,6 +743,13 @@ function mouseIsInButton(buttonName) {
     return true;
   } else {
     return false;
+  }
+}
+
+// Play background music and loop it
+function tryMusic() {
+  if (!backgroundMusic.isPlaying()) {
+    backgroundMusic.loop();
   }
 }
 
