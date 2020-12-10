@@ -52,6 +52,18 @@ class Fish {
 
     // is true if fish is keeping food inside its mouth
     this.foodInMouth = undefined;
+
+    // SOUND-RELATED VARIABLES
+    // synthesizer
+    this.synth = undefined;
+    // tracks the interval that plays note
+    this.interval = undefined;
+    // a little song tune I made up
+    this.notes = [];
+    // track which note we're at
+    this.currentNote = undefined;
+    // time between each note
+    this.noteDuration = undefined;
   }
 
   // Fish faces direction it is swimming
@@ -236,6 +248,10 @@ class Fish {
     this.releasePoopLine(poops);
     // Remove poop when there are too many to handle
     this.removePoop(poops, totalNumPoops);
+  }
+
+  playTune() {
+
   }
 
 

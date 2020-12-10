@@ -25,7 +25,7 @@ let autoplay = false;
 let osc;
 
 function setup() {
-  userAudioStart;
+  userStartAudio();
 
   createCanvas(720, 400);
   let div = createDiv("Click to play notes or ")
@@ -41,7 +41,7 @@ function setup() {
   });
 
   // A triangle oscillator
-  osc = new p5.TriOsc();
+  osc = new p5.SinOsc();
   // Start silent
   osc.start();
   osc.amp(0);
@@ -51,13 +51,15 @@ function setup() {
 function playNote(note, duration) {
   osc.freq(midiToFreq(note));
   // Fade it in
-  osc.fade(0.5,0.2);
+  // osc.fade(0.5,0.2);
+  osc.fade(0.1,0);
+
 
   // If we sest a duration, fade it out
   if (duration) {
     setTimeout(function() {
-      osc.fade(0,0.2);
-    }, duration-50);
+      osc.fade(0,0);
+    }, duration);
   }
 }
 

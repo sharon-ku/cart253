@@ -58,17 +58,43 @@ let title;
 
 // SOUND-RELATED VARIABLES ------------------------------------------------
 // synthesizer
-let synth;
+let synth1;
 let synth2;
 // tracks the interval that plays note
 let interval;
+let interval2;
 // a little song tune I made up
-let notes = [`C5`, `G4`, `E5`, `C5`, `A5`, `F4`, `F5`, `C5`, `B5`, `G4`, `G5`, `E5`, `F5`, `E5`, `D5`, `B5`];
+// let notes = [`C5`, `G4`, `E5`, `C5`, `A5`, `F4`, `F5`, `C5`, `B5`, `G4`, `G5`, `E5`, `F5`, `E5`, `D5`, `B5`];
+let notes = [`C4`, `G3`, `E4`, `C4`, `A4`, `F3`, `F4`, `C4`, `B4`, `G3`, `G4`, `E4`, `F4`, `E4`, `D4`, `B4`];
 
 // track which note we're at
-let currentNote =0;
+let currentNote = 0;
+let currentNote2 = 0;
 // time between each note
 let noteDuration = 500;
+
+
+
+// synthesizer for each fish
+let synth = {
+  firefish: undefined,
+  goby: undefined,
+  nene: undefined,
+  momo: undefined,
+};
+
+let fishNotes = {
+  firefish: [`C5`, `G4`, `E5`, `C5`, `A5`, `F4`, `F5`, `C5`, `B5`, `G4`, `G5`, `E5`, `F5`, `E5`, `D5`, `B5`],
+  goby: [`D#4`, `E4`, `D4`],
+};
+// // tracks the interval that plays note
+// let interval;
+// // a little song tune I made up
+// let notes = [`C5`, `G4`, `E5`, `C5`, `A5`, `F4`, `F5`, `C5`, `B5`, `G4`, `G5`, `E5`, `F5`, `E5`, `D5`, `B5`];
+// // track which note we're at
+// let currentNote =0;
+// // time between each note
+// let noteDuration = 500;
 // -----------------------------------------------------------------
 
 // Start button circle and text inside it
@@ -189,7 +215,7 @@ let poops = [];
 // Total number of poop that the fish can release in a single swimming
 let totalNumPoops = 50;
 
-// setup() -----------------------------------------------------------------------
+// preload() -----------------------------------------------------------------------
 //
 // Preload all images, music, and fonts
 // --------------------------------------------------------------------------------
@@ -246,8 +272,18 @@ function setup() {
   userStartAudio();
 
   // create a new synthesizer
-  synth = new p5.PolySynth;
+  synth1 = new p5.PolySynth;
   synth2 = new p5.PolySynth;
+
+  // Create new synthesizers for each fish
+  // for (let i = 0; i < allFishNames.length; i++) {
+  //   let fish = allFishNames[i];
+  //     synth.fish = new p5.PolySynth;
+  // }
+  synth.firefish = new p5.PolySynth;
+  synth.goby = new p5.PolySynth;
+  synth.nene = new p5.PolySynth;
+  synth.momo = new p5.PolySynth;
 
   // Create a new finger
   finger = new Finger();
@@ -255,7 +291,7 @@ function setup() {
   // ---
   // Create 4 fishes and push to fishes array:
   // 1- Create a new firefish
-  firefish = new Firefish(fishImages.firefish.img1, fishImages.firefish.img2);
+  firefish = new Firefish(fishImages.firefish.img1, fishImages.firefish.img2, synth.firefish);
   fishes.push(firefish);
 
   // 2- Create a new goby
@@ -275,10 +311,10 @@ function setup() {
   anemone = new Anemone();
 
   // Create the right number of snails to put into creatures array
-  for (let i=0; i<numSnails; i++) {
+  for (let i = 0; i < numSnails; i++) {
     let snailX = random(0, width);
     let snailY = random(height * 2 / 3, height - 100);
-    let snail = new Snail(snailX,snailY);
+    let snail = new Snail(snailX, snailY);
     creatures.push(snail);
   }
 
@@ -421,21 +457,37 @@ function setBackground() {
 // Try playing music if mouse is pressed
 function mousePressed() {
   if (state === `intro`) {
-    playNextNote();
-    // if (interval === undefined) {
-    //
-    // interval = setInterval(playNextNote, noteDuration);
-    // } else {
-    //   clearInterval(interval);
-    //   interval = undefined;
-    // }
+    if (firefish.overlapsWith(finger)) {
+      // playNextNote();
+      if (interval === undefined) {
+
+        interval = setInterval(playNextNote, noteDuration);
+      } else {
+        clearInterval(interval);
+        interval = undefined;
+      }
+    } else if (goby.overlapsWith(finger)) {
+      // playNextNote();
+      if (interval2 === undefined) {
+
+        interval2 = setInterval(playNextNote2, noteDuration);
+      } else {
+        clearInterval(interval2);
+        interval2 = undefined;
+      }
+    }
+
+  }
+  else if (state === `instructions`) {
+    clearInterval(interval);
+    clearInterval(interval2);
   }
 }
 
 // play the next note in song tune
 function playNextNote() {
-  // fetch the note from the notes array
-  let note = notes[currentNote];
+  // // fetch the note from the notes array
+  // let note = notes[currentNote];
   // play the note
   // synth.play(notes[1], 0.2, 0, 1);
   // synth2.play(notes[2], 0.2, 0, 1);
@@ -446,13 +498,39 @@ function playNextNote() {
   //   currentNote = 0;
   // }
 
-  for (let i = 0; i < fishes.length; i++) {
-    let fishName = fishes[i];
-    let note = notes[i];
+  // if (firefish.overlapsWith(finger)) {
+  // fetch the note from the notes array
+  let note = notes[currentNote];
+  // play the note
+  synth.firefish.play(notes[currentNote], 0.2, 0, 1);
+  // move to next note in array
+  currentNote += 1;
+  // restart array when reach the end
+  if (currentNote === notes.length) {
+    currentNote = 0;
+  }
+  // }
 
-    if (fishName.overlapsWith(finger)) {
-      synth.play(notes[i], 0.2, 0, 1);
-    }
+  // for (let i = 0; i < fishes.length; i++) {
+  //   let fishName = fishes[i];
+  //   let note = notes[i];
+  //
+  //   if (fishName.overlapsWith(finger)) {
+  //     // fishName.playTune();
+  //     // synth1.play(notes[i], 0.2, 0, 1);
+  //   }
+  // }
+}
+
+function playNextNote2() {
+  let note = fishNotes.goby[currentNote2];
+  // play the note
+  synth.goby.play(fishNotes.goby[currentNote2], 0.1, 0, 1);
+  // move to next note in array
+  currentNote2 += 1;
+  // restart array when reach the end
+  if (currentNote2 === fishNotes.goby.length) {
+    currentNote2 = 0;
   }
 }
 
@@ -569,14 +647,11 @@ function instructions() {
   // Setting up 5 substates for instructions state - start counting from 0
   if (instructionsState === `instructions0`) {
     instructions0();
-  }
-  else if (instructionsState === `instructions1`) {
+  } else if (instructionsState === `instructions1`) {
     instructions1();
-  }
-  else if (instructionsState === `instructions2`) {
+  } else if (instructionsState === `instructions2`) {
     instructions2();
-  }
-  else if (instructionsState === `instructions3`) {
+  } else if (instructionsState === `instructions3`) {
     instructions3();
   }
 
@@ -597,14 +672,20 @@ function displayInstructionsStep() {
 
 // demoFish appears from left side of screen, ring expands around fish, and then fish moves with finger when finger is close to it
 function instructions0() {
-  // Display and move demoFish
-  demoFish.move();
-  demoFish.onTheLookoutForFinger(finger);
-
-  demoFish.displayRing();
-  demoFish.display();
+  // Show a hoop around the fish that expands to show area close to fish
   demoFish.increaseRingSize();
   demoFish.changeRingAlpha();
+  demoFish.displayRing();
+
+  // Display and move the demoFish by guiding it with finger
+  displayAndMoveDemoFish();
+}
+
+// Display and move the demoFish by guiding it with finger
+function displayAndMoveDemoFish() {
+  demoFish.move();
+  demoFish.onTheLookoutForFinger(finger);
+  demoFish.display();
 }
 
 function instructions1() {
@@ -619,13 +700,11 @@ function instructions1() {
   }
 
 
-  // Display and move demoFish
-  demoFish.move();
-  demoFish.onTheLookoutForFinger(finger);
-  demoFish.display();
+  // Display and move the demoFish by guiding it with finger
+  displayAndMoveDemoFish();
 
   // Display food, move it, change current, and update number of food fish ate
-  for (let i = 0; i<demoFoods.length; i++) {
+  for (let i = 0; i < demoFoods.length; i++) {
     let demoFood = demoFoods[i];
     demoFood.move();
     demoFood.changeCurrent(); // let user change current with arrow keys
@@ -678,10 +757,8 @@ function instructions2() {
     }
   }
 
-  // Display and move demoFish
-  demoFish.move();
-  demoFish.onTheLookoutForFinger(finger);
-  demoFish.display();
+  // Display and move the demoFish by guiding it with finger
+  displayAndMoveDemoFish();
 
   // Display food, move it, change current, and update number of food fish ate
   for (let i = 0; i < demoFoods.length; i++) {
@@ -706,6 +783,14 @@ function instructions3() {
   // Set Instructions text to step number 3
   step.currentNumber = 3;
 
+  // Display and move the demoFish by guiding it with finger
+  displayAndMoveDemoFish();
+
+  // Display "I'm Full" on top of demoFish
+  if (demoFoodTracker.isAlmostFull()) {
+    demoFish.displayImFullText(bodyTextFont);
+  }
+
   // Show a food tracker that constantly fills up
   demoFoodTracker.increaseBar();
   demoFoodTracker.display();
@@ -720,6 +805,8 @@ function mouseClicked() {
   // If finger clicks on Start button, cue `instructions` state and play background music
   if (state === `intro`) {
     if (mouseIsInButton(startButtonCircle)) {
+      clearInterval(interval);
+      clearInterval(interval2);
       tryMusic();
       state = `instructions`;
     }

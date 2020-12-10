@@ -1,15 +1,15 @@
 class DemoFoodTracker {
   constructor(foodTrackerImg) {
     // size information
-    this.length = 156*2;
+    this.length = 312;
     this.lengthIncreaseSpeed = 2;
     this.lengthIncreaseAcceleration = {
       current: 1,
       min: 1,
       max: -1.2,
     }
-    this.totalLength = 156*2;
-    this.height = 13*2;
+    this.totalLength = 312;
+    this.height = 26;
     this.radius = 15; //radius of edge of rounded rectangle
 
     // position information
@@ -58,6 +58,16 @@ class DemoFoodTracker {
     // If food tracker is full, reset it to zero
     else if (this.length >= this.totalLength) {
       this.length = 0;
+    }
+  }
+
+  // Returns true if bar is almost full
+  isAlmostFull() {
+    if (this.length > this.totalLength * 9/10) {
+      return true;
+    }
+    else {
+      return false;
     }
   }
 

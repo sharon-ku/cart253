@@ -8,8 +8,8 @@ class DemoFish {
     this.framesBtwEachImage = 50;
 
     // size information
-    this.length = 480;
-    this.height = 197;
+    this.length = 320; //480
+    this.height = 131; //197
     this.heightOffset = 50; // to account for firefish's dorsal (top) fin
     this.scale = {
       x: 1,
@@ -17,19 +17,23 @@ class DemoFish {
     };
 
     // movement information
-    this.x = -100;
+    this.x = -200; //-300
     this.y = height-250;
-    this.xDestination = 50;
+    this.xDestination = -50; //-150
     this.vx = 0;
     this.vy = 0;
     this.speed = {
       casualSwimming: 3,
-      followingFinger: 2,
+      followingFinger: 1.8,
     };
-    this.buffer = 50; // stop moving fish when it is within a certain buffer of the finger
+    // stop moving fish when it is within a certain buffer of the finger
+    this.buffer = {
+      x: 50,
+      y: 0.005,
+    };
 
     // radius around fish where it can spot finger
-    this.fieldOfVision = 400;
+    this.fieldOfVision = 450;
 
     // circle that expands around demoFish
     this.ring = {
@@ -60,6 +64,13 @@ class DemoFish {
 
     // tracks how many food the fish has eaten
     this.numFoodEaten = 0;
+
+    // "I'm Full" text information
+    this.imFullText = {
+      text: "I'm Full!",
+      size: 20,
+      fill: 255,
+    };
   }
 
   // Fish switches between image 1 and image 2
@@ -131,16 +142,16 @@ class DemoFish {
     let distY = this.y - finger.y;
 
     // Fish's velocity changes depending on where the finger is with respect to its body
-    if (distX < -this.buffer) {
+    if (distX < -this.buffer.x) {
       this.vx = this.speed.followingFinger;
-    } else if (distX > this.buffer) {
+    } else if (distX > this.buffer.x) {
       this.vx = -this.speed.followingFinger;
     } else {
       this.vx = 0; // Stop moving if the fish is within buffer of the finger
     }
-    if (distY < 0) {
+    if (distY < -this.buffer.y) {
       this.vy = this.speed.followingFinger;
-    } else if (distY > 0) {
+    } else if (distY > this.buffer.y) {
       this.vy = -this.speed.followingFinger;
     }
 
@@ -204,6 +215,16 @@ class DemoFish {
     if (this.overlapsWith(demoFood)) {
       this.numFoodEaten += 1;
     }
+  }
+
+  displayImFullText(font) {
+    push();
+    translate(this.x, this.y);
+    textAlign(CENTER);
+    textFont(font, this.imFullText.size);
+    fill(this.imFullText.fill);
+    text(this.imFullText.text, 0, -this.height/2);
+    pop();
   }
 
 }
