@@ -398,7 +398,9 @@ function setBackground() {
 
 // intro() -----------------------------------------------------------------------
 //
-// INTRO STATE: Display title, start button, finger, and casually swimming fish
+// INTRO STATE:
+// Display title, start button, finger, casually swimming fish, snails, and anemone
+// If any creature in the tank is clicked, it emits a sound
 // --------------------------------------------------------------------------------
 
 function intro() {
@@ -714,11 +716,12 @@ function instructions3() {
 
 // game() -----------------------------------------------------------------------
 //
-// game STATE:
+// GAME STATE:
 // Finger, fish, food tracker, and MoreFoodButton are displayed.
 // Finger moves with mouse.
 // Fish move randomly (Perlin noise) until they spot the finger then follow it.
 // If the fish is close enough to food, it will eat it and the tracker updates.
+// Clownfish have a unique behavior: they sometimes feed the anemone! (symbiosis is beautiful)
 // --------------------------------------------------------------------------------
 
 function game() {
@@ -744,6 +747,7 @@ function game() {
     }
   }
 
+  // Food is released and fish are displayed; fish interact with food by eitehr eating it or feeding it to the anemone
   for (let i = 0; i < fishes.length; i++) {
     let fish = fishes[i];
     // Release fish food if the More Food Button is clicked and it is active
@@ -754,7 +758,7 @@ function game() {
     // Define what happens if fish has food stored in mouth (meaning it intends to feed anemone)
     fishHasFoodStoredInMouth(fish);
 
-    // Define the fish's movement: either the fish follows finger, casually swims, or feeds the anemone
+    // Define the fish's movement: either the fish follows finger, casually swims, or swims to the anemone
     defineFishMovement(fish);
 
     // Display animated fish
@@ -787,8 +791,11 @@ function releaseFishFood(fishName) {
 
   for (let i = fishFoods.length - 1; i >= 0; i--) {
     let fishFood = fishFoods[i];
+    // move fish food
     fishFood.move();
-    fishFood.changeCurrent(); // let user change current with arrow keys
+    // let user change current with arrow keys
+    fishFood.changeCurrent();
+    // display fish food
     fishFood.display();
 
     // If fish interacts with food by touching it, or if food goes off canvas, then remove food from fishFoods array
