@@ -138,11 +138,7 @@ let fishTank = {
   border: 100,
 };
 
-// Rules
-let rules;
-// Variable to store rules image
-let rulesImg;
-// Rounded rectangle displayed behind the rules image
+// Rounded rectangle displayed behind the instructions
 let rulesRect;
 
 // Instructions' current step number and text
@@ -224,9 +220,6 @@ function preload() {
 
   // Load demoFoodTracker image
   demoFoodTrackerImg = loadImage(`assets/images/demoFoodTracker.png`);
-
-  // Load rules image
-  rulesImg = loadImage(`assets/images/rules.png`);
 
   // Load more food button image
   moreFoodButtonImg = loadImage(`assets/images/moreFood.png`);
@@ -319,8 +312,7 @@ function setup() {
   readyButtonCircle = new ReadyButtonCircle(readyButtonX, readyButtonY);
   readyButtonText = new ReadyButtonText(readyButtonX, readyButtonY, bodyTextFont);
 
-  // Create a new rules image and a new rectangle that goes behind the image
-  rules = new Rules(rulesImg);
+  // Create new rectangle that goes behind the instructions
   rulesRect = new RulesRect();
 
   // Create array for fishFoods
@@ -413,6 +405,7 @@ function playNextNote() {
   // fetch the note from the notes array
   let note = notes[currentNote];
 
+  // if finger overlaps with fish, play a note from the synthesizer
   for (let i = 0; i < fishes.length; i++) {
     let fishName = fishes[i];
     let note = notes[i];
@@ -420,6 +413,8 @@ function playNextNote() {
     if (fishName.overlapsWith(finger)) {
       synth.play(notes[i], 0.2, 0, 1);
     }
+
+
   }
 
 }
@@ -436,6 +431,10 @@ function intro() {
 
   // Draw all sprites
   drawSprites();
+
+  // // If finger hovering over fish, play a note
+  // playNextNote();
+
 
   // Display the title
   title.display(titleFont);
@@ -511,15 +510,11 @@ function stayInTank(subject) {
 // --------------------------------------------------------------------------------
 
 function instructions() {
-
-
-  // Draw all sprites
-  // drawSprites();
-
+  // Set background music volume to lower
+  backgroundMusicVolume.current = backgroundMusicVolume.min;
 
   // Display rules and rounded rectangle behind it
   rulesRect.display();
-  // rules.display();
 
   // Display instructions step
   displayInstructionsStep();
@@ -552,10 +547,6 @@ function displayInstructionsStep() {
 
 // demoFish appears from left side of screen, ring expands around fish, and then fish moves with finger when finger is close to it
 function instructions0() {
-  // Set background music volume to lower
-  backgroundMusicVolume.current = backgroundMusicVolume.min;
-  console.log(backgroundMusicVolume.current);
-
   // Show a hoop around the fish that expands to show area close to fish
   demoFish.increaseRingSize();
   demoFish.changeRingAlpha();
