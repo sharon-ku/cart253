@@ -68,9 +68,8 @@ let synth;
 // tracks the interval that plays note
 let interval;
 
-// a little song tune I made up
-// let notes = [`C5`, `G4`, `E5`, `C5`, `A5`, `F4`, `F5`, `C5`, `B5`, `G4`, `G5`, `E5`, `F5`, `E5`, `D5`, `B5`];
-let notes = [`C4`, `G3`, `E4`, `C4`, `A4`, `F3`, `F4`, `C4`, `B4`, `G3`, `G4`, `E4`, `F4`, `E4`, `D4`, `B4`];
+// storing notes inside an array
+let notes = [`C5`, `E4`, `G5`, `E4`, `D5`, `F4`, `A5`, `C4`];
 
 // track which note we're at
 let currentNote = 0;
@@ -273,7 +272,9 @@ function setup() {
   // ---
 
   // Create a new anemone
-  anemone = new Anemone();
+  let anemoneX = 500;
+  let anemoneY = 510;
+  anemone = new Anemone(anemoneX, anemoneY);
 
   // Create the right number of snails to put into creatures array
   for (let i = 0; i < numSnails; i++) {
@@ -395,27 +396,47 @@ function setBackground() {
 // Try playing music if mouse is pressed
 function mousePressed() {
   if (state === `intro`) {
-    playNextNote();
+    playNote();
   }
 
 }
 
 // play the next note in song tune
-function playNextNote() {
+function playNote() {
   // fetch the note from the notes array
   let note = notes[currentNote];
 
   // if finger overlaps with fish, play a note from the synthesizer
   for (let i = 0; i < fishes.length; i++) {
     let fishName = fishes[i];
-    let note = notes[i];
+    // let note = notes[i];
 
     if (fishName.overlapsWith(finger)) {
-      synth.play(notes[i], 0.2, 0, 1);
+      // synth.play(notes[i], 0.2, 0, 1);
+      synth.play(notes[i*2], 0.3, 0, 1);
+      synth.play(notes[(i*2)+1], 0.3, 0, 1);
     }
 
 
   }
+
+  for (let i = 0; i < creatures.length; i++) {
+    let creature = creatures[i];
+
+    if (creature.overlapsWith(finger)) {
+      synth.play(notes[i], 0.3, 0, 1);
+    }
+  }
+
+  if (anemone.overlapsWith(finger)) {
+    synth.play(notes[3], 0.3, 0, 1);
+  }
+  // // move to next note in array
+  // currentNote += 1;
+  // // restart array when reach the end
+  // if (currentNote === notes.length) {
+  //   currentNote = 0;
+  // }
 
 }
 
@@ -426,27 +447,16 @@ function playNextNote() {
 
 function intro() {
   if (mousePressed) {
+    backgroundMusicVolume.current = backgroundMusicVolume.min;
     tryMusic();
   }
 
   // Draw all sprites
   drawSprites();
 
-  // // If finger hovering over fish, play a note
-  // playNextNote();
-
 
   // Display the title
   title.display(titleFont);
-
-  // push();
-  // fill(255);
-  // textSize(height/8);
-  // textAlign(CENTER,CENTER);
-  // textFont(titleFont);
-  // text(`HUNGRY`, width/2, height/5);
-  // text(`FISHIES`, width/2, height/3);
-  // pop();
 
   // Create a "start" button
   // Button is made up of a shape and a text inside it
@@ -511,7 +521,7 @@ function stayInTank(subject) {
 
 function instructions() {
   // Set background music volume to lower
-  backgroundMusicVolume.current = backgroundMusicVolume.min;
+  backgroundMusicVolume.current = backgroundMusicVolume.max;
 
   // Display rules and rounded rectangle behind it
   rulesRect.display();
@@ -609,6 +619,7 @@ function releaseDemoFood(demoFish) {
     // If fish interacts with food by touching it, or if food goes off canvas, then remove food from fishFoods array
     if (demoFish.overlapsWith(demoFood) || demoFood.offScreen()) {
       demoFoods.splice(i, 1);
+      // synth.
     }
   }
 }
