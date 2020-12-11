@@ -38,6 +38,11 @@ let instructionsState = `instructions0`;
 
 // Background music
 let backgroundMusic = undefined;
+let backgroundMusicVolume = {
+  current: 0.5,
+  min: 0.2,
+  max: 0.5,
+};
 
 // Variables related to fishFood
 let fishFoods = []; // fishFoods array that contains food objects
@@ -84,8 +89,9 @@ let synth = {
 };
 
 let fishNotes = {
-  firefish: [`C5`, `G4`, `E5`, `C5`, `A5`, `F4`, `F5`, `C5`, `B5`, `G4`, `G5`, `E5`, `F5`, `E5`, `D5`, `B5`],
-  goby: [`D#4`, `E4`, `D4`],
+  firefish: [`D#4`, `E4`, `E4`, `E4`, `B4`, `D4`, `C4`, `B4`, `A4`, `C4`, `B4`, `A4`, `G3`, `E4`, `D4`, `B4`],
+  // goby: [`G4`, `D5`, `C5`, `B4`],
+  goby: [`D2`, `C2`],
 };
 // // tracks the interval that plays note
 // let interval;
@@ -398,6 +404,9 @@ function setup() {
 // --------------------------------------------------------------------------------
 
 function draw() {
+  // Set volume of background music
+  backgroundMusic.setVolume(backgroundMusicVolume.current);
+
   // Set up background color, rocks, and sand
   setBackground();
 
@@ -457,6 +466,7 @@ function setBackground() {
 // Try playing music if mouse is pressed
 function mousePressed() {
   if (state === `intro`) {
+    // tryMusic();
     if (firefish.overlapsWith(finger)) {
       // playNextNote();
       if (interval === undefined) {
@@ -500,14 +510,16 @@ function playNextNote() {
 
   // if (firefish.overlapsWith(finger)) {
   // fetch the note from the notes array
-  let note = notes[currentNote];
+  let note = fishNotes.firefish[currentNote];
   // play the note
-  synth.firefish.play(notes[currentNote], 0.2, 0, 1);
+  synth.firefish.play(fishNotes.firefish[currentNote], 0.2, 0, 1);
+  // synth.firefish.play(notes[currentNote], 0.2, 0, 0.5);
   // move to next note in array
   currentNote += 1;
   // restart array when reach the end
-  if (currentNote === notes.length) {
-    currentNote = 0;
+  if (currentNote === fishNotes.firefish.length) {
+    // currentNote = 0;
+    synth.firefish.disconnect();
   }
   // }
 
@@ -525,7 +537,7 @@ function playNextNote() {
 function playNextNote2() {
   let note = fishNotes.goby[currentNote2];
   // play the note
-  synth.goby.play(fishNotes.goby[currentNote2], 0.1, 0, 1);
+  synth.goby.play(fishNotes.goby[currentNote2], 1, 0, 1);
   // move to next note in array
   currentNote2 += 1;
   // restart array when reach the end
@@ -540,6 +552,10 @@ function playNextNote2() {
 // --------------------------------------------------------------------------------
 
 function intro() {
+  if (mousePressed) {
+    tryMusic();
+  }
+
   // Draw all sprites
   drawSprites();
 
@@ -672,6 +688,10 @@ function displayInstructionsStep() {
 
 // demoFish appears from left side of screen, ring expands around fish, and then fish moves with finger when finger is close to it
 function instructions0() {
+  // Set background music volume to lower
+  backgroundMusicVolume.current = backgroundMusicVolume.min;
+  console.log(backgroundMusicVolume.current);
+
   // Show a hoop around the fish that expands to show area close to fish
   demoFish.increaseRingSize();
   demoFish.changeRingAlpha();
@@ -807,7 +827,7 @@ function mouseClicked() {
     if (mouseIsInButton(startButtonCircle)) {
       clearInterval(interval);
       clearInterval(interval2);
-      tryMusic();
+      // tryMusic();
       state = `instructions`;
     }
   }
@@ -836,6 +856,7 @@ function mouseIsInButton(buttonName) {
 // Play background music and loop it
 function tryMusic() {
   if (!backgroundMusic.isPlaying()) {
+    // backgroundMusic.setVolume(backgroundMusicVolume.current);
     backgroundMusic.loop();
   }
 }

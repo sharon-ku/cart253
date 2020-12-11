@@ -67,7 +67,7 @@ class DemoFish {
 
     // "I'm Full" text information
     this.imFullText = {
-      text: "I'm Full!",
+      text: "I'm full!",
       size: 20,
       fill: 255,
     };
