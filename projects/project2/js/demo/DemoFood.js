@@ -1,14 +1,14 @@
 class DemoFood {
   constructor(border) {
     this.x = random(border, width - border);
-    this.y = 0; //random(-100,0);
+    this.y = 0;
     this.vx = 0;
     this.vy = 0;
-    this.speedMax = 0.5;
+    this.speedMax = 1.5;
     this.speed = random(0, this.speedMax);
     this.ax = 0;
     this.ay = 0;
-    this.accelerationMax = 1;
+    this.accelerationMax = 2;
     this.accelerationX = random(-this.accelerationMax, this.accelerationMax);
     this.accelerationY = 0.3;
     this.size = random(20,30);

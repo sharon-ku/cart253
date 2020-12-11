@@ -37,7 +37,7 @@ Background music from Mixkit.co: Smooth Like Jazz by Ajhay Stelino
 // State of program
 let state = `intro`; // all possible states: intro, instructions, game, ending
 
-// Substates of instructions: (instructions0 count up to instructions4)
+// Substates of instructions: (instructions0 count up to instructions3)
 let instructionsState = `instructions0`;
 
 // Variables related to fishFood (used in game state)
@@ -368,7 +368,7 @@ function setup() {
 // --------------------------------------------------------------------------------
 
 function draw() {
-  // Set volume of background music
+  // Set volume of background music to current (this volume will be adjusted later on)
   backgroundMusic.setVolume(backgroundMusicVolume.current);
 
   // Set up background color, rocks, and sand
@@ -396,69 +396,16 @@ function setBackground() {
   pop();
 }
 
-// In intro state, play note if mouse is pressed and overlapping with a living being
-function mousePressed() {
-  if (state === `intro`) {
-    playNote();
-
-    // backgroundMusicVolume.current = backgroundMusicVolume.min;
-    tryMusic();
-  }
-}
-
-// Play the note if finger overlaps with a living being (fish or creature or anemone)
-function playNote() {
-  // if finger overlaps with fish, play two notes overlapped with each other
-  for (let i = 0; i < fishes.length; i++) {
-    let fishName = fishes[i];
-
-    // The pair of notes that will be played correspond to the fish's index in the fishes array
-    // For example, for firefish that occupies index 0 in the fishes array, have it play the first two notes in notes array
-    // Next, for goby that has index 1 in fishes array, have it play the next two notes in the notes array
-    // And so on for the rest of the fishes...
-    if (fishName.overlapsWith(finger)) {
-      // play note from notes array
-      synth.play(notes[i * 2], synthVolume, synthDelay, synthSustainTime);
-      // along with the note that follows right after
-      synth.play(notes[(i * 2) + 1], synthVolume, synthDelay, synthSustainTime);
-    }
-  }
-
-  // For each snail that is stored in the creatures array, play a note if it overlaps with finger
-  for (let i = 0; i < creatures.length; i++) {
-    let creature = creatures[i];
-
-    // Note that is played from notes array shares same index as snail's index in creatures array
-    if (creature.overlapsWith(finger)) {
-      synth.play(notes[i], synthVolume, synthDelay, synthSustainTime);
-    }
-  }
-
-  // If anemone overlaps with array, have it play the third note in notes array
-  if (anemone.overlapsWith(finger)) {
-    synth.play(notes[4], synthVolume, synthDelay, synthSustainTime);
-  }
-
-}
-
 // intro() -----------------------------------------------------------------------
 //
 // INTRO STATE: Display title, start button, finger, and casually swimming fish
 // --------------------------------------------------------------------------------
 
 function intro() {
-  if (mouseIsPressed) {
-    // play note if mouse is pressed and overlapping with a living being
-    // playNote();
-    // play background music and set volume to minimum so we can hear the notes emitted by living beings
-    // backgroundMusicVolume.current = backgroundMusicVolume.min;
-    // tryMusic();
-  }
-
   // Set background music volume to minimum so we can hear the notes emitted by living beings
   backgroundMusicVolume.current = backgroundMusicVolume.min;
 
-  // Draw all sprites (snails and anemone)
+  // Draw all animated sprites (snails and anemone)
   drawSprites();
 
   // Display the title
@@ -518,24 +465,107 @@ function stayInTank(subject) {
   subject.y = constrain(subject.y, fishTank.border, height - fishTank.border);
 }
 
+// If mouse is pressed:
+function mousePressed() {
+  // If it's the intro state
+  if (state === `intro`) {
+    // Play note if user clicks on a living being
+    playNote();
+
+    // Play background music and loop it
+    tryMusic();
+  }
+}
+
+// Play the note if finger overlaps with a living being (fish or creature or anemone)
+function playNote() {
+  // if finger overlaps with fish, play two notes overlapped with each other
+  for (let i = 0; i < fishes.length; i++) {
+    let fishName = fishes[i];
+
+    // The pair of notes that will be played correspond to the fish's index in the fishes array
+    // For example, for firefish that occupies index 0 in the fishes array, have it play the first two notes in notes array
+    // Next, for goby that has index 1 in fishes array, have it play the next two notes in the notes array
+    // And so on for the rest of the fishes...
+    if (fishName.overlapsWith(finger)) {
+      // play note from notes array
+      synth.play(notes[i * 2], synthVolume, synthDelay, synthSustainTime);
+      // along with the note that follows right after
+      synth.play(notes[(i * 2) + 1], synthVolume, synthDelay, synthSustainTime);
+    }
+  }
+
+  // For each snail that is stored in the creatures array, play a note if it overlaps with finger
+  for (let i = 0; i < creatures.length; i++) {
+    let creature = creatures[i];
+
+    // Note that is played from notes array shares same index as snail's index in creatures array
+    if (creature.overlapsWith(finger)) {
+      synth.play(notes[i], synthVolume, synthDelay, synthSustainTime);
+    }
+  }
+
+  // If anemone overlaps with array, have it play the third note in notes array
+  if (anemone.overlapsWith(finger)) {
+    synth.play(notes[4], synthVolume, synthDelay, synthSustainTime);
+  }
+}
+
+// Play background music and loop it
+function tryMusic() {
+  if (!backgroundMusic.isPlaying()) {
+    backgroundMusic.loop();
+  }
+}
+
+// Changes states when mouse clicks on Start or Ready button
+function mouseClicked() {
+  // If finger clicks on Start button, cue `instructions` state
+  if (state === `intro`) {
+    if (mouseIsInButton(startButtonCircle)) {
+      state = `instructions`;
+    }
+  }
+
+  // If finger clicks on Ready button, cue `game` state
+  if (state === `instructions`) {
+    if (mouseIsInButton(readyButtonCircle)) {
+      state = `game`;
+    }
+  }
+}
+
+// Returns true if finger's position is inside a button
+function mouseIsInButton(buttonName) {
+  if (mouseX < buttonName.x + (buttonName.size / 2) &&
+    mouseX > buttonName.x - (buttonName.size / 2) &&
+    mouseY < buttonName.y + (buttonName.size / 2) &&
+    mouseY > buttonName.y - (buttonName.size / 2)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 // instructions() ----------------------------------------------------------------------
 //
 // INSTRUCTIONS STATE:
-// Display rules on the canvas with fish, MoreFood button, and food tracker in background.
+// There are 4 substates for instructions: instructions0 all the way to instructions3.
+// The substates explain the actions that the user can perform.
 // Player starts the game by clicking "Ready!" button.
 // --------------------------------------------------------------------------------
 
 function instructions() {
-  // Set background music volume to lower
+  // Set background music volume to max
   backgroundMusicVolume.current = backgroundMusicVolume.max;
 
-  // Display rules and rounded rectangle behind it
+  // Display rounded rectangle behind the instructions
   rulesRect.display();
 
-  // Display instructions step
+  // Display the written instructions on top left corner of canvas
   displayInstructionsStep();
 
-  // Setting up 5 substates for instructions state - start counting from 0
+  // Setting up 4 substates for instructions state - start counting from 0 (reason is so that it matches the index of the instructionsText array)
   if (instructionsState === `instructions0`) {
     instructions0();
   } else if (instructionsState === `instructions1`) {
@@ -561,7 +591,8 @@ function displayInstructionsStep() {
   pop();
 }
 
-// demoFish appears from left side of screen, ring expands around fish, and then fish moves with finger when finger is close to it
+// DemoFish appears from left side of screen, ring expands around fish, and then fish moves with finger when finger is close to it.
+// When finger overlaps with fish, switch to instructions1 substate
 function instructions0() {
   // Show a hoop around the fish that expands to show area close to fish
   demoFish.increaseRingSize();
@@ -575,36 +606,22 @@ function instructions0() {
 // Display and move the demoFish by guiding it with finger
 function displayAndMoveDemoFish() {
   demoFish.move();
-  demoFish.onTheLookoutForFinger(finger);
+  demoFish.onTheLookoutForFinger(finger); // fish follows finger
   demoFish.display();
 }
 
+// DemoFood is released from top of tank; user must guide fish to food with finger
 function instructions1() {
+  // Set instructions to step number 1
   step.currentNumber = 1;
 
-  if (demoFoods.length === 0) {
-
-    // Create new fishFoods in array
-    for (let i = 0; i < numDemoFoods; i++) {
-      demoFoods[i] = new DemoFood(fishTank.border);
-    }
-  }
-
+  // Create demoFoods when there aren't any in demoFoods array
+  refillDemoFoods();
 
   // Display and move the demoFish by guiding it with finger
   displayAndMoveDemoFish();
 
-  // Display food, move it, change current, and update number of food fish ate
-  for (let i = 0; i < demoFoods.length; i++) {
-    let demoFood = demoFoods[i];
-    demoFood.move();
-    demoFood.changeCurrent(); // let user change current with arrow keys
-    demoFood.display();
-
-    // Update how many pieces of food fish has eaten
-    demoFish.updateNumFoodEaten(demoFood);
-  }
-  // Release demoFoods from top of tank
+  // Display food, move it, change current, update number of food fish ate, and remove food if eaten or off screen
   releaseDemoFood(demoFish);
 
   // If fish eats 7 pieces of food, move to next instruction
@@ -613,7 +630,17 @@ function instructions1() {
   }
 }
 
-// Releases pieces of demo food
+// Create demoFoods when there aren't any
+function refillDemoFoods() {
+  if (demoFoods.length === 0) {
+    // Create new fishFoods in array
+    for (let i = 0; i < numDemoFoods; i++) {
+      demoFoods[i] = new DemoFood(fishTank.border);
+    }
+  }
+}
+
+// Display food, move it, change current, and update number of food fish ate
 function releaseDemoFood(demoFish) {
 
   for (let i = demoFoods.length - 1; i >= 0; i--) {
@@ -622,14 +649,19 @@ function releaseDemoFood(demoFish) {
     demoFood.changeCurrent(); // let user change current with arrow keys
     demoFood.display();
 
-    // If fish interacts with food by touching it, or if food goes off canvas, then remove food from fishFoods array
+    // Update how many pieces of food fish has eaten
+    demoFish.updateNumFoodEaten(demoFood);
+
+    // If fish eats food by touching it, or if food goes off canvas, then remove food from fishFoods array
     if (demoFish.overlapsWith(demoFood) || demoFood.offScreen()) {
       demoFoods.splice(i, 1);
-      // synth.
     }
   }
 }
 
+// Show tip: user can use left and right arrow keys to change current direction
+// Display arrow keys that "light up" if user clicks on that key on their keyboard to represent current flow
+// User still needs to guide fish to food
 function instructions2() {
   // set Instructions text to step number 2
   step.currentNumber = 2;
@@ -641,36 +673,23 @@ function instructions2() {
     demoArrowKey.display();
   }
 
-  // if no more food in demoFoods array, refill it
-  if (demoFoods.length === 0) {
-    // Create new fishFoods in array
-    for (let i = 0; i < numDemoFoods; i++) {
-      demoFoods[i] = new DemoFood(fishTank.border);
-    }
-  }
+  // Create demoFoods when there aren't any in demoFoods array
+  refillDemoFoods();
 
   // Display and move the demoFish by guiding it with finger
   displayAndMoveDemoFish();
 
-  // Display food, move it, change current, and update number of food fish ate
-  for (let i = 0; i < demoFoods.length; i++) {
-    let demoFood = demoFoods[i];
-    demoFood.move();
-    demoFood.changeCurrent(); // let user change current with arrow keys
-    demoFood.display();
-
-    // Update how many pieces of food fish has eaten
-    demoFish.updateNumFoodEaten(demoFood);
-  }
-
-  // Release demoFoods from top of tank
+  // Display food, move it, change current, update number of food fish ate, and remove food if eaten or off screen
   releaseDemoFood(demoFish);
 
+  // If 15 pieces of food have been eaten in total, switch to next instructions state
   if (demoFish.numFoodEaten >= 15) {
     instructionsState = `instructions3`;
   }
 }
 
+// Show food tracker that fills up, and when it does, demoFish says "I'm Full!"
+// Use clicks on "ready" button to move to game state
 function instructions3() {
   // Set Instructions text to step number 3
   step.currentNumber = 3;
@@ -692,43 +711,6 @@ function instructions3() {
   generateButton(readyButtonCircle, readyButtonText);
 }
 
-// Changes states when mouse clicks on Start or Ready button
-function mouseClicked() {
-  // If finger clicks on Start button, cue `instructions` state and play background music
-  if (state === `intro`) {
-    if (mouseIsInButton(startButtonCircle)) {
-      clearInterval(interval);
-      state = `instructions`;
-    }
-  }
-
-  // If finger clicks on Ready button, cue `game` state
-  if (state === `instructions`) {
-    if (mouseIsInButton(readyButtonCircle)) {
-      state = `game`;
-    }
-  }
-}
-
-// Checks if finger's position is inside a button
-function mouseIsInButton(buttonName) {
-
-  if (mouseX < buttonName.x + (buttonName.size / 2) &&
-    mouseX > buttonName.x - (buttonName.size / 2) &&
-    mouseY < buttonName.y + (buttonName.size / 2) &&
-    mouseY > buttonName.y - (buttonName.size / 2)) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
-// Play background music and loop it
-function tryMusic() {
-  if (!backgroundMusic.isPlaying()) {
-    backgroundMusic.loop();
-  }
-}
 
 // game() -----------------------------------------------------------------------
 //
