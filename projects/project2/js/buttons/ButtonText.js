@@ -1,8 +1,17 @@
 class ButtonText extends Button {
-  constructor(x, y) {
-    super(x, y);
+  constructor(x, y, typeface) {
+    super(x, y, typeface);
+    // information for text inside button
     this.string = undefined;
     this.typeface = undefined;
+    this.size = undefined;
+    this.sizeBigger = undefined;
+    this.sizeSmaller = undefined;
+    this.fill = {
+      r: undefined,
+      g: undefined,
+      b: undefined,
+    };
   }
 
   // display the text
@@ -20,6 +29,8 @@ class ButtonText extends Button {
 
   // set the text to move with the button shape's position
   move(buttonShape) {
+    super.move();
+
     this.x = buttonShape.x;
     this.y = buttonShape.y;
   }

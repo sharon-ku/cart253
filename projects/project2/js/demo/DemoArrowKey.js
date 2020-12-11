@@ -9,13 +9,13 @@ class DemoArrowKey {
     this.fill = 0;
     // vertices of triangle that form the arrow
     this.triangle = {
-      x1: -this.size/5,
-      y1: this.size/4,
-      x2: this.size/4,
-      y2: 0,
-      x3: -this.size/5,
-      y3: -this.size/4,
-      fill: 255,
+      x1: undefined,
+      y1: undefined,
+      x2: undefined,
+      y2: undefined,
+      x3: undefined,
+      y3: undefined,
+      fill: undefined,
     };
     // alpha for both the square and triangle
     this.alpha = {

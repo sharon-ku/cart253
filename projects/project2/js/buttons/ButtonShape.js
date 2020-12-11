@@ -1,11 +1,22 @@
 class ButtonShape extends Button {
   constructor(x,y) {
     super(x,y);
-
+    // movement information
     this.vx = 0.5;
     this.vy = 0.5;
     this.speed = 2;
-    this.change = 0;
+    this.chanceOfChangingDirections = 0;
+    // size information
+    this.size = undefined;
+    this.sizeBigger = undefined;
+    this.sizeSmaller = undefined;
+    // color information
+    this.fill = {
+      r: undefined,
+      g: undefined,
+      b: undefined,
+      alpha: undefined,
+    };
   }
 
   // display the button
@@ -20,10 +31,11 @@ class ButtonShape extends Button {
 
   // move the button randomly
   move() {
+    super.move();
     // generates a random number between 0 and 1
-    this.change = random();
-    // change direction 0.5% of the time
-    if (this.change < 0.005) {
+    this.chanceOfChangingDirections = random();
+    // change direction only a certain percentage of the time
+    if (this.chanceOfChangingDirections < 0.005) {
       this.vx = random(-this.speed, this.speed);
       this.vy = random(-this.speed, this.speed);
     }

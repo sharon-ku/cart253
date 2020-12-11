@@ -1,8 +1,12 @@
 class Button {
-  constructor(x,y) {
+  constructor(x, y, typeface) {
     // movement information
     this.x = x;
     this.y = y;
+    this.vx = undefined;
+    this.vy = undefined;
+    this.speed = undefined;
+    this.chanceOfChangingDirections = undefined;
     // size information
     this.size = undefined;
     this.sizeBigger = undefined;
@@ -16,7 +20,9 @@ class Button {
       b: undefined,
       alpha: undefined,
     };
-
+    // information for text inside the button
+    this.string = undefined;
+    this.typeface = undefined;
   }
 
   // display the button
@@ -32,13 +38,12 @@ class Button {
   // button changes sizes when mouse hovers over it
   hover() {
     if (this.grow) {
-      this.size+= this.sizeChangeRate;
+      this.size += this.sizeChangeRate;
       if (this.size >= this.sizeBigger) {
         this.grow = false;
       }
-    }
-    else {
-      this.size-= this.sizeChangeRate;
+    } else {
+      this.size -= this.sizeChangeRate;
       if (this.size <= this.sizeSmaller) {
         this.grow = true;
       }

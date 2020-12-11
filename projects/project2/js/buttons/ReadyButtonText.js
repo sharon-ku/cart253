@@ -13,8 +13,4 @@ class ReadyButtonText extends ButtonText {
     };
   }
 
-  move(startButtonCircle) {
-    super.move(startButtonCircle);
-  }
-
 }

@@ -4,12 +4,12 @@ class DemoFish {
     this.img1 = fishImg1;
     this.img2 = fishImg2;
     this.currentImage = fishImg1; // Set fish's current image to first image
-    this.framesElapsed = 0;
-    this.framesBtwEachImage = 50;
+    this.framesElapsed = 0; // tracks frames that have passed between each image
+    this.framesBtwEachImage = 50; // frames needed to switch between each image
 
     // size information
-    this.length = 320; //480
-    this.height = 131; //197
+    this.length = 320;
+    this.height = 131;
     this.heightOffset = 50; // to account for firefish's dorsal (top) fin
     this.scale = {
       x: 1,
@@ -17,9 +17,9 @@ class DemoFish {
     };
 
     // movement information
-    this.x = -200; //-300
+    this.x = -200;
     this.y = height-250;
-    this.xDestination = -50; //-150
+    this.xDestination = -50;
     this.vx = 0;
     this.vy = 0;
     this.speed = {
@@ -103,12 +103,11 @@ class DemoFish {
     noFill();
     strokeWeight(this.ring.strokeWeight);
     stroke(this.ring.strokeFill.r, this.ring.strokeFill.g, this.ring.strokeFill.b, this.ring.alpha.current);
-    // ellipse(this.x + this.length/2, this.y + 10, this.ring.size.current);
     ellipse(this.x, this.y, this.ring.size.current);
     pop();
   }
 
-  // Increase the ring attached to demoFish
+  // Increase the ring size attached to demoFish
   increaseRingSize() {
     // increase the ring's size until it reaches max size
     if (this.ring.size.current < this.ring.size.max) {
