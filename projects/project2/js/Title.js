@@ -3,24 +3,14 @@ class Title {
     this.line1 = `HUNGRY`;
     this.line2 = `FISHIES`;
     this.fill = 255;
-    this.rect = {
-      fill:255,
-      length: width/2,
-      height: height/3,
-      alpha: 120,
-    };
+    this.size = height/8;
   }
 
+  // Display the title "Hungry Fishies"
   display(font) {
-    // push();
-    // fill(this.rect.fill, this.rect.fill, this.rect.fill, this.rect.alpha);
-    // rectMode(CENTER);
-    // rect(width/2, height/4+25, this.rect.length, this.rect.height);
-    // pop();
-
     push();
     fill(this.fill);
-    textSize(height/8);
+    textSize(this.size);
     textAlign(CENTER,CENTER);
     textFont(font);
 

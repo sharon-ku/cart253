@@ -37,10 +37,12 @@ class Clownfish extends Fish {
     // is true if fish is keeping food inside its mouth
     this.foodInMouth = undefined;
 
+    // ---
     // Acknowledgment!
     // I dedicate this part of the code to Pippin for helping me work through the logic
     // He recommended I make a "special" food separate from the fishFoods array to feed the anemone
-    // ---
+
+
     // Information on special food that clownfish draws and carries to anemone when time to feed anemone
     this.specialFood = {
       // position information

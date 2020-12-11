@@ -1,5 +1,6 @@
 class Poop {
   constructor(fishX, fishY) {
+    // movement information
     this.x = fishX;
     this.y = fishY;
     this.vx = 0;
@@ -8,6 +9,7 @@ class Poop {
     this.ax = 0;
     this.ay = 0;
     this.acceleration = 3.5;
+    // size information
     this.size = 2;
     // poop brown color
     this.fill = {
@@ -17,7 +19,7 @@ class Poop {
     };
   }
 
-  // display poop pebble
+  // display poop pebble as circles
   show() {
     push();
     fill(this.fill.r, this.fill.g, this.fill.b);
@@ -27,9 +29,12 @@ class Poop {
 
   // poop flows upwards --> it knows how to fly!
   move() {
+    // set acceleration
     this.ay = -this.acceleration;
+    // set velocity
     this.vx = this.speed;
     this.vy = this.speed;
+    // set position
     this.x +=  this.vx + this.ax;
     this.y +=  this.vy + this.ay;
   }

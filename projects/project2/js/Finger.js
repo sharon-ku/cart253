@@ -1,8 +1,10 @@
 class Finger {
   constructor() {
-    this.size= 40;
+    // position information
     this.x= 100;
     this.y= 100;
+    // appearance Information
+    this.size= 40;
     this.fill= { // light cyan
       r: 220,
       g: 255,
