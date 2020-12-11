@@ -4,9 +4,12 @@ Sharon Ku
 
 
 INTRO state & INSTRUCTIONS state:
-- The title "Hungry Fishies" is displayed
-- Three fish (firefish, neon goby, clownfish) are swimming around the tank.
-- Click the "Start" button to see the instructions (instructions state).
+- Four fish (1 firefish, 1 goby, 2 clownfish named Nene and Momo) are swimming around the tank.
+- Click on any creature in the tank and it will emit a sound.
+- Click the "Start" button to see the instructions.
+
+INSTRUCTIONS state:
+- A short tutorial that shows the basic actions of the game.
 - Click "Ready!" to start the game state.
 
 GAME state:
@@ -14,6 +17,7 @@ GAME state:
 - Bring the finger/user circle close enough to the fish for it to notice it.
 - Try to get the fish to eat the food by guiding it with the finger.
 - Change the current direction by using the left and right arrow keys.
+- The clownfish like to feed the anemone sometimes instead of eating the food :)
 - When all fish are full, the simulation ends (cue ending state).
 
 ENDING state:
@@ -33,10 +37,21 @@ Background music from Mixkit.co: Smooth Like Jazz by Ajhay Stelino
 // State of program
 let state = `intro`; // all possible states: intro, instructions, game, ending
 
-// Substates of instructions: (instructions0 goes up to instructions 4)
+// Substates of instructions: (instructions0 count up to instructions4)
 let instructionsState = `instructions0`;
 
-// Background music
+// Variables related to fishFood (used in game state)
+let fishFoods = []; // fishFoods array that contains food objects
+let numFishFoods = 10; // number of fish food in the tank at once
+let totalFood = 10; // total amount of food that each fish needs to consume
+
+// Variables related to demoFood (used in instructions state)
+let demoFoods = []; // fishFoods array that contains food objects
+let numDemoFoods = 5; // number of demo food in the tank at once
+
+
+// SOUND-RELATED VARIABLES -------------------
+// Background music and volume
 let backgroundMusic = undefined;
 let backgroundMusicVolume = {
   current: 0.3,
@@ -44,15 +59,25 @@ let backgroundMusicVolume = {
   max: 0.5,
 };
 
-// Variables related to fishFood
-let fishFoods = []; // fishFoods array that contains food objects
-let numFishFoods = 10; // number of fish food in the tank at once //5
-let totalFood = 5; // total amount of food that each fish needs to consume
+// synthesizer
+let synth;
+// volume of synthesizer
+let synthVolume = 0.3;
+// delay in seconds at which to play synthesizer
+let synthDelay = 0;
+// time to hold note of synthesizer
+let synthSustainTime = 1;
 
-// Variables related to demoFood
-let demoFoods = []; // fishFoods array that contains food objects
-let numDemoFoods = 5; // number of fish food in the tank at once //5
-// let totalFood = 5; // total amount of food that each fish needs to consume
+// tracks the interval that plays note
+let interval;
+
+// stores notes
+let notes = [`C5`, `E4`, `G5`, `E4`, `D5`, `F4`, `A5`, `C4`];
+
+// time between each note
+let noteDuration = 500;
+
+// --------------------------------------------
 
 // Fonts used for title and body text
 let titleFont;
@@ -60,24 +85,6 @@ let bodyTextFont;
 
 // Title text
 let title;
-
-// SOUND-RELATED VARIABLES ------------------------------------------------
-// synthesizer
-let synth;
-
-// tracks the interval that plays note
-let interval;
-
-// storing notes inside an array
-let notes = [`C5`, `E4`, `G5`, `E4`, `D5`, `F4`, `A5`, `C4`];
-
-// track which note we're at
-let currentNote = 0;
-
-// time between each note
-let noteDuration = 500;
-
-// -----------------------------------------------------------------
 
 // Start button circle and text inside it
 let startButtonCircle;
@@ -89,12 +96,6 @@ let foodTrackers = [];
 // Fishes array
 let fishes = [];
 
-// My fishies
-let firefish;
-let goby;
-let nene;
-let momo;
-
 // Stores the names of all my fishies
 let allFishNames = [`firefish`, `goby`, `nene`, `momo`];
 
@@ -105,7 +106,7 @@ let fishImages = {
 
 // Creatures (non-fish) array
 let creatures = [];
-let numSnails = 2;
+let numSnails = 2; // number of snails in tank
 
 // Anemone
 let anemone;
@@ -132,7 +133,7 @@ let bg = {
   },
 };
 
-// Fish tank
+// Fish tank's border
 let fishTank = {
   border: 100,
 };
@@ -140,7 +141,7 @@ let fishTank = {
 // Rounded rectangle displayed behind the instructions
 let rulesRect;
 
-// Instructions' current step number and text
+// Instructions' current step number
 let step = {
   currentNumber: 0,
   // appearance information
@@ -151,6 +152,8 @@ let step = {
   x: 100,
   y: 100,
 };
+
+// Instructions' text for each step
 let instructionsText = [
   `Bring your finger near the fish
 to get its attention.`,
@@ -168,7 +171,7 @@ let demoFoodTracker;
 // Stores demo left and right arrow keys
 let demoArrowKeys = [];
 
-// Stores images for demo fish and food tracker (used for Instructions state)
+// Stores images for demo fish and food tracker
 let demoFishImg1;
 let demoFishImg2;
 let demoFoodTrackerImg;
@@ -193,6 +196,8 @@ let poops = [];
 // Total number of poop that the fish can release in a single swimming
 let totalNumPoops = 50;
 
+
+
 // preload() -----------------------------------------------------------------------
 //
 // Preload all images, music, and fonts
@@ -209,6 +214,7 @@ function preload() {
     // load image 1 and 2 for each fish
     fishImages[`${fish}`].img1 = loadImage(`assets/images/${fish}1.png`);
     fishImages[`${fish}`].img2 = loadImage(`assets/images/${fish}2.png`);
+
     // load food tracker image for each fish
     fishImages[`${fish}`].foodTrackerImg = loadImage(`assets/images/${fish}FoodTracker.png`);
   }
@@ -220,7 +226,7 @@ function preload() {
   // Load demoFoodTracker image
   demoFoodTrackerImg = loadImage(`assets/images/demoFoodTracker.png`);
 
-  // Load more food button image
+  // Load More Food button image
   moreFoodButtonImg = loadImage(`assets/images/moreFood.png`);
 
   // Load background rocks and sand images
@@ -237,7 +243,7 @@ function preload() {
 
 // setup() -----------------------------------------------------------------------
 //
-// Set up canvas, hide cursor, hide all strokes, create all objects from classes
+// Set up canvas, hide cursor, hide all strokes, prep audio, and create all objects from classes
 // --------------------------------------------------------------------------------
 
 function setup() {
@@ -252,24 +258,24 @@ function setup() {
   // Create a new finger
   finger = new Finger();
 
-  // ---
+  // -----
   // Create 4 fishes and push to fishes array:
   // 1- Create a new firefish
-  firefish = new Firefish(fishImages.firefish.img1, fishImages.firefish.img2);
+  let firefish = new Firefish(fishImages.firefish.img1, fishImages.firefish.img2);
   fishes.push(firefish);
 
   // 2- Create a new goby
-  goby = new Goby(fishImages.goby.img1, fishImages.goby.img2);
+  let goby = new Goby(fishImages.goby.img1, fishImages.goby.img2);
   fishes.push(goby);
 
-  // 3- Create a new nene
-  nene = new Nene(fishImages.nene.img1, fishImages.nene.img2);
+  // 3- Create a new nene (aka big clownfish)
+  let nene = new Nene(fishImages.nene.img1, fishImages.nene.img2);
   fishes.push(nene);
 
-  // 4- Create a new momo
-  momo = new Momo(fishImages.momo.img1, fishImages.momo.img2);
+  // 4- Create a new momo (aka small clownfish)
+  let momo = new Momo(fishImages.momo.img1, fishImages.momo.img2);
   fishes.push(momo);
-  // ---
+  // -----
 
   // Create a new anemone
   let anemoneX = 500;
@@ -279,14 +285,13 @@ function setup() {
   // Create the right number of snails to put into creatures array
   for (let i = 0; i < numSnails; i++) {
     let snailX = random(0, width);
-    let snailY = random(height * 2 / 3, height - 100);
+    let snailY = random(height * 3 / 4, height - 100);
     let snail = new Snail(snailX, snailY);
     creatures.push(snail);
   }
 
-  // Create a new title
+  // Create a new title "Hungry Fishies"
   title = new Title();
-
 
   // Setting x and y positions for start button
   let startButtonX = width * 0.2;
@@ -298,10 +303,16 @@ function setup() {
   // Create a new demo fish
   demoFish = new DemoFish(demoFishImg1, demoFishImg2);
 
+  // Create array for demoFoods (only used in Instructions state)
+  for (let i = 0; i < numDemoFoods; i++) {
+    let demoFood = demoFoods[i];
+    demoFood = new DemoFood(fishTank.border);
+  }
+
   // Create a new demo food tracker
   demoFoodTracker = new DemoFoodTracker(demoFoodTrackerImg);
 
-  // Create new demo left and right arrow keys
+  // Create new demo left and right arrow keys and push to demoArrowKeys array
   let demoLeftArrowKey = new DemoLeftArrowKey();
   let demoRightArrowKey = new DemoRightArrowKey();
   demoArrowKeys.push(demoLeftArrowKey, demoRightArrowKey);
@@ -320,12 +331,6 @@ function setup() {
   for (let i = 0; i < numFishFoods; i++) {
     let fishFood = fishFoods[i];
     fishFood = new FishFood(fishTank.border);
-  }
-
-  // Create array for demoFoods (only used in Instructions state)
-  for (let i = 0; i < numDemoFoods; i++) {
-    let demoFood = demoFoods[i];
-    demoFood = new DemoFood(fishTank.border);
   }
 
   // Create a new More Food button
@@ -359,7 +364,7 @@ function setup() {
 
 // draw() -----------------------------------------------------------------------
 //
-// Set up background color, background rocks and sand, and states
+// Set up background music, background color, background rocks and sand, and states
 // --------------------------------------------------------------------------------
 
 function draw() {
@@ -379,8 +384,6 @@ function draw() {
   } else if (state === `ending`) {
     ending();
   }
-
-
 }
 
 // Set up background color, rocks, and sand
@@ -393,50 +396,48 @@ function setBackground() {
   pop();
 }
 
-// Try playing music if mouse is pressed
+// In intro state, play note if mouse is pressed and overlapping with a living being
 function mousePressed() {
   if (state === `intro`) {
     playNote();
-  }
 
+    // backgroundMusicVolume.current = backgroundMusicVolume.min;
+    tryMusic();
+  }
 }
 
-// play the next note in song tune
+// Play the note if finger overlaps with a living being (fish or creature or anemone)
 function playNote() {
-  // fetch the note from the notes array
-  let note = notes[currentNote];
-
-  // if finger overlaps with fish, play a note from the synthesizer
+  // if finger overlaps with fish, play two notes overlapped with each other
   for (let i = 0; i < fishes.length; i++) {
     let fishName = fishes[i];
-    // let note = notes[i];
 
+    // The pair of notes that will be played correspond to the fish's index in the fishes array
+    // For example, for firefish that occupies index 0 in the fishes array, have it play the first two notes in notes array
+    // Next, for goby that has index 1 in fishes array, have it play the next two notes in the notes array
+    // And so on for the rest of the fishes...
     if (fishName.overlapsWith(finger)) {
-      // synth.play(notes[i], 0.2, 0, 1);
-      synth.play(notes[i*2], 0.3, 0, 1);
-      synth.play(notes[(i*2)+1], 0.3, 0, 1);
+      // play note from notes array
+      synth.play(notes[i * 2], synthVolume, synthDelay, synthSustainTime);
+      // along with the note that follows right after
+      synth.play(notes[(i * 2) + 1], synthVolume, synthDelay, synthSustainTime);
     }
-
-
   }
 
+  // For each snail that is stored in the creatures array, play a note if it overlaps with finger
   for (let i = 0; i < creatures.length; i++) {
     let creature = creatures[i];
 
+    // Note that is played from notes array shares same index as snail's index in creatures array
     if (creature.overlapsWith(finger)) {
-      synth.play(notes[i], 0.3, 0, 1);
+      synth.play(notes[i], synthVolume, synthDelay, synthSustainTime);
     }
   }
 
+  // If anemone overlaps with array, have it play the third note in notes array
   if (anemone.overlapsWith(finger)) {
-    synth.play(notes[3], 0.3, 0, 1);
+    synth.play(notes[4], synthVolume, synthDelay, synthSustainTime);
   }
-  // // move to next note in array
-  // currentNote += 1;
-  // // restart array when reach the end
-  // if (currentNote === notes.length) {
-  //   currentNote = 0;
-  // }
 
 }
 
@@ -446,14 +447,19 @@ function playNote() {
 // --------------------------------------------------------------------------------
 
 function intro() {
-  if (mousePressed) {
-    backgroundMusicVolume.current = backgroundMusicVolume.min;
-    tryMusic();
+  if (mouseIsPressed) {
+    // play note if mouse is pressed and overlapping with a living being
+    // playNote();
+    // play background music and set volume to minimum so we can hear the notes emitted by living beings
+    // backgroundMusicVolume.current = backgroundMusicVolume.min;
+    // tryMusic();
   }
 
-  // Draw all sprites
-  drawSprites();
+  // Set background music volume to minimum so we can hear the notes emitted by living beings
+  backgroundMusicVolume.current = backgroundMusicVolume.min;
 
+  // Draw all sprites (snails and anemone)
+  drawSprites();
 
   // Display the title
   title.display(titleFont);
@@ -692,7 +698,6 @@ function mouseClicked() {
   if (state === `intro`) {
     if (mouseIsInButton(startButtonCircle)) {
       clearInterval(interval);
-      // tryMusic();
       state = `instructions`;
     }
   }
@@ -721,7 +726,6 @@ function mouseIsInButton(buttonName) {
 // Play background music and loop it
 function tryMusic() {
   if (!backgroundMusic.isPlaying()) {
-    // backgroundMusic.setVolume(backgroundMusicVolume.current);
     backgroundMusic.loop();
   }
 }
