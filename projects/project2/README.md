@@ -1,4 +1,18 @@
-# Project 2: Artist's statement
+# Hungry Fishies
+
+Artist's statement
+
+My goal was to simulate a fish tank environment containing adorable fish and creatures that users can interact with, feed, and befriend.
+
+I was inspired by my friend’s saltwater aquarium. Each of his fish has their unique personalities and quirks, which I brought into the game. I hope that users seek comfort with the simple task of feeding the fish while listening to the music.
+
+I believe I accomplished my goal artistically by striving to make all stages of the game playful, which is why I incorporated interactivity whenever possible (e.g. in the explanation of the rules and with the musical fishies). I also introduced lively colors to the tank’s inhabitants and animated their images to make them feel more realistic. The players who successfully satisfy the bellies of all the ravenous fish are rewarded with the product of my poetic skills and of the fish’s pooping skills.
+
+For my technical explorations, I relied on the powerful effect that emerges by combining object-oriented programming, inheritance, and arrays. That is, I created multiple classes to contain my objects, some of which are part of a chain of inheritance, and to bring these objects into my main script and execute their methods, I used arrays. This allowed me to make modular fish that possess different behaviours and keep track of their food intake in the fish’s respective food trackers. Because many objects interacted with each other (like the fish and the food, or the food and the food tracker), I practiced providing objects as parameters to the methods of other objects. My greatest technical challenge was getting the clownfish to feed the anemone. The clownfish would either grab the food and swim off to the side of the tank, or eat the food it was supposed to feed the anemone - how frustrating! Yet, when I got it to work, it was also the most satisfying accomplishment I felt during the whole project.
+
+Enjoy!
+
+---
 
 Attribution: This project is an expansion of my first project, "Hungry Fishy." Here is what I have already implemented in Project 1:
 
@@ -13,17 +27,3 @@ Attribution: This project is an expansion of my first project, "Hungry Fishy." H
 
     Ending state:
     A poem is featured as the tank plunges into darkness and the fish releases a little surprise from its behind.
-
------
-
-Artist's statement for Project 2
-
-My goal was to simulate a fish tank environment containing adorable fish and creatures that users can interact with, feed, and befriend.
-
-I was inspired by my friend’s saltwater aquarium. Each of his fish has their unique personalities and quirks, which I brought into the game. I hope that users seek comfort with the simple task of feeding the fish while listening to the music.
-
-I believe I accomplished my goal artistically by striving to make all stages of the game playful, which is why I incorporated interactivity whenever possible (e.g. in the explanation of the rules and with the musical fishies). I also introduced lively colors to the tank’s inhabitants and animated their images to make them feel more realistic. The players who successfully satisfy the bellies of all the ravenous fish are rewarded with the product of my poetic skills and of the fish’s pooping skills.
-
-For my technical explorations, I relied on the powerful effect that emerges by combining object-oriented programming, inheritance, and arrays. That is, I created multiple classes to contain my objects, some of which are part of a chain of inheritance, and to bring these objects into my main script and execute their methods, I used arrays. This allowed me to make modular fish that possess different behaviours and keep track of their food intake in the fish’s respective food trackers. Because many objects interacted with each other (like the fish and the food, or the food and the food tracker), I practiced providing objects as parameters to the methods of other objects. My greatest technical challenge was getting the clownfish to feed the anemone. The clownfish would either grab the food and swim off to the side of the tank, or eat the food it was supposed to feed the anemone - how frustrating! Yet, when I got it to work, it was also the most satisfying accomplishment I felt during the whole project.
-
-Enjoy!
