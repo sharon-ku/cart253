@@ -5,6 +5,8 @@ Sharon Ku
 Click on the canvas to activate the short tune. User-controlled froggie tries to sabotage the music by moving left and right on the screen (click on right and left arrow keys). User can clap or make a loud noise to create the lightning and the thunder.
 **************************************************/
 
+// create canvas
+let canvas;
 
 // frog controlled by user
 let frog;
@@ -24,6 +26,10 @@ let maxNumRaindropsToAdd = 50;
 // ground
 let ground;
 
+// Grab info of parent that canvas goes into
+let canvasDiv = document.getElementById('canvas-parent');
+
+
 
 // SOUND-RELATED VARIABLES ------------------------------------------------
 // volume needed to cue lightning
@@ -41,7 +47,7 @@ let interval;
 // a little song tune I made up
 let notes = [`C5`, `G4`, `E5`, `C5`, `A5`, `F4`, `F5`, `C5`, `B5`, `G4`, `G5`, `E5`, `F5`, `E5`, `D5`, `B5`];
 // track which note we're at
-let currentNote =0;
+let currentNote = 0;
 // time between each note
 let noteDuration = 500;
 
@@ -80,7 +86,10 @@ function preload() {
 //
 // Description of setup() goes here.
 function setup() {
-  createCanvas(windowWidth, windowHeight);
+  canvas = createCanvas(windowWidth, windowHeight);
+
+  // append canvas to #canvas-parent
+  canvas.parent('canvas-parent');
 
   userStartAudio();
 
@@ -101,7 +110,7 @@ function setup() {
   mic.start();
 
   // create an oscillator
-  oscillator = new p5.Oscillator(0,`sine`);
+  oscillator = new p5.Oscillator(0, `sine`);
 }
 
 // add new raindrops to raindrops array
@@ -218,7 +227,7 @@ function resetToNoLightning() {
 function mousePressed() {
   if (interval === undefined) {
     interval = setInterval(playNextNote, noteDuration);
-  } else{
+  } else {
     clearInterval(interval);
     interval = undefined;
   }
@@ -240,7 +249,7 @@ function playNextNote() {
 
 // press left + right arrow keys to move frog and play what is supposed to be the next note in the song tune
 function keyPressed() {
-    frog.handleInput();
-    frog.move();
-    playNextNote();
+  frog.handleInput();
+  frog.move();
+  playNextNote();
 }

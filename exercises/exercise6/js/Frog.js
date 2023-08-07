@@ -1,8 +1,9 @@
 class Frog {
-  constructor(x,y) {
+  constructor(x, y) {
     // size information
-    this.width = 250*1.5; // original width: 250
-    this.height = 200*1.5; //original height: 200
+    this.scale = 2;
+    this.width = 250 * this.scale; // original width: 250
+    this.height = 200 * this.scale; //original height: 200
     // position information
     this.x = x;
     this.y = y;
@@ -42,17 +43,17 @@ class Frog {
   // make frog's eyes blink
   blink() {
     this.framesElapsed.forBlink++;
-     if (this.framesElapsed.forBlink === this.framesBtwEachImageForBlink) {
-       if (this.currentImage === 0) {
-         this.currentImage = 1;
-         this.framesBtwEachImageForBlink = this.framesNeededForBlinking;
-       } else if (this.currentImage === 1) {
-         this.currentImage = 0;
-         this.framesBtwEachImageForBlink = this.framesNeededForEyesOpen;
-         }
-       this.framesElapsed.forBlink = 0;
+    if (this.framesElapsed.forBlink === this.framesBtwEachImageForBlink) {
+      if (this.currentImage === 0) {
+        this.currentImage = 1;
+        this.framesBtwEachImageForBlink = this.framesNeededForBlinking;
+      } else if (this.currentImage === 1) {
+        this.currentImage = 0;
+        this.framesBtwEachImageForBlink = this.framesNeededForEyesOpen;
+      }
+      this.framesElapsed.forBlink = 0;
 
-     }
+    }
   }
 
   // move frog
